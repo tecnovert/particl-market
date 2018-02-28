@@ -1,11 +1,14 @@
 import { inject, named } from 'inversify';
-import { controller, httpGet, httpPost, httpPut, httpDelete, response, requestBody, requestParam } from 'inversify-express-utils';
+import { controller, httpGet, httpPost, httpPut, httpDelete, response, requestBody, requestParam, queryParam } from 'inversify-express-utils';
 import { Types, Core, Targets } from '../../constants';
 import { app } from '../../app';
 import { ItemImageService } from '../services/ItemImageService';
 import { Logger as LoggerType } from '../../core/Logger';
 import sharp = require('sharp');
 import * as _ from 'lodash';
+import { RpcController } from './RpcController';
+import { Commands } from '../commands/CommandEnumType';
+import { ImageDataProtocolType } from '../enums/ImageDataProtocolType';
 
 // Get middlewares
 const restApi = app.IoC.getNamed<interfaces.Middleware>(Types.Middleware, Targets.Middleware.AuthenticateMiddleware);
@@ -17,6 +20,7 @@ export class ItemImageController {
 
     constructor(
         @inject(Types.Service) @named(Targets.Service.ItemImageService) private itemImageService: ItemImageService,
+        @inject(Types.Controller) @named(Targets.Controller.RpcController) private rpcController: RpcController,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType) {
         this.log = new Logger(__filename);
     }
@@ -78,6 +82,16 @@ export class ItemImageController {
           + newInfo.format );
         res.send(dataBuffer);
       }
+    }
+
+    @httpPost('/template/:templateId')
+    public async uploadImage( @response() res: myExpress.Response, @requestParam('templateId') templateId: string,
+        @queryParam('image') image: any): Promise<any> {
+        return this.rpcController.handleRPC(res, {
+            method: Commands.ITEMIMAGE_ROOT.commandName,
+            params: [Commands.ITEMIMAGE_ADD.commandName, templateId, 'TODO:random', ImageDataProtocolType.LOCAL, 'BASE64', image],
+            id: 1
+        });
     }
 }
 
