@@ -100,7 +100,10 @@ export class ListingItemImageAddMessageFactory extends BaseMessageFactory {
         if (withData) {
             // load the actual image data
             // we're not sending the image data anymore when posting the ListingItem
-            data = await this.imageDataService.loadImageFile(imageData.imageHash, imageData.imageVersion);
+            data = await this.imageDataService.loadImageFile(imageData.imageHash, imageData.imageVersion).catch(err => {
+                this.log.error(err);
+                return undefined;
+            });
         }
 
         dsns.push({
