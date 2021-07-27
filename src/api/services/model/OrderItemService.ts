@@ -44,6 +44,9 @@ export class OrderItemService {
         this.madctBuyFlowSequence[OrderItemStatus.SHIPPING] = {
             nextStates: [OrderItemStatus.COMPLETE]
         };
+        this.madctBuyFlowSequence[OrderItemStatus.BID_CANCELLED] = {
+            nextStates: [OrderItemStatus.ESCROW_COMPLETED]
+        };
     }
 
     public async findAll(): Promise<Bookshelf.Collection<OrderItem>> {

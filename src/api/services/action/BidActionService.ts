@@ -141,7 +141,9 @@ export class BidActionService extends BaseActionService {
         const marketReceiveAddressKVS: KVS | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => {
             return kvs.key === ActionMessageObjects.BID_ON_MARKET;
         });
+        // tslint:disable:no-useless-cast
         const marketReceiveAddress = marketReceiveAddressKVS!.value as string;
+        // tslint:enable:no-useless-cast
         // smsgMessage.to should be the same?
 
         // find the ListingItem the Bid is for
@@ -198,17 +200,19 @@ export class BidActionService extends BaseActionService {
 
         // if we're the buyer, Order hash was generated before posting the BidMessage to the seller
         // if we're the seller, we should have received the Order hash from the buyer in the message
-        const orderHash = _.find(bidMessage.objects || [], (kvs: KVS) => {
+        const orderHash: any | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => {
             return kvs.key === ActionMessageObjects.ORDER_HASH;
         });
         this.log.debug('createBid(), orderHash: ', orderHash);
 
+        // tslint:disable:no-useless-cast
         const orderCreateRequest: OrderCreateRequest = await this.orderFactory.get({
                 actionMessage: marketplaceMessage.action as BidMessage,
                 smsgMessage,
                 bids: [bid],
                 hash: orderHash!.value
             } as OrderCreateParams);
+        // tslint:enable:no-useless-cast
 
         await this.orderService.create(orderCreateRequest).then(value => value.toJSON());
 
