@@ -72,6 +72,10 @@ export class App {
         return this.socketIoServer;
     }
 
+    get ZmqWorker(): ZmqWorker {
+        return this.zmqWorker;
+    }
+
     public Logger(scope: string): Logger {
         return new Logger(scope || __filename);
     }
