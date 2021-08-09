@@ -73,21 +73,21 @@ export class ZmqWorker {
             );
         });
 
-        particld.on('hashblock', (hash) => {
-            this.log.debug('ZMQ: receive(hashblock): ', hash.toString('hex'));
-        });
+        // particld.on('hashblock', (hash) => {
+        //     this.log.debug('ZMQ: receive(hashblock): ', hash.toString('hex'));
+        // });
 
-        particld.on('hashtx', (hash) => {
-            this.log.debug('ZMQ: receive(hashtx): ', hash.toString('hex'));
-        });
+        // particld.on('hashtx', (hash) => {
+        //     this.log.debug('ZMQ: receive(hashtx): ', hash.toString('hex'));
+        // });
 
-        particld.on('rawblock', (block) => {
-            this.log.debug('ZMQ: receive(rawblock): ', block.toString('hex'));
-        });
+        // particld.on('rawblock', (block) => {
+        //     this.log.debug('ZMQ: receive(rawblock): ', block.toString('hex'));
+        // });
 
-        particld.on('rawtx', (tx) => {
-            this.log.debug('ZMQ: receive(rawtx): ', tx.toString('hex'));
-        });
+        // particld.on('rawtx', (tx) => {
+        //     this.log.debug('ZMQ: receive(rawtx): ', tx.toString('hex'));
+        // });
 
         particld.on('connect:*', (uri, type) => {
             this.isConnected = true;

@@ -32,20 +32,80 @@ const newApp = new App();
 console.log('app, Environment.isTest():', Environment.isTest());
 console.log('app, Environment.isBlackBoxTest():', Environment.isBlackBoxTest());
 
-if (!Environment.isTest() && !Environment.isBlackBoxTest()) {
+const start = () => {
 
-    console.log('app, starting in non-test environment...');
+    if (!Environment.isTest() && !Environment.isBlackBoxTest()) {
 
-    // integration tests will bootstrap the app
-    newApp.configure(new CustomConfig());
-    newApp.bootstrap()
-        .catch(reason => {
-            console.log('ERROR:', reason);
-        });
+        console.log('app, starting in non-test environment...');
 
-} else {
-    console.log('app, starting in test environment...');
-}
+        // integration tests will bootstrap the app
+        newApp.configure(new CustomConfig());
+        newApp.bootstrap()
+            .catch(reason => {
+                console.log('ERROR:', reason);
+            });
 
+    } else {
+        console.log('app, starting in test environment...');
+    }
+};
+
+
+const terminationHandler = (cleanup: (cb: (exitCode?: number) => void) => void, options = { timeout: 2000 }) => {
+
+    const exitCB = (code: number = 0) => {
+        process.exit(code);
+    };
+
+    return (code: number, reason: string) => (err: Error | undefined, promise: Promise<any>) => {
+
+        if (err && err instanceof Error) {
+            newApp.Logger('').error(err.message, err.stack);
+        } else {
+            newApp.Logger('').info(reason);
+        }
+
+        if (cleanup instanceof Function) {
+            cleanup(exitCB);
+            // @ts-ignore
+            setTimeout(exitCB, options.timeout).unref();
+        } else {
+            exitCB(code);
+        }
+    };
+};
+
+const terminator = terminationHandler((exitCallback) => {
+    if (newApp.Server) {
+        newApp.Server.httpServer.close();
+    }
+    if (newApp.SocketIOServer) {
+        newApp.SocketIOServer.socketIO.close();
+    }
+    if (newApp.ZmqWorker) {
+        newApp.ZmqWorker.zmq.disconnect().catch(() => false /* TODO: do something more useful here */);
+    }
+});
+
+
+process.on('uncaughtException', terminator(1, 'uncaughtException'));
+process.on('unhalndledRejection', terminator(1, 'uncaughtException'));
+process.on('SIGTERM', terminator(0, 'exit requested'));
+process.on('SIGINT', terminator(0, 'exit requested'));
+
+process.on('message', (msg: any) => {
+    if (typeof msg === 'string') {
+        switch (msg) {
+            case 'START':
+                start();
+                break;
+            case 'STOP':
+                terminator(0, 'PROCESS STOP REQUESTED')(undefined, new Promise<any>((resolve) => resolve));
+                break;
+            default:
+                break;
+        }
+    }
+});
 
 export const app = newApp;

@@ -5,7 +5,7 @@
 import 'reflect-metadata';
 
 import * as path from 'path';
-import { spawn, ChildProcess } from 'child_process';
+import { ChildProcess, fork } from 'child_process';
 
 let proc: ChildProcess;
 
@@ -25,7 +25,8 @@ exports.start = (envArgs: any) => {
     const envAdditional = envArgs && typeof envArgs === 'object' && envArgs.constructor === Object ? envArgs : {};
     const envActual = {...environment, ...envAdditional};
 
-    proc = spawn(process.execPath, [p], { env: envActual });
+    proc = fork(p, [], { env: envActual, stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
+    proc.send('START');
     return proc;
 };
 
@@ -34,6 +35,10 @@ exports.start = (envArgs: any) => {
  */
 exports.stop = () => {
     if (proc) {
-        proc.kill('SIGINT');
+        if (proc.connected) {
+            proc.send('STOP');
+        } else {
+            proc.kill('SIGINT');
+        }
     }
 };
