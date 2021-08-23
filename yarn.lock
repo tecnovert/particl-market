@@ -372,6 +372,15 @@
   dependencies:
     "@types/node" "*"
 
+"@zasmilingidiot/particl-zmq@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-zmq/-/particl-zmq-1.0.7.tgz#a3cd7e3bdfcca8e054288e8f296f5e022ed324ef"
+  integrity sha512-Tl1s//unWpjal8iY72Mfk1YkVzsPmD/oT16bDxe5otIq/DIuRd+CH5O8kqBvg0MXMXGPQRUyiNlKYogQ99iSRQ==
+  dependencies:
+    debug "^4.1.0"
+    eventemitter2 "^5.0.1"
+    zeromq "^6.0.0-beta.6"
+
 JSONStream@^1.3.1:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.2.tgz#c102371b6ec3a7cf3b847ca00c20bb0fce4c6dea"
@@ -6281,7 +6290,7 @@ node-addon-api@2.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.0.tgz#f9afb8d777a91525244b01775ea0ddbe1125483b"
   integrity sha512-ASCL5U13as7HhOExbT6OlWJJUV/lLzL2voOSP1UVehpRD8FbSrSDjfScK/KwAvVTI5AS6r4VwbOMlIqtvRidnA==
 
-node-gyp-build@^4.2.3:
+node-gyp-build@^4.1.0, node-gyp-build@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.2.3.tgz#ce6277f853835f718829efb47db20f3e4d9c4739"
   integrity sha512-MN6ZpzmfNCRM+3t57PTJHgHyw/h4OWnZ6mR8P5j/uZtqQr46RRuDE/P+g3n0YR/AiYXeWixZZzaip77gdICfRg==
@@ -6901,9 +6910,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -6911,15 +6920,6 @@ particl-bitcore-lib@^0.16.0:
     elliptic "=3.0.3"
     inherits "=2.0.1"
     lodash "=3.10.1"
-
-particl-zmq@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.6.tgz#0c22a225918b837241b4012aa7ce9d1e263792a6"
-  integrity sha512-JrljoX3gJQP5o/eCdp/PK7GY557ctXmNSbE5wiOsE3AzaNUllRc9g/O9CWZBK2138uS5NkH7CKG1KFWDO3z/4w==
-  dependencies:
-    debug "^4.1.0"
-    eventemitter2 "^5.0.1"
-    zeromq "^5.2.8"
 
 pascalcase@^0.1.1:
   version "0.1.1"
@@ -9590,6 +9590,13 @@ zeromq@^5.2.8:
   dependencies:
     nan "2.14.2"
     node-gyp-build "^4.2.3"
+
+zeromq@^6.0.0-beta.6:
+  version "6.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
+  integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
+  dependencies:
+    node-gyp-build "^4.1.0"
 
 zombie@^6.1.2:
   version "6.1.3"

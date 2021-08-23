@@ -6,7 +6,7 @@ import { Logger } from './Logger';
 import { Core, Targets, Types } from '../constants';
 import { EventEmitter } from './api/events';
 import { IoC } from './IoC';
-import * as ParticlZmq from 'particl-zmq';
+import * as ParticlZmq from '@zasmilingidiot/particl-zmq';
 import { CoreMessageProcessor } from '../api/messageprocessors/CoreMessageProcessor';
 import PQueue, { Options } from 'pm-queue';
 import PriorityQueue, { PriorityQueueOptions } from 'pm-queue/dist/priority-queue';

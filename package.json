@@ -67,6 +67,7 @@
     "dist/**/*"
   ],
   "dependencies": {
+    "@zasmilingidiot/particl-zmq": "1.0.7",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.17.2",
     "bookshelf": "^0.10.4",
@@ -108,7 +109,6 @@
     "multer": "^1.4.1",
     "omp-lib": "^0.1.153",
     "particl-bitcore-lib": "^0.16.0",
-    "particl-zmq": "^1.0.6",
     "path": "^0.12.7",
     "piexifjs": "^1.0.3",
     "pluralize": "^5.0.0",
