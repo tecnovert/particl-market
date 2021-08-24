@@ -1,0 +1,8 @@
+{
+    "branch": "dev",
+    "cleanup": true,
+    "tests": false,
+    "yarn": true,
+    "contents": "dist",
+    "message": "bump version to v%s for release"
+}
