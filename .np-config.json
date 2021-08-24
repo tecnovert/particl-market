@@ -1,5 +1,5 @@
 {
-    "branch": "dev",
+    "branch": "0.3",
     "cleanup": true,
     "tests": false,
     "yarn": true,
