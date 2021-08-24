@@ -1,6 +1,6 @@
 {
   "name": "@zasmilingidiot/particl-marketplace",
-  "version": "0.3.2",
+  "version": "0.3.1",
   "description": "decentralized marketplace",
   "main": "dist/module.js",
   "scripts": {
@@ -146,7 +146,8 @@
     "node": ">=14.*.*"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "jest": {
     "verbose": true,
