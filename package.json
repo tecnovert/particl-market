@@ -73,7 +73,7 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "@zasmilingidiot/particl-zmq": "1.0.7",
+    "@zasmilingidiot/particl-zmq": "1.0.7-win",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.17.2",
     "bookshelf": "^0.10.4",
