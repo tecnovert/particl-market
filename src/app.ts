@@ -89,9 +89,9 @@ const terminator = terminationHandler((exitCallback) => {
 
 
 process.on('uncaughtException', terminator(1, 'uncaughtException'));
-process.on('unhalndledRejection', terminator(1, 'uncaughtException'));
-process.on('SIGTERM', terminator(0, 'exit requested'));
-process.on('SIGINT', terminator(0, 'exit requested'));
+process.on('unhandledRejection', terminator(1, 'unhandledRejection'));
+process.on('SIGTERM', terminator(0, 'exit requested - sigterm'));
+process.on('SIGINT', terminator(0, 'exit requested - sigint'));
 
 process.on('message', (msg: any) => {
     if (typeof msg === 'string') {
