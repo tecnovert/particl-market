@@ -150,7 +150,10 @@ export class ServerStartedListener implements interfaces.Listener {
         process.env.CHAIN = blockchainInfo.chain;
 
         // are we updating from previous installation (a market wallet already exists+no profile identity)
-        const isUpgradingFromSingleMarketWallet = await this.isUpgradingFromSingleMarketWallet();
+        // Removed this logic for now as the DB is new (new MP version) and
+        //  attempting to derive from an existing 'market' wallet that is encrypted at the time prevents the initialization from completing
+        //  (even on subsequent attempts to start the service) and requires manual user intervention to delete various files, wallets, etc
+        const isUpgradingFromSingleMarketWallet = false; // await this.isUpgradingFromSingleMarketWallet();
         // this.log.debug('bootstrap(), isUpgradingFromSingleMarketWallet: ', isUpgradingFromSingleMarketWallet);
 
         let defaultProfile: resources.Profile;
