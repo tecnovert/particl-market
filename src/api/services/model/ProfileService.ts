@@ -21,7 +21,6 @@ import { ShoppingCartService } from './ShoppingCartService';
 import { AddressCreateRequest } from '../../requests/model/AddressCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from '../../requests/model/CryptocurrencyAddressCreateRequest';
 import { CryptocurrencyAddressUpdateRequest } from '../../requests/model/CryptocurrencyAddressUpdateRequest';
-import { ShoppingCartCreateRequest } from '../../requests/model/ShoppingCartCreateRequest';
 import { SettingService } from './SettingService';
 import { SettingValue } from '../../enums/SettingValue';
 import { IdentityService } from './IdentityService';

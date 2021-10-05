@@ -23,8 +23,8 @@ export class ProfileRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Profile>> {
-        const list = await this.ProfileModel.fetchAll();
-        return list as Bookshelf.Collection<Profile>;
+        const list = await this.ProfileModel.fetchAll<Profile>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Profile> {
