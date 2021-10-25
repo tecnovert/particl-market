@@ -74,7 +74,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
                 new BooleanValidationRule('usePaidImageMessages', false, false),
                 new EnumValidationRule('feeType', false, 'OutputType',
                     [OutputType.ANON, OutputType.PART] as string[], OutputType.PART),
-                new RingSizeValidationRule('ringSize', false, 24)
+                new RingSizeValidationRule('ringSize', false, 12)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
@@ -169,7 +169,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
      *       default: default Profiles default Market publishAddress,
      *  [5]: paidImageMessages (optional, default: false)
      *  [6]: feeType (optional, default: PART)
-     *  [7]: ringSize (optional, default: 24)
+     *  [7]: ringSize (optional, default: 12)
      *
      * Promotes a Market.
      *
@@ -275,7 +275,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
             + '    <fromIdentityId>             - [optional] number, id of the Identity to use for posting.\n'
             + '    <usePaidImageMessages>       - [optional] boolean, send Images as paid messages. \n'
             + '    <feeType>                    - [optional] OutputType, default: PART. OutputType used to pay for the message fee.\n'
-            + '    <ringSize>                   - [optional] number, default: 24. Ring size used if anon used for fee.\n';
+            + '    <ringSize>                   - [optional] number, default: 12. Ring size used if anon used for fee.\n';
     }
 
     public description(): string {
