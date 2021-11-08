@@ -315,11 +315,15 @@ export class SmsgService {
             this.log.debug('smsgSend, response: ' + JSON.stringify(response, null, 2));
         }
 
-        if (response.error) {
-            this.log.error('ERROR: ', JSON.stringify(response, null, 2));
-            throw new MessageException(`Failed to send message: ${response.error}`);
+        if (
+            response &&
+            (typeof response === 'object') &&
+            (estimateFee || (response.result === 'Sent.'))
+        ) {
+            return response;
         }
-        return response;
+        this.log.error('ERROR: ', JSON.stringify(response, null, 2));
+        throw new MessageException(`Failed to send message: ${response.error}`);
     }
 
     /**
