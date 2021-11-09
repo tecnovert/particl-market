@@ -18,7 +18,7 @@ import { IdentityUpdateRequest } from '../../requests/model/IdentityUpdateReques
 import { SettingService } from './SettingService';
 import { IdentityType } from '../../enums/IdentityType';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWallet, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
 import { MessageException } from '../../exceptions/MessageException';
 import { CoreRpcService } from '../CoreRpcService';
 import { SmsgService } from '../SmsgService';
@@ -231,8 +231,6 @@ export class IdentityService {
                         : await this.coreRpcService.mnemonic(['new', passphrase, 'english', '32', true]);
 
                     this.log.debug('createProfileIdentity(), walletName: ' + walletName);
-                    this.log.debug('createProfileIdentity(), mnemonic: ' + mnemonic.mnemonic);
-                    this.log.debug('createProfileIdentity(), passphrase: ' + passphrase);
 
                     // import master key from bip44 mnemonic root key and derive default account
                     await this.coreRpcService.extKeyGenesisImport(walletName, [

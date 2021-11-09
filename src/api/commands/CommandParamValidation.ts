@@ -215,7 +215,7 @@ export class NumberValidationRule extends BaseParamValidationRule {
 }
 
 export class RingSizeValidationRule extends NumberValidationRule {
-    constructor(name: string, required: boolean = false, defaultValue: number = 24) {
+    constructor(name: string, required: boolean = false, defaultValue: number = 12) {
         super(name, required, defaultValue);
     }
 
