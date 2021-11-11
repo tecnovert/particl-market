@@ -278,6 +278,8 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
 
             // send each image related to the ListingItem
             for (const itemImage of listingItemTemplate.ItemInformation.Images) {
+                const cleanedImageDatas = itemImage.ImageDatas ? itemImage.ImageDatas.map(d => ({ ...d, dataId: '' })) : itemImage.ImageDatas;
+                itemImage.ImageDatas = cleanedImageDatas;
                 imageAddRequest.image = itemImage;
                 const smsgSendResponse: SmsgSendResponse = await this.listingItemImageAddActionService.post(imageAddRequest);
                 results.push(smsgSendResponse);
