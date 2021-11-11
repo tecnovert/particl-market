@@ -298,11 +298,15 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
 
         if (!_.isEmpty(promotedMarket.Image)) {
 
+            const image = marketAddRequest.market.Image;
+            const cleanedImageDatas = image.ImageDatas ? image.ImageDatas.map(d => ({ ...d, dataId: '' })) : image.ImageDatas;
+            image.ImageDatas = cleanedImageDatas;
+
             // then prepare the ListingItemImageAddRequest for sending the images
             const imageAddRequest = {
                 sendParams: marketAddRequest.sendParams,
                 market: marketAddRequest.market,
-                image: marketAddRequest.market.Image,
+                image,
                 withData: true
             } as MarketImageAddRequest;
 
