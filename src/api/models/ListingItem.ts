@@ -156,11 +156,11 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                     // qb.innerJoin('listing_item_templates', 'listing_item_templates.id', 'listing_items.listing_item_template_id');
                     // qb.where('listing_item_templates.hash', '=', options.listingItemHash);
 
-                    qb.where('listing_items.hash', '=', options.listingItemHash);
+                    qb.andWhere('listing_items.hash', '=', options.listingItemHash);
                 }
 
                 if (options.msgid && options.msgid !== '*') {
-                    qb.where('listing_items.msgid', '=', options.msgid);
+                    qb.andWhere('listing_items.msgid', '=', options.msgid);
                 }
 
                 // searchBy by buyer
@@ -170,12 +170,12 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                         qb.innerJoin('bids', 'bids.listing_item_id', 'listing_items.id');
                         joinedBids = true;
                     }
-                    qb.where('bids.bidder', '=', options.buyer);
+                    qb.andWhere('bids.bidder', '=', options.buyer);
                 }
 
                 // searchBy by seller
                 if (options.seller && options.seller !== '*') {
-                    qb.where('listing_items.seller', '=', options.seller);
+                    qb.andWhere('listing_items.seller', '=', options.seller);
                 }
 
                 qb.innerJoin('item_informations', 'item_informations.listing_item_id', 'listing_items.id');
@@ -184,10 +184,10 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                 if (options.categories && options.categories.length > 0) {
                     if (typeof options.categories[0] === 'number') {
                         qb.innerJoin('item_categories', 'item_categories.id', 'item_informations.item_category_id');
-                        qb.whereIn('item_categories.id', options.categories);
+                        qb.andWhere('item_categories.id', 'in', options.categories);
                     } else if (typeof options.categories[0] === 'string') {
                         qb.innerJoin('item_categories', 'item_categories.id', 'item_informations.item_category_id');
-                        qb.whereIn('item_categories.key', options.categories);
+                        qb.andWhere('item_categories.key', 'in', options.categories);
                     }
                 }
 
@@ -225,13 +225,13 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                 // searchBy by item location (country)
                 if (options.country) {
                     qb.innerJoin('item_locations', 'item_informations.id', 'item_locations.item_information_id');
-                    qb.where('item_locations.country', options.country);
+                    qb.andWhere('item_locations.country', options.country);
                 }
 
                 // searchBy by shippingDestination
                 if (options.shippingDestination) {
                     qb.leftJoin('shipping_destinations', 'item_informations.id', 'shipping_destinations.item_information_id');
-                    qb.where( qbInner => {
+                    qb.andWhere( qbInner => {
                        return qbInner.where( qbInnerInner => {
                            qbInnerInner.where('shipping_destinations.country', options.shippingDestination)
                                .andWhere('shipping_destinations.shipping_availability', 'SHIPS');
@@ -240,21 +240,23 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                 }
 
                 if (options.searchString) {
-                    qb.where('item_informations.title', 'LIKE', '%' + options.searchString + '%');
-                    qb.orWhere('item_informations.short_description', 'LIKE', '%' + options.searchString + '%');
-                    qb.orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%');
-                    qb.orWhere('listing_items.hash', '=', options.searchString);
+                    qb.andWhere(qbInner => {
+                        return qbInner.where('item_informations.title', 'LIKE', '%' + options.searchString + '%')
+                            .orWhere('item_informations.short_description', 'LIKE', '%' + options.searchString + '%')
+                            .orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%')
+                            .orWhere('listing_items.hash', '=', options.searchString);
+                    });
                 }
 
                 if (options.flagged) {
                     // ListingItems having FlaggedItem
                     qb.innerJoin('flagged_items', 'listing_items.id', 'flagged_items.listing_item_id');
                 } else {
-                    qb.where('listing_items.removed', '=', false);
+                    qb.andWhere('listing_items.removed', '=', false);
                 }
 
                 if (options.market) {
-                    qb.where('listing_items.market', '=', options.market);
+                    qb.andWhere('listing_items.market', '=', options.market);
                 }
 
                 if (options.withBids && !joinedBids) { // Don't want to join twice or we'll get errors.
