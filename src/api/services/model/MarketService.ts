@@ -158,7 +158,10 @@ export class MarketService {
     }
 
     public async destroy(id: number): Promise<void> {
+        const market = await this.findOne(id, false);
+        const marketReceiveAddress = market.ReceiveAddress;
         await this.marketRepo.destroy(id);
+        await this.smsgService.smsgRemoveAddress(marketReceiveAddress);
     }
 
     public async joinMarket(market: resources.Market, rescan: boolean = false): Promise<void> {

@@ -396,6 +396,30 @@ export class SmsgService {
         return response;
     }
 
+
+    /**
+     * Removes a receiving address from smsg.
+     * Key for address must exist in the wallet.
+     *
+     * @param {string} address
+     * @returns {Promise<boolean>}
+     */
+    public async smsgRemoveAddress(address: string): Promise<boolean> {
+        const success = await this.coreRpcService.call('smsglocalkeys', ['recv', '-', address])
+            .then(response =>
+                response &&
+                (typeof response === 'object') &&
+                (typeof response.result === 'string') &&
+                response.result.toLowerCase().includes('success')
+            )
+            .catch(error => {
+                this.log.error('smsglocalkeys remove address failed: ', error);
+                return false;
+            });
+        return success;
+    }
+
+
     /**
      * ﻿Add address and matching public key to database.
      * ﻿smsgaddaddress <address> <pubkey>
