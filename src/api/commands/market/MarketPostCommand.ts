@@ -203,7 +203,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         let fromMarket: resources.Market | undefined;
         // let fromIdentity: resources.Identity | undefined;
 
-        if (_.isNil(toMarketIdOrAddress) && _.isNil(fromIdentity)) {
+        if (_.isNil(toMarketIdOrAddress)) {
             // toMarketIdOrAddress === undefined && fromIdentityId === undefined:
             //  -> send from default Market publishAddress to default Market receiveAddress.
             const defaultProfile: resources.Profile = await this.profileService.getDefault()
