@@ -215,7 +215,7 @@ export class NumberValidationRule extends BaseParamValidationRule {
 }
 
 export class RingSizeValidationRule extends NumberValidationRule {
-    constructor(name: string, required: boolean = false, defaultValue: number = 24) {
+    constructor(name: string, required: boolean = false, defaultValue: number = 12) {
         super(name, required, defaultValue);
     }
 
@@ -267,6 +267,10 @@ export class PriceValidationRule extends NumberValidationRule {
 export class EscrowRatioValidationRule extends NumberValidationRule {
     constructor(name: string, required: boolean = false, defaultValue?: number) {
         super(name, required, defaultValue ? defaultValue : 100);
+    }
+
+    public async customValidate(value: number, index: number, allValues: any[]): Promise<boolean> {
+        return (+value >= 0) && (+value <= 100) && (parseInt(`${+value}`, 10) === value);
     }
 }
 

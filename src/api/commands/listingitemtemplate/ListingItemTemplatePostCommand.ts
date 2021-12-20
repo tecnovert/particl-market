@@ -71,7 +71,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
                 new BooleanValidationRule('usePaidImageMessages', false, false),
                 new EnumValidationRule('feeType', false, 'OutputType',
                     [OutputType.ANON, OutputType.PART] as string[], OutputType.PART),
-                new RingSizeValidationRule('ringSize', false, 24)
+                new RingSizeValidationRule('ringSize', false, 12)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
@@ -86,7 +86,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
      *  [3]: paidImageMessages (optional, default: false)
      *  [4]: market: resources.Market
      *  [5]: anonFee: boolean
-     *  [6]: ringSize (optional, default: 24)
+     *  [6]: ringSize (optional, default: 12)
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -173,7 +173,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
      *  [2]: estimateFee (optional, default: false)
      *  [3]: paidImageMessages (optional, default: false)
      *  [4]: feeType (optional, default: PART)
-     *  [5]: ringSize (optional, default: 24)
+     *  [5]: ringSize (optional, default: 12)
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -238,7 +238,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
             + '    <estimateFee>                - [optional] boolean, estimate the fee, don\'t post. \n'
             + '    <usePaidImageMessages>       - [optional] boolean, send Images as paid messages. \n'
             + '    <feeType>                    - [optional] OutputType, default: PART. OutputType used to pay for the message fee.\n'
-            + '    <ringSize>                   - [optional] number, default: 24. Ring size used if anon used for fee.\n';
+            + '    <ringSize>                   - [optional] number, default: 12. Ring size used if anon used for fee.\n';
     }
 
     public description(): string {
@@ -278,6 +278,8 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
 
             // send each image related to the ListingItem
             for (const itemImage of listingItemTemplate.ItemInformation.Images) {
+                const cleanedImageDatas = itemImage.ImageDatas ? itemImage.ImageDatas.map(d => ({ ...d, dataId: '' })) : itemImage.ImageDatas;
+                itemImage.ImageDatas = cleanedImageDatas;
                 imageAddRequest.image = itemImage;
                 const smsgSendResponse: SmsgSendResponse = await this.listingItemImageAddActionService.post(imageAddRequest);
                 results.push(smsgSendResponse);

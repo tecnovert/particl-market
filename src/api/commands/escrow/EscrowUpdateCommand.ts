@@ -46,8 +46,8 @@ export class EscrowUpdateCommand extends BaseCommand implements RpcCommandInterf
                 new IdValidationRule('listingItemTemplateId', true, this.listingItemTemplateService),
                 new EnumValidationRule('escrowType', true, 'EscrowType',
                     [EscrowType.MAD_CT] as string[], EscrowType.MAD_CT),
-                new EscrowRatioValidationRule('buyerRatio', true, 100),
-                new EscrowRatioValidationRule('sellerRatio', true, 100),
+                new EscrowRatioValidationRule('buyerRatio', true),
+                new EscrowRatioValidationRule('sellerRatio', true),
                 new EnumValidationRule('escrowReleaseType', false, 'EscrowReleaseType',
                     EnumHelper.getValues(EscrowReleaseType) as string[], EscrowReleaseType.ANON)
             ] as ParamValidationRule[]

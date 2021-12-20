@@ -315,11 +315,15 @@ export class SmsgService {
             this.log.debug('smsgSend, response: ' + JSON.stringify(response, null, 2));
         }
 
-        if (response.error) {
-            this.log.error('ERROR: ', JSON.stringify(response, null, 2));
-            throw new MessageException(`Failed to send message: ${response.error}`);
+        if (
+            response &&
+            (typeof response === 'object') &&
+            (estimateFee || (response.result === 'Sent.'))
+        ) {
+            return response;
         }
-        return response;
+        this.log.error('ERROR: ', JSON.stringify(response, null, 2));
+        throw new MessageException(`Failed to send message: ${response.error}`);
     }
 
     /**
@@ -391,6 +395,30 @@ export class SmsgService {
         // this.log.debug('smsg, response: ' + JSON.stringify(response, null, 2));
         return response;
     }
+
+
+    /**
+     * Removes a receiving address from smsg.
+     * Key for address must exist in the wallet.
+     *
+     * @param {string} address
+     * @returns {Promise<boolean>}
+     */
+    public async smsgRemoveAddress(address: string): Promise<boolean> {
+        const success = await this.coreRpcService.call('smsglocalkeys', ['recv', '-', address])
+            .then(response =>
+                response &&
+                (typeof response === 'object') &&
+                (typeof response.result === 'string') &&
+                response.result.toLowerCase().includes('success')
+            )
+            .catch(error => {
+                this.log.error('smsglocalkeys remove address failed: ', error);
+                return false;
+            });
+        return success;
+    }
+
 
     /**
      * ﻿Add address and matching public key to database.

@@ -117,9 +117,14 @@ export class PaymentInformationFactory implements ModelFactoryInterface {
 
     private async getModelEscrowRatio(ratio: EscrowRatio): Promise<EscrowRatioCreateRequest> {
         return {
-            buyer: ratio.buyer,
-            seller: ratio.seller
+            buyer: this.getValidModelEscrowEscrowRatio(ratio.buyer),
+            seller: this.getValidModelEscrowEscrowRatio(ratio.seller)
         } as EscrowRatioCreateRequest;
+    }
+
+    private getValidModelEscrowEscrowRatio(num: number): number {
+        const actualNum = parseInt(`${+num}`, 10);
+        return actualNum >= 0 ? actualNum : 100;
     }
 
 }
