@@ -25,7 +25,7 @@ export const envConfig = (): EnvConfig => {
     } else if (Environment.isAlpha()) {
         config = new AlphaEnvConfig();
     } else if (Environment.isDevelopment()) {
-        config = new DevelopmentEnvConfig();
+        config = new DevelopmentEnvConfig(process.env.MP_DATA_FOLDER || './data', process.env.MP_DOTENV_FILE || '.env');
     } else if (Environment.isTest()) {
         config = new TestEnvConfig(process.env.MP_DATA_FOLDER || './data/tests', process.env.MP_DOTENV_FILE || '.env.test');
     } else if (Environment.isBlackBoxTest()) {

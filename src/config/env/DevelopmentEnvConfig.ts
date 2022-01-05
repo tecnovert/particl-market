@@ -7,10 +7,10 @@ import { EnvConfig } from './EnvConfig';
 
 export class DevelopmentEnvConfig extends EnvConfig {
 
-    constructor(dataDirLocation?: string) {
+    constructor(dataDirLocation?: string, envFileName?: string) {
         super(
             dataDirLocation || './data',
-            '.env'
+            envFileName || '.env'
         );
     }
 }

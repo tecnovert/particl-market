@@ -81,12 +81,14 @@ export class App {
         this.log.info('Configuring app...');
 
         if (Environment.isTruthy(process.env.INIT)) {
+            /* Hack for regtest env
             await DataDir.createDefaultEnvFile()
                 .catch(reason => {
                     this.log.error('Error: ', JSON.stringify(reason, null, 2));
                     // TODO: exit codes for different problems
                     return process.exit(1);
                 });
+            */
         }
 
         // loads the .env file into the 'process.env' variable, in case it hasn't been loaded already
