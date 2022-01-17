@@ -5,8 +5,8 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ActionMessageInterface } from './ActionMessageInterface';
 import { MessageBody } from '../../../core/api/MessageBody';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 
 export class EscrowCompleteMessage extends MessageBody implements ActionMessageInterface {

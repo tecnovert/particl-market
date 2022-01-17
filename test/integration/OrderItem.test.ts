@@ -17,7 +17,7 @@ import { OrderItemCreateRequest } from '../../src/api/requests/model/OrderItemCr
 import { OrderItemUpdateRequest } from '../../src/api/requests/model/OrderItemUpdateRequest';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { MarketService } from '../../src/api/services/model/MarketService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatus } from '../../src/api/enums/OrderItemStatus';
 import { ListingItemService } from '../../src/api/services/model/ListingItemService';
 import { ListingItemTemplateService } from '../../src/api/services/model/ListingItemTemplateService';

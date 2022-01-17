@@ -16,7 +16,7 @@ import {Commands} from '../CommandEnumType';
 import {BaseCommand} from '../BaseCommand';
 import {ImageDataService} from '../../services/model/ImageDataService';
 import {BooleanValidationRule, CommandParamValidationRules, IdValidationRule, ParamValidationRule} from '../CommandParamValidation';
-import {ProtocolDSN} from 'omp-lib/dist/interfaces/dsn';
+import {ProtocolDSN} from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 
 export class ListingItemGetCommand extends BaseCommand implements RpcCommandInterface<resources.ListingItem> {
 

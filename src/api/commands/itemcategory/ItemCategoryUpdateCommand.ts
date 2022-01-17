@@ -19,7 +19,7 @@ import { BaseCommand } from '../BaseCommand';
 import { MessageException } from '../../exceptions/MessageException';
 import { MarketService } from '../../services/model/MarketService';
 import { MarketType } from '../../enums/MarketType';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';
 import {
     CommandParamValidationRules,

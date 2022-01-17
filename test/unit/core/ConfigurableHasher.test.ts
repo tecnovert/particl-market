@@ -4,7 +4,7 @@
 
 import * from 'jest';
 import { ImageProcessing } from '../../../src/core/helpers/ImageProcessing';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableImageCreateRequestConfig } from '../../../src/api/factories/hashableconfig/createrequest/HashableImageCreateRequestConfig';
 
 

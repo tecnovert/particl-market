@@ -12,12 +12,12 @@ import { ProposalCreateRequest } from '../../requests/model/ProposalCreateReques
 import { ProposalOptionCreateRequest } from '../../requests/model/ProposalOptionCreateRequest';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ProposalCreateParams } from '../ModelCreateParams';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashMismatchException } from '../../exceptions/HashMismatchException';
 import { HashableProposalCreateRequestConfig } from '../hashableconfig/createrequest/HashableProposalCreateRequestConfig';
 import { HashableProposalAddField, HashableProposalOptionField } from '../hashableconfig/HashableField';
 import { HashableProposalOptionMessageConfig } from '../hashableconfig/message/HashableProposalOptionMessageConfig';
-import { HashableFieldValueConfig } from 'omp-lib/dist/interfaces/configs';
+import { HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
 
 
 export class ProposalFactory implements ModelFactoryInterface {

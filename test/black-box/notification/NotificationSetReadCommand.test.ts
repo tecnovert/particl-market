@@ -13,10 +13,10 @@ import { ListingItemSearchOrderField, NotificationSearchOrderField } from '../..
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { MPActionExtended } from '../../../src/api/enums/MPActionExtended';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 
 describe('NotificationSetReadCommand', () => {

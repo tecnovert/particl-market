@@ -15,12 +15,12 @@ import { MessagingInformationCreateRequest } from '../../requests/model/Messagin
 import { ListingItemObjectCreateRequest } from '../../requests/model/ListingItemObjectCreateRequest';
 import { ListingItemObjectDataCreateRequest } from '../../requests/model/ListingItemObjectDataCreateRequest';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
-import { ItemObject } from 'omp-lib/dist/interfaces/omp';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { ItemObject } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ListingItemCreateParams } from '../ModelCreateParams';
-import { KVS } from 'omp-lib/dist/interfaces/common';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableListingItemTemplateCreateRequestConfig } from '../hashableconfig/createrequest/HashableListingItemTemplateCreateRequestConfig';
 import { HashMismatchException } from '../../exceptions/HashMismatchException';
 import { MissingParamException } from '../../exceptions/MissingParamException';

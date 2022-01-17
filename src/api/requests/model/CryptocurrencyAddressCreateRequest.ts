@@ -4,7 +4,7 @@
 
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { CryptoAddressType } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
 // tslint:disable:variable-name

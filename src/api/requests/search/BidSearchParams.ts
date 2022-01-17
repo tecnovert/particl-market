@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { BaseSearchParams } from './BaseSearchParams';
 import { BidSearchOrderField } from '../../enums/SearchOrderField';
 

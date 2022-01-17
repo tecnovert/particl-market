@@ -10,7 +10,7 @@ import { Logger as LoggerType } from '../../../src/core/Logger';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { MarketType } from '../../../src/api/enums/MarketType';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 
 describe('ItemCategoryUpdateCommand', () => {
 

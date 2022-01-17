@@ -32,7 +32,7 @@ import { MessageException } from '../exceptions/MessageException';
 import { ProfileService } from '../services/model/ProfileService';
 import { CoreConnectionStatusServiceStatus } from '../enums/CoreConnectionStatusServiceStatus';
 import { ExpiredProposalService } from '../services/observer/ExpiredProposalService';
-import { RpcBlockchainInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcBlockchainInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 
 export class ServerStartedListener implements interfaces.Listener {
 

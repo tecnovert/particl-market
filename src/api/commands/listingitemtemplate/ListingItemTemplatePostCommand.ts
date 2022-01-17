@@ -20,10 +20,10 @@ import { MessageException } from '../../exceptions/MessageException';
 import { MarketService } from '../../services/model/MarketService';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableListingItemTemplateConfig } from '../../factories/hashableconfig/model/HashableListingItemTemplateConfig';
-import { CryptoAddress, CryptoAddressType, OutputType } from 'omp-lib/dist/interfaces/crypto';
-import { EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { CryptoAddress, CryptoAddressType, OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotImplementedException } from '../../exceptions/NotImplementedException';
 import { CoreRpcService } from '../../services/CoreRpcService';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
@@ -37,7 +37,7 @@ import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';
 import { BooleanValidationRule, CommandParamValidationRules, EnumValidationRule, IdValidationRule, MessageRetentionValidationRule,
     ParamValidationRule, RingSizeValidationRule } from '../CommandParamValidation';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
-import { RpcUnspentOutput } from 'omp-lib/dist/interfaces/rpc';
+import { RpcUnspentOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { BigNumber } from 'mathjs';
 import { SmsgSendCoinControl } from '../../services/SmsgService';
 

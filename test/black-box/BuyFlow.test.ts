@@ -11,7 +11,7 @@ import { Commands } from '../../src/api/commands/CommandEnumType';
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { SearchOrder } from '../../src/api/enums/SearchOrder';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatus } from '../../src/api/enums/OrderItemStatus';
 import { BidDataValue } from '../../src/api/enums/BidDataValue';
 import { OrderStatus } from '../../src/api/enums/OrderStatus';

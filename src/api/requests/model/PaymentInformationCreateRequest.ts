@@ -6,7 +6,7 @@ import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { EscrowCreateRequest } from './EscrowCreateRequest';
 import { ItemPriceCreateRequest } from './ItemPriceCreateRequest';
-import { SaleType} from 'omp-lib/dist/interfaces/omp-enums';
+import { SaleType} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
 // tslint:disable:variable-name

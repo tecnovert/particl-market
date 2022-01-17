@@ -19,7 +19,7 @@ import { BidService } from '../../src/api/services/model/BidService';
 import { ValidationException } from '../../src/api/exceptions/ValidationException';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { OrderItemService } from '../../src/api/services/model/OrderItemService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderStatus } from '../../src/api/enums/OrderStatus';
 import { OrderItemCreateRequest } from '../../src/api/requests/model/OrderItemCreateRequest';
 import { OrderItemStatus } from '../../src/api/enums/OrderItemStatus';

@@ -16,7 +16,7 @@ import { SmsgMessageFactory } from '../factories/model/SmsgMessageFactory';
 import { ActionDirection } from '../enums/ActionDirection';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
 import { MessageQueuePriority } from '../enums/MessageQueuePriority';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MarketplaceMessageEvent } from '../messages/MarketplaceMessageEvent';
 import { SmsgMessageStatus } from '../enums/SmsgMessageStatus';
 import { ListingItemAddActionMessageProcessor } from './action/ListingItemAddActionMessageProcessor';

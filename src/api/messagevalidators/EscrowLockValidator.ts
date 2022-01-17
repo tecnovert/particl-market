@@ -5,11 +5,11 @@
 import * as resources from 'resources';
 import * as _ from 'lodash';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ValidationException } from '../exceptions/ValidationException';
-import { MPM} from 'omp-lib/dist/interfaces/omp';
+import { MPM} from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
-import { FV_MPA_LOCK } from 'omp-lib/dist/format-validators/mpa_lock';
+import { FV_MPA_LOCK } from '@zasmilingidiot/omp-lib/dist/format-validators/mpa_lock';
 import { decorate, inject, injectable, named } from 'inversify';
 import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';

@@ -14,7 +14,7 @@ import { MessageException } from '../exceptions/MessageException';
 import { CoreSmsgMessage } from '../messages/CoreSmsgMessage';
 import { SmsgSendParams } from '../requests/action/SmsgSendParams';
 import { SmsgMessageService } from './model/SmsgMessageService';
-import { RpcWallet, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcWallet, RpcWalletInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { NotImplementedException } from '../exceptions/NotImplementedException';
 import { CoreMessageVersion } from '../enums/CoreMessageVersion';
 import { MessageVersions } from '../messages/MessageVersions';

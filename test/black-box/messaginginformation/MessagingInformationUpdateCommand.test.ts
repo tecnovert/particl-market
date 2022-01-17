@@ -10,7 +10,7 @@ import { BlackBoxTestUtil } from '../lib/BlackBoxTestUtil';
 import { Commands} from '../../../src/api/commands/CommandEnumType';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotModifiableException } from '../../../src/api/exceptions/ModelNotModifiableException';

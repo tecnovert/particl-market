@@ -19,7 +19,7 @@ import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { ItemPriceService } from '../../src/api/services/model/ItemPriceService';
 import { ItemPriceCreateRequest } from '../../src/api/requests/model/ItemPriceCreateRequest';
 import { ItemPriceUpdateRequest } from '../../src/api/requests/model/ItemPriceUpdateRequest';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ShippingPriceCreateRequest } from '../../src/api/requests/model/ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model/CryptocurrencyAddressCreateRequest';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';

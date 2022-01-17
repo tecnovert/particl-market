@@ -15,7 +15,7 @@ import { BaseCommand } from '../BaseCommand';
 import { MessageException } from '../../exceptions/MessageException';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
 import { OrderItemService } from '../../services/model/OrderItemService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { SmsgSendResponse } from '../../responses/SmsgSendResponse';
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';

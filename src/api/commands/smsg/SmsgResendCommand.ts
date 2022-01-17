@@ -19,7 +19,7 @@ import { SmsgMessageService } from '../../services/model/SmsgMessageService';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ActionMessageObjects } from '../../enums/ActionMessageObjects';
 import { IdentityService } from '../../services/model/IdentityService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';

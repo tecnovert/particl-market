@@ -28,7 +28,7 @@ import { AddressCreateRequest } from '../../requests/model/AddressCreateRequest'
 import { AddressType } from '../../enums/AddressType';
 import { IdentityService } from '../../services/model/IdentityService';
 import { MarketService } from '../../services/model/MarketService';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { SmsgService } from '../../services/SmsgService';
 import {
     AddressOrAddressIdValidationRule,

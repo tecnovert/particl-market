@@ -10,7 +10,7 @@ import { CreatableModel } from '../../../src/api/enums/CreatableModel';
 import { Commands } from '../../../src/api/commands/CommandEnumType';
 import { GenerateBidParams } from '../../../src/api/requests/testdata/GenerateBidParams';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { BidSearchOrderField } from '../../../src/api/enums/SearchOrderField';

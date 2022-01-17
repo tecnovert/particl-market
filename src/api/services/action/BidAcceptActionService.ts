@@ -25,7 +25,7 @@ import { BidAcceptMessage } from '../../messages/action/BidAcceptMessage';
 import { OrderStatus } from '../../enums/OrderStatus';
 import { OrderItemService } from '../model/OrderItemService';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { ActionDirection } from '../../enums/ActionDirection';
 import { MarketplaceNotification } from '../../messages/MarketplaceNotification';

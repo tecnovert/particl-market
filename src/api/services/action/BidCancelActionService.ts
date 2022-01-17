@@ -24,7 +24,7 @@ import { BidCancelMessage } from '../../messages/action/BidCancelMessage';
 import { BidCancelMessageFactory } from '../../factories/message/BidCancelMessageFactory';
 import { BidCancelValidator } from '../../messagevalidators/BidCancelValidator';
 import { BaseBidActionService } from '../BaseBidActionService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { ListingItemService } from '../model/ListingItemService';
 import { ActionDirection } from '../../enums/ActionDirection';

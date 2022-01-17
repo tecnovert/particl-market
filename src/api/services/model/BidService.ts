@@ -23,7 +23,7 @@ import { ListingItemService } from './ListingItemService';
 import { AddressService } from './AddressService';
 import { ProfileService } from './ProfileService';
 import { SearchOrder } from '../../enums/SearchOrder';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MessageException } from '../../exceptions/MessageException';
 import { CoreRpcService } from '../CoreRpcService';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';

@@ -20,7 +20,7 @@ import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { ModelNotModifiableException } from '../../exceptions/ModelNotModifiableException';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 export class MessagingInformationUpdateCommand extends BaseCommand implements RpcCommandInterface<MessagingInformation> {
 

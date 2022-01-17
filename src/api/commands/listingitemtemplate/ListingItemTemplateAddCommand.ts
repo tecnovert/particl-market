@@ -25,7 +25,7 @@ import {
     IdValidationRule, ParamValidationRule, PriceValidationRule, SaleTypeValidationRule, StringValidationRule
 } from '../CommandParamValidation';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
-import { EscrowReleaseType, EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 
 export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCommandInterface<ListingItemTemplate> {

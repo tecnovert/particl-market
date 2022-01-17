@@ -10,7 +10,7 @@ import { Commands } from '../../../src/api/commands/CommandEnumType';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { Logger as LoggerType } from '../../../src/core/Logger';
-import { EscrowReleaseType, EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';

@@ -25,11 +25,11 @@ import { SmsgMessageFactory } from '../../../src/api/factories/model/SmsgMessage
 import { WaitingMessageService } from '../../../src/api/services/observer/WaitingMessageService';
 import { SmsgMessageSearchParams } from '../../../src/api/requests/search/SmsgMessageSearchParams';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ListingItemAddMessageFactory } from '../../../src/api/factories/message/ListingItemAddMessageFactory';
 import { ListingItemAddMessageCreateParams } from '../../../src/api/requests/message/MessageCreateParamsInterface';
 import { ListingItemAddMessage } from '../../../src/api/messages/action/ListingItemAddMessage';
-import { ompVersion } from 'omp-lib/dist/omp';
+import { ompVersion } from '@zasmilingidiot/omp-lib/dist/omp';
 import { CoreSmsgMessage } from '../../../src/api/messages/CoreSmsgMessage';
 import { ActionDirection } from '../../../src/api/enums/ActionDirection';
 

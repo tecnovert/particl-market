@@ -29,7 +29,7 @@ import { FlaggedItemService } from '../model/FlaggedItemService';
 import { ListingItemTemplateService } from '../model/ListingItemTemplateService';
 import { MarketService } from '../model/MarketService';
 import { ActionDirection } from '../../enums/ActionDirection';
-import { MPAction} from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { MarketplaceNotification } from '../../messages/MarketplaceNotification';
 import { ListingItemNotification } from '../../messages/notification/ListingItemNotification';

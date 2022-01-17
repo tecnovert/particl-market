@@ -12,14 +12,14 @@ import { HttpException } from '../exceptions/HttpException';
 import { JsonRpc2Response } from '../../core/api/jsonrpc';
 import { InternalServerException } from '../exceptions/InternalServerException';
 import { CoreCookieService } from './observer/CoreCookieService';
-import { Rpc } from 'omp-lib';
+import { Rpc } from '@zasmilingidiot/omp-lib';
 import {
     RpcAddressBalance, RpcAddressInfo, RpcBlindSendToOutput, RpcBlockchainInfo, RpcExtKeyGenesisImport, RpcMnemonic, RpcNetworkInfo, RpcRawTx,
     RpcUnspentOutput, RpcWallet, RpcWalletDir, RpcWalletInfo, RpcExtKey, RpcExtKeyResult, RpcBalances
-} from 'omp-lib/dist/interfaces/rpc';
-import { BlindPrevout, CryptoAddress, CryptoAddressType, OutputType, Prevout } from 'omp-lib/dist/interfaces/crypto';
-import { fromSatoshis } from 'omp-lib/dist/util';
-import { CtRpc } from 'omp-lib/dist/abstract/rpc';
+} from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
+import { BlindPrevout, CryptoAddress, CryptoAddressType, OutputType, Prevout } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { fromSatoshis } from '@zasmilingidiot/omp-lib/dist/util';
+import { CtRpc } from '@zasmilingidiot/omp-lib/dist/abstract/rpc';
 import { VerifiableMessage } from '../factories/message/ListingItemAddMessageFactory';
 import { AuthOptions, RequestOptions, Headers} from 'web-request';
 

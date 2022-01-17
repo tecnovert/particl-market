@@ -19,7 +19,7 @@ import { MessagingInformationUpdateRequest } from '../../src/api/requests/model/
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MarketService } from '../../src/api/services/model/MarketService';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import {GenerateListingItemParams} from '../../src/api/requests/testdata/GenerateListingItemParams';

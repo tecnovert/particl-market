@@ -11,7 +11,7 @@ import { ListingItemAddActionService } from '../../services/action/ListingItemAd
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { MarketplaceMessageEvent } from '../../messages/MarketplaceMessageEvent';
 import { SmsgMessageService } from '../../services/model/SmsgMessageService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
 import { ProposalService } from '../../services/model/ProposalService';

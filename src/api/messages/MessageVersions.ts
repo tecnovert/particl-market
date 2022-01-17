@@ -4,7 +4,7 @@
 
 import { CoreMessageVersion } from '../enums/CoreMessageVersion';
 import { ActionMessageTypes } from '../enums/ActionMessageTypes';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MPActionExtended } from '../enums/MPActionExtended';
 import { GovernanceAction } from '../enums/GovernanceAction';
 import { CommentAction } from '../enums/CommentAction';

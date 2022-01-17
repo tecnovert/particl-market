@@ -12,7 +12,7 @@ import { CommentCreateParams } from '../ModelCreateParams';
 import { CommentCreateRequest } from '../../requests/model/CommentCreateRequest';
 import { CommentUpdateRequest } from '../../requests/model/CommentUpdateRequest';
 import { CommentAddMessage } from '../../messages/action/CommentAddMessage';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashMismatchException } from '../../exceptions/HashMismatchException';
 import { HashableCommentCreateRequestConfig } from '../hashableconfig/createrequest/HashableCommentCreateRequestConfig';
 

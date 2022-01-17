@@ -15,7 +15,7 @@ import { ListingItemService } from '../../src/api/services/model/ListingItemServ
 import { ItemInformationService } from '../../src/api/services/model/ItemInformationService';
 import { ImageProcessing } from '../../src/core/helpers/ImageProcessing';
 import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageDataCreateRequest } from '../../src/api/requests/model/ImageDataCreateRequest';
 import { ImageDataUpdateRequest } from '../../src/api/requests/model/ImageDataUpdateRequest';
 

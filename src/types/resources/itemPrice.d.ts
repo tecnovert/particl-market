@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 declare module 'resources' {
 

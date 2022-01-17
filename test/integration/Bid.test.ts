@@ -23,7 +23,7 @@ import { OrderService } from '../../src/api/services/model/OrderService';
 import { AddressType } from '../../src/api/enums/AddressType';
 import { ValidationException } from '../../src/api/exceptions/ValidationException';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
-import { MPAction  } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction  } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatus } from '../../src/api/enums/OrderItemStatus';
 import { BidDataCreateRequest } from '../../src/api/requests/model/BidDataCreateRequest';
 import { OrderCreateRequest } from '../../src/api/requests/model/OrderCreateRequest';

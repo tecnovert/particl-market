@@ -18,7 +18,7 @@ import { OrderItemService } from '../../services/model/OrderItemService';
 import { EscrowReleaseRequest } from '../../requests/action/EscrowReleaseRequest';
 import { EscrowReleaseActionService } from '../../services/action/EscrowReleaseActionService';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { BidService } from '../../services/model/BidService';
 import { SmsgSendResponse } from '../../responses/SmsgSendResponse';

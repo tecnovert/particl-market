@@ -24,7 +24,7 @@ import { GenerateListingItemTemplateParams } from '../../src/api/requests/testda
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { EscrowCreateRequest } from '../../src/api/requests/model/EscrowCreateRequest';
-import {EscrowReleaseType, EscrowType} from 'omp-lib/dist/interfaces/omp-enums';
+import {EscrowReleaseType, EscrowType} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
 describe('EscrowRatio', () => {

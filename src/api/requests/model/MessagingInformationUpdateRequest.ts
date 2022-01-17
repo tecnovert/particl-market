@@ -4,7 +4,7 @@
 
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { MessagingProtocol } from 'omp-lib/dist/interfaces/omp-enums';
+import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
 // tslint:disable:variable-name

@@ -15,7 +15,7 @@ import { CryptocurrencyAddressService } from '../../src/api/services/model/Crypt
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model/CryptocurrencyAddressCreateRequest';
 import { CryptocurrencyAddressUpdateRequest } from '../../src/api/requests/model/CryptocurrencyAddressUpdateRequest';
-import { CryptoAddressType } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 describe('CryptocurrencyAddress', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;

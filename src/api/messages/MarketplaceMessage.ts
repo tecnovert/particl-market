@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 // tslint:disable:variable-name
-import { MPM } from 'omp-lib/dist/interfaces/omp';
+import { MPM } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ActionMessageInterface } from './action/ActionMessageInterface';
 
 /**

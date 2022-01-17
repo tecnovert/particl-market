@@ -11,7 +11,7 @@ import { MissingParamException } from '../../../src/api/exceptions/MissingParamE
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';
 import { MessageException } from '../../../src/api/exceptions/MessageException';
-import { OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 
 describe('IdentityFundCommand', () => {

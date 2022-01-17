@@ -21,7 +21,7 @@ import { SmsgMessageStatus } from '../../src/api/enums/SmsgMessageStatus';
 import { CoreSmsgMessage } from '../../src/api/messages/CoreSmsgMessage';
 import { SmsgMessageSearchParams } from '../../src/api/requests/search/SmsgMessageSearchParams';
 import { SearchOrder } from '../../src/api/enums/SearchOrder';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ActionMessageTypes } from '../../src/api/enums/ActionMessageTypes';
 import { GovernanceAction } from '../../src/api/enums/GovernanceAction';
 import { SmsgMessageCreateParams } from '../../src/api/factories/ModelCreateParams';

@@ -15,7 +15,7 @@ import { OrderSearchOrderField } from '../../../src/api/enums/SearchOrderField';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';
 import { GenerateBidParams } from '../../../src/api/requests/testdata/GenerateBidParams';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatus } from '../../../src/api/enums/OrderItemStatus';
 
 describe('OrderItemSearchCommand', () => {

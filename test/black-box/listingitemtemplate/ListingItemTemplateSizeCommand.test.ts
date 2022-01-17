@@ -14,7 +14,7 @@ import { MessageSize } from '../../../src/api/responses/MessageSize';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { CoreMessageVersion } from '../../../src/api/enums/CoreMessageVersion';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { EnvironmentType } from '../../../src/core/helpers/Environment';
 
 

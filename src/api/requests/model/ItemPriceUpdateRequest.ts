@@ -4,7 +4,7 @@
 
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ShippingPriceUpdateRequest } from './ShippingPriceUpdateRequest';
 import { CryptocurrencyAddressUpdateRequest } from './CryptocurrencyAddressUpdateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';

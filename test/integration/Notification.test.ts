@@ -16,7 +16,7 @@ import { Notification } from '../../src/api/models/Notification';
 import { NotificationService } from '../../src/api/services/model/NotificationService';
 import { NotificationCreateRequest } from '../../src/api/requests/model/NotificationCreateRequest';
 import { NotificationUpdateRequest } from '../../src/api/requests/model/NotificationUpdateRequest';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 
 describe('Notification', () => {

@@ -8,7 +8,7 @@ import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core } from '../../../constants';
 import { ItemCategoryCreateRequest } from '../../requests/model/ItemCategoryCreateRequest';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { MessageException } from '../../exceptions/MessageException';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ItemCategoryCreateParams } from '../ModelCreateParams';

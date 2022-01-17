@@ -18,7 +18,7 @@ import { ItemCategoryUpdateRequest } from '../../src/api/requests/model/ItemCate
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { MarketService } from '../../src/api/services/model/MarketService';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 
 describe('ItemCategory', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;

@@ -6,7 +6,7 @@ import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { BidDataCreateRequest } from './BidDataCreateRequest';
 import { AddressCreateRequest } from './AddressCreateRequest';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelRequestInterface } from './ModelRequestInterface';
 import {ActionMessageTypes} from '../../enums/ActionMessageTypes';
 import {MPActionExtended} from '../../enums/MPActionExtended';

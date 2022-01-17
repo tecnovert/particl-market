@@ -15,7 +15,7 @@ import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
 import { MarketService } from '../../services/model/MarketService';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { MarketType } from '../../enums/MarketType';
 import { MessageException } from '../../exceptions/MessageException';
 import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';

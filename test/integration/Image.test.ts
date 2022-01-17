@@ -16,7 +16,7 @@ import { ListingItemService } from '../../src/api/services/model/ListingItemServ
 import { ValidationException } from '../../src/api/exceptions/ValidationException';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { ImageDataService } from '../../src/api/services/model/ImageDataService';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
 import { MarketService } from '../../src/api/services/model/MarketService';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
@@ -25,7 +25,7 @@ import { DefaultMarketService } from '../../src/api/services/DefaultMarketServic
 import { ImageDataCreateRequest } from '../../src/api/requests/model/ImageDataCreateRequest';
 import { ImageCreateRequest } from '../../src/api/requests/model/ImageCreateRequest';
 import { ImageUpdateRequest } from '../../src/api/requests/model/ImageUpdateRequest';
-import {ConfigurableHasher} from 'omp-lib/dist/hasher/hash';
+import {ConfigurableHasher} from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import {HashableImageCreateRequestConfig} from '../../src/api/factories/hashableconfig/createrequest/HashableImageCreateRequestConfig';
 
 

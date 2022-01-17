@@ -8,7 +8,7 @@ import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { MPActionExtended } from '../../enums/MPActionExtended';
-import { DSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageDataService } from '../../services/model/ImageDataService';
 import { ListingItemImageAddMessageFactory } from './ListingItemImageAddMessageFactory';
 import { MarketImageAddMessage } from '../../messages/action/MarketImageAddMessage';

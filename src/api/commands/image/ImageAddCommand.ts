@@ -19,7 +19,7 @@ import { BaseCommand } from '../BaseCommand';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { ModelNotModifiableException } from '../../exceptions/ModelNotModifiableException';
-import { DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageFactory } from '../../factories/model/ImageFactory';
 import { ImageCreateParams } from '../../factories/ModelCreateParams';
 import { MarketService } from '../../services/model/MarketService';

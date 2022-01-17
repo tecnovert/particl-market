@@ -14,7 +14,7 @@ import { ItemCategoryRepository } from '../../repositories/ItemCategoryRepositor
 import { ItemCategory } from '../../models/ItemCategory';
 import { ItemCategoryCreateRequest } from '../../requests/model/ItemCategoryCreateRequest';
 import { ItemCategoryUpdateRequest } from '../../requests/model/ItemCategoryUpdateRequest';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';
 import { ItemCategorySearchParams } from '../../requests/search/ItemCategorySearchParams';
 import { ItemCategoryCreateParams } from '../../factories/ModelCreateParams';

@@ -5,7 +5,7 @@
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { BidDataCreateRequest } from './BidDataCreateRequest';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
 // tslint:disable:variable-name

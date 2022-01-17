@@ -17,7 +17,7 @@ import { MarketUpdateRequest } from '../../requests/model/MarketUpdateRequest';
 import { IdentityService } from './IdentityService';
 import { MarketSearchParams } from '../../requests/search/MarketSearchParams';
 import { MarketFactory } from '../../factories/model/MarketFactory';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketCreateRequestConfig } from '../../factories/hashableconfig/createrequest/HashableMarketCreateRequestConfig';
 import { CoreRpcService } from '../CoreRpcService';
 import { MarketType } from '../../enums/MarketType';

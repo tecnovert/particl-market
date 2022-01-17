@@ -4,7 +4,7 @@
 
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
 // tslint:disable:variable-name

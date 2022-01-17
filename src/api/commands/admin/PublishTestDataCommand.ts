@@ -19,19 +19,19 @@ import { MarketService } from '../../services/model/MarketService';
 import { ItemCategoryService } from '../../services/model/ItemCategoryService';
 import { TestDataService } from '../../services/TestDataService';
 import { ListingItemTemplatePostCommand } from '../listingitemtemplate/ListingItemTemplatePostCommand';
-import { Cryptocurrency, OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { Cryptocurrency, OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ListingItemTemplateCreateRequest } from '../../requests/model/ListingItemTemplateCreateRequest';
 import { ImageCreateParams, ListingItemTemplateCreateParams } from '../../factories/ModelCreateParams';
 import { ListingItemTemplateFactory } from '../../factories/model/ListingItemTemplateFactory';
-import { EscrowReleaseType, EscrowType, SaleType } from 'omp-lib/dist/interfaces/omp-enums';
-import { toSatoshis } from 'omp-lib/dist/util';
+import { EscrowReleaseType, EscrowType, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { toSatoshis } from '@zasmilingidiot/omp-lib/dist/util';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { ItemCategoryUpdateRequest } from '../../requests/model/ItemCategoryUpdateRequest';
 import { ItemInformationUpdateRequest } from '../../requests/model/ItemInformationUpdateRequest';
 import { ItemInformationService } from '../../services/model/ItemInformationService';
 import { CoreRpcService } from '../../services/CoreRpcService';
 import { ImageCreateRequest } from '../../requests/model/ImageCreateRequest';
-import { DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { BaseImageAddMessage } from '../../messages/action/BaseImageAddMessage';
 import { ImageFactory } from '../../factories/model/ImageFactory';
 import { ImageService } from '../../services/model/ImageService';
@@ -39,7 +39,7 @@ import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
 import PQueue, {DefaultAddOptions, Options} from 'pm-queue';
 import PriorityQueue, {PriorityQueueOptions} from 'pm-queue/dist/priority-queue';
 import { SmsgSendCoinControl } from '../../services/SmsgService';
-import { RpcBlindSendToOutput } from 'omp-lib/dist/interfaces/rpc';
+import { RpcBlindSendToOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 
 export interface RpcInput {
     tx: string;     // txid

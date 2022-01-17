@@ -18,7 +18,7 @@ import { EscrowUpdateRequest } from '../../requests/model/EscrowUpdateRequest';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { EscrowRatioUpdateRequest } from '../../requests/model/EscrowRatioUpdateRequest';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { EscrowReleaseType, EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelNotModifiableException } from '../../exceptions/ModelNotModifiableException';
 import {
     CommandParamValidationRules, EnumValidationRule,

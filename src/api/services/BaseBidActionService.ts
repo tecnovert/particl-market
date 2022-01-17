@@ -13,7 +13,7 @@ import { ActionMessageValidatorInterface } from '../messagevalidators/ActionMess
 import { NotifyService } from './NotifyService';
 import { ActionMessageTypes } from '../enums/ActionMessageTypes';
 import { ActionMessageObjects } from './../enums/ActionMessageObjects';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { BaseActionService } from './BaseActionService';
 import { BidCreateRequest } from '../requests/model/BidCreateRequest';
 import { ListingItemService } from './model/ListingItemService';

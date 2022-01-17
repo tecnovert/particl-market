@@ -7,7 +7,7 @@ import { IsNotEmpty } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { ActionRequestInterface } from './ActionRequestInterface';
 import { SmsgSendParams } from './SmsgSendParams';
-import { CryptoAddress } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddress } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 export class ListingItemAddRequest extends RequestBody implements ActionRequestInterface {
 

@@ -25,8 +25,8 @@ import {
     StringValidationRule
 } from '../CommandParamValidation';
 import { CoreRpcService } from '../../services/CoreRpcService';
-import { CryptoAddress, OutputType } from 'omp-lib/dist/interfaces/crypto';
-import { RpcBlindSendToOutput } from 'omp-lib/dist/interfaces/rpc';
+import { CryptoAddress, OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { RpcBlindSendToOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { IdentityType } from '../../enums/IdentityType';
 import { MessageException } from '../../exceptions/MessageException';
 

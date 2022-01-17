@@ -4,7 +4,7 @@
 
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { EscrowReleaseType, EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { EscrowRatioUpdateRequest } from './EscrowRatioUpdateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';
 

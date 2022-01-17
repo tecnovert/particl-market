@@ -15,7 +15,7 @@ import { MessageException } from '../../../src/api/exceptions/MessageException';
 import { PrivateKey, Networks } from 'particl-bitcore-lib';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';
 import { MarketRegion } from '../../../src/api/enums/MarketRegion';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageProcessing } from '../../../src/core/helpers/ImageProcessing';
 
 

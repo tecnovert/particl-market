@@ -5,9 +5,9 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ActionMessageInterface } from './ActionMessageInterface';
 import { MessageBody } from '../../../core/api/MessageBody';
-import { MPAction} from 'omp-lib/dist/interfaces/omp-enums';
-import { MPA_REJECT } from 'omp-lib/dist/interfaces/omp';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { MPAction} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { MPA_REJECT } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 
 export class BidRejectMessage extends MessageBody implements ActionMessageInterface, MPA_REJECT {
 

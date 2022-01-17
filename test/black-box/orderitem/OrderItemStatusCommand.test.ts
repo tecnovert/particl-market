@@ -12,7 +12,7 @@ import { OrderItemStatus } from '../../../src/api/enums/OrderItemStatus';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
 import { Logger as LoggerType } from '../../../src/core/Logger';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatusResponse } from '../../../src/core/helpers/OrderItemStatusResponse';
 import { BidSearchOrderField, ListingItemSearchOrderField, OrderSearchOrderField } from '../../../src/api/enums/SearchOrderField';
 import { OrderStatus } from '../../../src/api/enums/OrderStatus';

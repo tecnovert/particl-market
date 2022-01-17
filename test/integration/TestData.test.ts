@@ -17,7 +17,7 @@ import { ListingItemTemplateService } from '../../src/api/services/model/Listing
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ListingItemService } from '../../src/api/services/model/ListingItemService';
 import { OrderStatus } from '../../src/api/enums/OrderStatus';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';

@@ -18,7 +18,7 @@ import { IdentityUpdateRequest } from '../../requests/model/IdentityUpdateReques
 import { SettingService } from './SettingService';
 import { IdentityType } from '../../enums/IdentityType';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWalletInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { MessageException } from '../../exceptions/MessageException';
 import { CoreRpcService } from '../CoreRpcService';
 import { SmsgService } from '../SmsgService';

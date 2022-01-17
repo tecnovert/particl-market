@@ -18,7 +18,7 @@ import { CoreMessageVersion } from '../enums/CoreMessageVersion';
 import { ListingItemTemplateService } from '../services/model/ListingItemTemplateService';
 import { Image } from '../models/Image';
 import { ImageCreateRequest } from '../requests/model/ImageCreateRequest';
-import { DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { BaseImageAddMessage } from '../messages/action/BaseImageAddMessage';
 import { ImageCreateParams } from '../factories/ModelCreateParams';
 import { ImageFactory } from '../factories/model/ImageFactory';

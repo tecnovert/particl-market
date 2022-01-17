@@ -4,7 +4,7 @@
 
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { SaleType} from 'omp-lib/dist/interfaces/omp-enums';
+import { SaleType} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { EscrowUpdateRequest } from './EscrowUpdateRequest';
 import { ItemPriceUpdateRequest } from './ItemPriceUpdateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';

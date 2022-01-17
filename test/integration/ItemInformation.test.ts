@@ -26,7 +26,7 @@ import { ShippingAvailability } from '../../src/api/enums/ShippingAvailability';
 import { ItemInformationCreateRequest } from '../../src/api/requests/model/ItemInformationCreateRequest';
 import { ItemInformationUpdateRequest } from '../../src/api/requests/model/ItemInformationUpdateRequest';
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { MarketService } from '../../src/api/services/model/MarketService';
@@ -39,7 +39,7 @@ import { ItemCategoryUpdateRequest } from '../../src/api/requests/model/ItemCate
 import { ItemLocationCreateRequest } from '../../src/api/requests/model/ItemLocationCreateRequest';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { ShippingCountries } from '../../src/core/helpers/ShippingCountries';
 import { HashableImageCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableImageCreateRequestConfig';
 // tslint:enable:max-line-length

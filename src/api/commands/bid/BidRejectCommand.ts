@@ -19,7 +19,7 @@ import { BidRejectActionService } from '../../services/action/BidRejectActionSer
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { MPAction} from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { BidRejectReason } from '../../enums/BidRejectReason';
 import { BidRejectRequest } from '../../requests/action/BidRejectRequest';
 import { IdentityService } from '../../services/model/IdentityService';

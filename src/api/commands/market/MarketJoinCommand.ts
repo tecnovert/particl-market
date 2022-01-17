@@ -23,7 +23,7 @@ import { ItemCategoryService } from '../../services/model/ItemCategoryService';
 import { MarketAddMessage } from '../../messages/action/MarketAddMessage';
 import { MarketCreateParams } from '../../factories/ModelCreateParams';
 import { MarketFactory } from '../../factories/model/MarketFactory';
-import { ContentReference, DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import {BooleanValidationRule, CommandParamValidationRules, IdValidationRule, ParamValidationRule} from '../CommandParamValidation';
 import {ImageVersions} from '../../../core/helpers/ImageVersionEnumType';
 

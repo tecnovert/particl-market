@@ -10,7 +10,7 @@ import { Commands } from '../../../src/api/commands/CommandEnumType';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ListingItemSearchOrderField, SmsgMessageSearchOrderField } from '../../../src/api/enums/SearchOrderField';
 
 describe('SmsgResendCommand', () => {

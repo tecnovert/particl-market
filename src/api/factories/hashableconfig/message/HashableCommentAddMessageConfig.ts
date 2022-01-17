@@ -2,9 +2,9 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { BaseHashableConfig, HashableFieldConfig, HashableFieldValueConfig } from 'omp-lib/dist/interfaces/configs';
+import { BaseHashableConfig, HashableFieldConfig, HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
 import { HashableCommentAddField } from '../HashableField';
-import { HashableCommonField } from 'omp-lib/dist/interfaces/omp-enums';
+import { HashableCommonField } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 export class HashableCommentAddMessageConfig extends BaseHashableConfig {
 

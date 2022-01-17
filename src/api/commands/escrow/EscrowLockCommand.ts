@@ -21,9 +21,9 @@ import { EscrowLockActionService } from '../../services/action/EscrowLockActionS
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { BidService } from '../../services/model/BidService';
 import { EscrowLockRequest } from '../../requests/action/EscrowLockRequest';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { SmsgSendResponse } from '../../responses/SmsgSendResponse';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { BidDataValue } from '../../enums/BidDataValue';
 import { IdentityService } from '../../services/model/IdentityService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';

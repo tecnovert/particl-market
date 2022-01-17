@@ -24,7 +24,7 @@ import { OrderItemService } from '../model/OrderItemService';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
 import { BidCreateRequest } from '../../requests/model/BidCreateRequest';
 import { CoreRpcService } from '../CoreRpcService';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ActionMessageObjects } from '../../enums/ActionMessageObjects';
 import { EscrowCompleteMessageFactory } from '../../factories/message/EscrowCompleteMessageFactory';
 import { EscrowCompleteRequest } from '../../requests/action/EscrowCompleteRequest';

@@ -23,7 +23,7 @@ import { Market } from '../models/Market';
 import { MarketFactory } from '../factories/model/MarketFactory';
 import { MarketCreateParams } from '../factories/ModelCreateParams';
 import { MarketAddMessage } from '../messages/action/MarketAddMessage';
-import { ContentReference, DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageProcessing } from '../../core/helpers/ImageProcessing';
 
 

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { ActionMessageTypes } from '../../enums/ActionMessageTypes';
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { ActionDirection } from '../../enums/ActionDirection';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ListingItemAddRequest } from '../action/ListingItemAddRequest';
 
 // todo: extends GenerateCommonParamsInterface

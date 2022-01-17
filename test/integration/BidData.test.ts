@@ -18,7 +18,7 @@ import { ListingItemService } from '../../src/api/services/model/ListingItemServ
 import { BidDataCreateRequest } from '../../src/api/requests/model/BidDataCreateRequest';
 import { BidDataUpdateRequest } from '../../src/api/requests/model/BidDataUpdateRequest';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
