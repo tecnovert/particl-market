@@ -60,6 +60,11 @@ export class ListingItemImageAddActionMessageProcessor extends BaseActionMessage
     public async onEvent(event: MarketplaceMessageEvent): Promise<SmsgMessageStatus> {
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
+
+        if (!smsgMessage || (smsgMessage.expiration <= Date.now())) {
+            return SmsgMessageStatus.IGNORED;
+        }
+
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
         const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
 
