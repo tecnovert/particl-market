@@ -34,8 +34,10 @@ import { ListingItemImageAddRequest } from '../../requests/action/ListingItemIma
 import { ListingItemImageAddActionService } from '../../services/action/ListingItemImageAddActionService';
 import { ItemCategoryService } from '../../services/model/ItemCategoryService';
 import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';
-import { BooleanValidationRule, CommandParamValidationRules, EnumValidationRule, IdValidationRule, MessageRetentionValidationRule,
-    ParamValidationRule, RingSizeValidationRule } from '../CommandParamValidation';
+import {
+    BooleanValidationRule, CommandParamValidationRules, EnumValidationRule, IdValidationRule, MessageRetentionValidationRule,
+    ParamValidationRule, RingSizeValidationRule
+} from '../CommandParamValidation';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
 import { RpcUnspentOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { BigNumber } from 'mathjs';
@@ -92,7 +94,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
      * @returns {Promise<ListingItemTemplate>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
+    public async execute(@request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
 
         let listingItemTemplate: resources.ListingItemTemplate = data.params[0];
         const daysRetention: number = data.params[1] || parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10);
@@ -105,6 +107,30 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
 
         const fromAddress = market.publishAddress;
         const toAddress = market.receiveAddress;
+
+        const imageCount = listingItemTemplate.ItemInformation.Images.length;
+        let paidSmsgCount = 1;
+        if (paidImageMessages) {
+            paidSmsgCount += imageCount;
+        }
+        const unspentUtxos: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(
+            market.Identity.wallet,
+            anonFee ? OutputType.ANON : OutputType.PART
+        ).catch(err => {
+            this.log.error(err);
+            return [];
+        });
+
+        let smsgSendResponse: SmsgSendResponse = {
+            result: 'Not Sent.',
+            availableUtxos: unspentUtxos.length
+        };
+
+        if (unspentUtxos.length < paidSmsgCount) {
+            smsgSendResponse.error = 'Not enough utxos.';
+
+            return smsgSendResponse;
+        }
 
         // create the market category if needed
         const categoryArray: string[] = this.itemCategoryFactory.getArray(listingItemTemplate.ItemInformation.ItemCategory);
@@ -127,40 +153,53 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
         } as ListingItemAddRequest;
 
         // first post the ListingItem
-        const smsgSendResponse: SmsgSendResponse = await this.listingItemAddActionService.post(postRequest);
+        const smsgSendResponseListing = await this.listingItemAddActionService.post(postRequest);
+        smsgSendResponse = { ...smsgSendResponse, ...smsgSendResponseListing };
 
-        if (!estimateFee && smsgSendResponse.result === 'Sent.') {
-            // if post was succesful ad were not just estimating, update the hash
-            // once listingItemTemplate.hash is created, it cannot be modified anymore
-            const hash = ConfigurableHasher.hash(listingItemTemplate, new HashableListingItemTemplateConfig());
-            listingItemTemplate = await this.listingItemTemplateService.updateHash(listingItemTemplate.id, hash).then(value => value.toJSON());
+        const listingContentFee = math.bignumber(smsgSendResponse.fee ? smsgSendResponse.fee : 0);
+
+        if (!estimateFee) {
+            // if we're not just estimating...
+            if (smsgSendResponse.result === 'Sent.') {
+                // if post was successful, update the hash
+                // once listingItemTemplate.hash is created, it cannot be modified anymore
+                const hash = ConfigurableHasher.hash(listingItemTemplate, new HashableListingItemTemplateConfig());
+                listingItemTemplate = await this.listingItemTemplateService.updateHash(listingItemTemplate.id, hash).then(value => value.toJSON());
+            } else {
+                // listing content sending failed, so do not continue to listing image sending...
+                smsgSendResponse.childResults = [];
+                return smsgSendResponse;
+            }
         }
 
-        // then post the Images related to the ListingItem
+        // post the Images related to the ListingItem
         smsgSendResponse.childResults = await this.postListingImages(listingItemTemplate, postRequest, paidImageMessages);
 
-        // this.log.debug('smsgSendResponse: ', JSON.stringify(smsgSendResponse, null, 2));
-
-        // then create the response, add totalFees and availableUtxos
-        const unspentUtxos: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(postRequest.sendParams.wallet,
-            anonFee ? OutputType.ANON : OutputType.PART);
-        smsgSendResponse.availableUtxos = unspentUtxos.length;
-        let minRequiredUtxos = 1;
-
-        if (!_.isNil(smsgSendResponse.childResults)) {
-            let childSum: BigNumber = math.bignumber(0);
-            for (const childResult of smsgSendResponse.childResults) {
-                childSum = math.add(childSum, math.bignumber(childResult.fee ? childResult.fee : 0));
+        let childError = '';
+        let childSum: BigNumber = math.bignumber(0);
+        for (const childResult of smsgSendResponse.childResults) {
+            childSum = math.add(childSum, math.bignumber(childResult.fee ? childResult.fee : 0));
+            if (!childError && (typeof childResult.error === 'string') && (childResult.error.length > 0)) {
+                childError = childResult.error;
             }
-            smsgSendResponse.totalFees = +math.format(math.add(childSum, math.bignumber(smsgSendResponse.fee ? smsgSendResponse.fee : 0)), {precision: 8});
-            minRequiredUtxos = minRequiredUtxos + (paidImageMessages ? smsgSendResponse.childResults.length : 0);
-        } else {
-            smsgSendResponse.totalFees = 0;
         }
 
-        if (smsgSendResponse.availableUtxos < minRequiredUtxos) {
-            smsgSendResponse.error = 'Not enough utxos.';
+        if (paidImageMessages && smsgSendResponse.childResults.length < imageCount) {
+            smsgSendResponse.error = 'Not all images included.';
         }
+        if (!smsgSendResponse.error && childError) {
+            smsgSendResponse.error = childError;
+        }
+        if (!smsgSendResponse.error) {
+            smsgSendResponse.totalFees = +math.format(math.add(childSum, listingContentFee), { precision: 8 });
+        } else {
+            smsgSendResponse.totalFees = -1;
+        }
+
+        const unspentUtxosPostSend: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(postRequest.sendParams.wallet,
+            anonFee ? OutputType.ANON : OutputType.PART).catch(() => ([]));
+        smsgSendResponse.availableUtxos = unspentUtxosPostSend.length;
+
 
         this.log.debug('smsgSendResponse: ', JSON.stringify(smsgSendResponse, null, 2));
         return smsgSendResponse;
@@ -256,8 +295,11 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
      * @param listingItemAddRequest
      * @param usePaid, use paid messages to send images
      */
-    private async postListingImages(listingItemTemplate: resources.ListingItemTemplate, listingItemAddRequest: ListingItemAddRequest,
-                                    usePaid: boolean = false): Promise<SmsgSendResponse[] | undefined> {
+    private async postListingImages(
+        listingItemTemplate: resources.ListingItemTemplate,
+        listingItemAddRequest: ListingItemAddRequest,
+        usePaid: boolean = false
+    ): Promise<SmsgSendResponse[]> {
 
         if (!_.isEmpty(listingItemTemplate.ItemInformation.Images)) {
 
@@ -281,13 +323,17 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
                 const cleanedImageDatas = itemImage.ImageDatas ? itemImage.ImageDatas.map(d => ({ ...d, dataId: '' })) : itemImage.ImageDatas;
                 itemImage.ImageDatas = cleanedImageDatas;
                 imageAddRequest.image = itemImage;
-                const smsgSendResponse: SmsgSendResponse = await this.listingItemImageAddActionService.post(imageAddRequest);
-                results.push(smsgSendResponse);
+                const smsgSendResponse: SmsgSendResponse | void = await this.listingItemImageAddActionService.post(imageAddRequest).catch(err => {
+                    this.log.error('ERROR: posting listing image failed: ', err);
+                });
+                if (smsgSendResponse) {
+                    results.push(smsgSendResponse);
+                }
             }
             // this.log.debug('postListingImages(), results: ', JSON.stringify(results, null, 2));
             return results;
         } else {
-            return undefined;
+            return [];
         }
     }
 }
