@@ -83,6 +83,18 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
         return ListingItemCollection.fetchAll(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
 
+    public static async fetchAllByMarketReceiveAddress(
+        marketReceiveAddress: string, withRelated: boolean = true
+    ): Promise<Collection<ListingItem>> {
+        const ListingItemCollection = ListingItem.forge<Model<ListingItem>>()
+            .query(qb => {
+                qb.where('market', '=', marketReceiveAddress);
+            })
+            .orderBy('expiry_time', 'ASC');
+
+        return ListingItemCollection.fetchAll(withRelated ? {withRelated: this.RELATIONS} : undefined);
+    }
+
     public static async fetchById(value: number, withRelated: boolean = true): Promise<ListingItem> {
         return ListingItem.where<ListingItem>({ id: value }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }

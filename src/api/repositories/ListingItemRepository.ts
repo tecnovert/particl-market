@@ -51,6 +51,12 @@ export class ListingItemRepository {
         return this.ListingItemModel.fetchAllByHashAndMarketReceiveAddress(hash, marketReceiveAddress, withRelated);
     }
 
+    public async findAllByMarketReceiveAddress(
+        marketReceiveAddress: string, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<ListingItem>> {
+        return this.ListingItemModel.fetchAllByMarketReceiveAddress(marketReceiveAddress, withRelated);
+    }
+
     public async findOne(id: number, withRelated: boolean = true): Promise<ListingItem> {
         return this.ListingItemModel.fetchById(id, withRelated);
     }

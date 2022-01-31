@@ -147,7 +147,7 @@ export class SmsgMessageService {
         return await this.findOne(id);
     }
 
-    public async destroy(id: number): Promise<void> {
+    public async destroy(id: number | string): Promise<void> {
         await this.smsgMessageRepo.destroy(id);
     }
 

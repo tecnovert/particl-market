@@ -78,8 +78,10 @@ export class SmsgMessageRepository {
         }
     }
 
-    public async destroy(id: number): Promise<void> {
-        let smsgMessage = this.SmsgMessageModel.forge<SmsgMessage>({ id });
+    public async destroy(id: number | string): Promise<void> {
+        const params = {};
+        params[typeof id === 'string' ? 'msgid' : 'id'] = id;
+        let smsgMessage = this.SmsgMessageModel.forge<SmsgMessage>(params);
         try {
             smsgMessage = await smsgMessage.fetch({ require: true });
         } catch (error) {

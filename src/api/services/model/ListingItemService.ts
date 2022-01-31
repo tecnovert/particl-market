@@ -17,6 +17,7 @@ import { ListingItemUpdateRequest } from '../../requests/model/ListingItemUpdate
 import { MessagingInformationService } from './MessagingInformationService';
 import { PaymentInformationService } from './PaymentInformationService';
 import { ItemInformationService } from './ItemInformationService';
+import { SmsgMessageService } from './SmsgMessageService';
 import { ListingItemSearchParams } from '../../requests/search/ListingItemSearchParams';
 import { PaymentInformationCreateRequest } from '../../requests/model/PaymentInformationCreateRequest';
 import { MessagingInformationCreateRequest } from '../../requests/model/MessagingInformationCreateRequest';
@@ -44,6 +45,7 @@ export class ListingItemService {
         @inject(Types.Service) @named(Targets.Service.model.CommentService) public commentService: CommentService,
         @inject(Types.Service) @named(Targets.Service.model.ShoppingCartItemService) public shoppingCartItemService: ShoppingCartItemService,
         @inject(Types.Repository) @named(Targets.Repository.ListingItemRepository) public listingItemRepo: ListingItemRepository,
+        @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
         this.log = new Logger(__filename);
@@ -78,6 +80,12 @@ export class ListingItemService {
         hash: string, marketReceiveAddress: string, withRelated: boolean = true
     ): Promise<Bookshelf.Collection<ListingItem>> {
         return await this.listingItemRepo.findAllByHashAndMarketReceiveAddress(hash, marketReceiveAddress, withRelated);
+    }
+
+    public async findAllByMarketReceiveAddress(
+        marketReceiveAddress: string, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<ListingItem>> {
+        return await this.listingItemRepo.findAllByMarketReceiveAddress(marketReceiveAddress, withRelated);
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ListingItem> {
@@ -352,6 +360,11 @@ export class ListingItemService {
                 await this.imageService.destroy(image.id);
             }
         }
+
+        // remove the smsg message associated with the listing
+        await this.smsgMessageService.destroy(listingItem.msgid).catch(err =>
+            this.log.warn(`SMSG with msgid=${listingItem.msgid} associated with listing id=${listingItem.id} could not be removed!`, err)
+        ).catch(() => null);
 
         await this.listingItemRepo.destroy(listingItem.id);
     }
