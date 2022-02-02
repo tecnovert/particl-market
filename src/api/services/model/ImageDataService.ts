@@ -19,6 +19,7 @@ import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequ
 import { ImageDataUpdateRequest } from '../../requests/model/ImageDataUpdateRequest';
 import { DataDir } from '../../../core/helpers/DataDir';
 import { MessageException } from '../../exceptions/MessageException';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 
 export class ImageDataService {
 
@@ -58,7 +59,7 @@ export class ImageDataService {
     }
 
     @validate()
-    public async create( @request(ImageDataCreateRequest) data: ImageDataCreateRequest): Promise<ImageData> {
+    public async create(@request(ImageDataCreateRequest) data: ImageDataCreateRequest): Promise<ImageData> {
         const body = JSON.parse(JSON.stringify(data));
 
         if (!_.isNil(body.data)) {
@@ -77,7 +78,8 @@ export class ImageDataService {
 
         const imageData = await this.findOne(id, false);
 
-        await this.removeImageFile(imageData.ImageHash, imageData.ImageVersion);
+        // no need to remove first if the save call overwrites the existing file.
+        // await this.removeImageFile(imageData.ImageHash, imageData.ImageVersion);
         body.dataId = await this.saveImageFile(body.data, body.imageHash, body.imageVersion);
         delete body.data;
 
@@ -112,7 +114,13 @@ export class ImageDataService {
 
     public async destroy(id: number): Promise<void> {
         const imageData: resources.ImageData = await this.findOne(id, false).then(value => value.toJSON());
-        await this.removeImageFile(imageData.imageHash, imageData.imageVersion);
+        if (imageData.protocol === ProtocolDSN.FILE) {
+            this.log.info(`will attempt to remove local file for imagedata=${id} ...`);
+            await this.removeImageFile(imageData.imageHash, imageData.imageVersion)
+                .catch(err =>
+                    this.log.error(`error removing file for image hash=${imageData.imageHash} version=${imageData.imageVersion}`, err)
+                );
+        }
         await this.imageDataRepo.destroy(id);
     }
 
@@ -147,8 +155,14 @@ export class ImageDataService {
     public async removeImageFile(imageHash: string, imageVersion: string): Promise<void> {
         // this.log.debug('removeImageFile(), imageHash: ', imageHash);
         // this.log.debug('removeImageFile(), imageVersion: ', imageVersion);
-        const imageDatas: resources.ImageData[] = await this.findAllByImageHashAndVersion(imageHash, imageVersion, false).then(value => value.toJSON());
 
+        /**
+         * NOTE: this is significantly confusing. Validation on whether the file should be removed or not should be handled prior to this
+         *  function call. By doing it here it creates a requirement of prior knowledge on the caller:
+         *      for example: caller must know that the ImageDatas DB entry cannot be removed prior to this call otherwise this removal fails silently.
+         */
+        let imageDatas: resources.ImageData[] = await this.findAllByImageHashAndVersion(imageHash, imageVersion, false).then(value => value.toJSON());
+        imageDatas = imageDatas.filter(d => d.protocol === ProtocolDSN.FILE);
         if (imageDatas.length === 0) {
             this.log.warn('removeImageFile(): no file to remove.');
             return;

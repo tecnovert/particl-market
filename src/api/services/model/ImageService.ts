@@ -16,6 +16,7 @@ import { ImageCreateRequest } from '../../requests/model/ImageCreateRequest';
 import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequest';
 import { ImageUpdateRequest } from '../../requests/model/ImageUpdateRequest';
 import { ImageDataService } from './ImageDataService';
+import { SmsgMessageService } from './SmsgMessageService';
 import { ImageVersions } from '../../../core/helpers/ImageVersionEnumType';
 import { MessageException } from '../../exceptions/MessageException';
 import { ImageDataRepository } from '../../repositories/ImageDataRepository';
@@ -24,6 +25,7 @@ import { ImageProcessing } from '../../../core/helpers/ImageProcessing';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
 import { MessageVersions } from '../../messages/MessageVersions';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 
 
 export class ImageService {
@@ -33,6 +35,7 @@ export class ImageService {
     constructor(
         // tslint:disable:max-line-length
         @inject(Types.Service) @named(Targets.Service.model.ImageDataService) public imageDataService: ImageDataService,
+        @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService,
         @inject(Types.Repository) @named(Targets.Repository.ImageRepository) public imageRepository: ImageRepository,
         @inject(Types.Repository) @named(Targets.Repository.ImageDataRepository) public imageDataRepository: ImageDataRepository,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
@@ -268,10 +271,41 @@ export class ImageService {
 
     public async destroy(id: number): Promise<void> {
         const image: resources.Image = await this.findOne(id, true).then(value => value.toJSON());
-        for (const imageData of image.ImageDatas) {
-            await this.imageDataService.destroy(imageData.id);
+
+        const altImages: resources.Image[] = await this.findAllByHashAndTarget(image.hash, image.ItemInformation.ListingItem.hash)
+            .then(value => value.toJSON())
+            .catch(err => {
+                this.log.warn(`Error retrieving associated listing images for image hash=${image.hash}`, err);
+                return [];
+            });
+
+        const allImages = [image, ...altImages];
+
+        for (const img of allImages) {
+            for (const imgData of img.ImageDatas) {
+                await this.imageDataService.destroy(imgData.id).catch(() => null);
+            }
         }
 
-        await this.imageRepository.destroy(id);
+        for (const img of allImages) {
+
+            await this.imageRepository.destroy(img.id).catch(err =>
+                this.log.warn(`DB record for image with id=${img.id} could not be removed!`, err)
+            ).catch(() => null);
+
+            /**
+             *
+             *  Apparently, no need to clean the original listing image(s), beacuse the msgid of the original image message points to the listing_add smsg...
+             *  So if there are only the single imagedata object (because wtf... something something multiple incorrect associations something something)
+             *  then its likely the image references the "indication" of an image as included in the LISTING_ADD smsg, rather than some actual
+             *  received LISTING_IMAGE_ADD smsg.
+             *
+             */
+            if (img.msgid && !((img.ImageDatas.length === 1) && (img.ImageDatas[0].protocol === ProtocolDSN.SMSG))) {
+                await this.smsgMessageService.destroy(img.msgid).catch(err =>
+                    this.log.warn(`DB record for smsg message with msgid=${img.msgid} associated with image id=${img.id} could not be removed!`, err)
+                ).catch(() => null);
+            }
+        }
     }
 }
