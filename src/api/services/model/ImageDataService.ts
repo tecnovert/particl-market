@@ -181,9 +181,9 @@ export class ImageDataService {
                 this.log.error('removeImageFile(), image file remove failed: ' + err);
                 throw new MessageException('Image remove failed: ' + err);
             }
-        }//  else {
-        //    this.log.debug('removeImageFile(): multiple images using the same data file, skipping...');
-        // }
+        }  else {
+           this.log.debug('removeImageFile(): multiple images using the same data file, skipping...');
+        }
 
     }
 
