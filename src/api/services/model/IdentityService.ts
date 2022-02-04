@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -18,7 +18,7 @@ import { IdentityUpdateRequest } from '../../requests/model/IdentityUpdateReques
 import { SettingService } from './SettingService';
 import { IdentityType } from '../../enums/IdentityType';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcExtKey, RpcExtKeyResult, RpcMnemonic, RpcWalletInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { MessageException } from '../../exceptions/MessageException';
 import { CoreRpcService } from '../CoreRpcService';
 import { SmsgService } from '../SmsgService';

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -10,7 +10,7 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { MarketplaceMessageEvent } from '../../messages/MarketplaceMessageEvent';
 import { SmsgMessageService } from '../../services/model/SmsgMessageService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -10,7 +10,7 @@ import { CreatableModel } from '../../../src/api/enums/CreatableModel';
 import { Commands } from '../../../src/api/commands/CommandEnumType';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
 import { BidDataValue } from '../../../src/api/enums/BidDataValue';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { BidSearchOrderField, ListingItemSearchOrderField } from '../../../src/api/enums/SearchOrderField';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';

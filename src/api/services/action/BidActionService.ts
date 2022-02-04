@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -24,11 +24,11 @@ import { BidMessage } from '../../messages/action/BidMessage';
 import { BidCreateParams, OrderCreateParams } from '../../factories/ModelCreateParams';
 import { BidCreateRequest } from '../../requests/model/BidCreateRequest';
 import { OrderFactory } from '../../factories/model/OrderFactory';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ActionMessageObjects } from '../../enums/ActionMessageObjects';
 import { OrderCreateRequest } from '../../requests/model/OrderCreateRequest';
 import { ActionDirection } from '../../enums/ActionDirection';
-import { MPAction  } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction  } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { MessageException } from '../../exceptions/MessageException';
 import { MarketplaceNotification } from '../../messages/MarketplaceNotification';

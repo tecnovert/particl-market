@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -19,7 +19,7 @@ import { BaseCommand } from '../BaseCommand';
 import { MessageException } from '../../exceptions/MessageException';
 import { MarketService } from '../../services/model/MarketService';
 import { MarketType } from '../../enums/MarketType';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { ItemCategoryFactory } from '../../factories/model/ItemCategoryFactory';
 import {
     CommandParamValidationRules,

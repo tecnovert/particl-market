@@ -1,8 +1,8 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { ompVersion } from 'omp-lib/dist/omp';
+import { ompVersion } from '@zasmilingidiot/omp-lib/dist/omp';
 import { MessageFactoryInterface } from './MessageFactoryInterface';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
 import { ActionRequestInterface } from '../requests/action/ActionRequestInterface';

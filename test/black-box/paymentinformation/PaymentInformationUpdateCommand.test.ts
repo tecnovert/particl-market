@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -9,8 +9,8 @@ import { Commands } from '../../../src/api/commands/CommandEnumType';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
 import { Logger as LoggerType } from '../../../src/core/Logger';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
-import { SaleType} from 'omp-lib/dist/interfaces/omp-enums';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { SaleType} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ModelNotModifiableException } from '../../../src/api/exceptions/ModelNotModifiableException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';

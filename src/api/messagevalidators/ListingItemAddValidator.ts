@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -7,9 +7,9 @@ import * as resources from 'resources';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
 import { ValidationException } from '../exceptions/ValidationException';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
-import { FV_MPA_LISTING } from 'omp-lib/dist/format-validators/mpa_listing_add';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
-import { MPM } from 'omp-lib/dist/interfaces/omp';
+import { FV_MPA_LISTING } from '@zasmilingidiot/omp-lib/dist/format-validators/mpa_listing_add';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { MPM } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { decorate, inject, injectable, named } from 'inversify';
 import { ActionDirection } from '../enums/ActionDirection';
 import { ListingItemAddMessage } from '../messages/action/ListingItemAddMessage';
@@ -20,7 +20,7 @@ import { MarketService } from '../services/model/MarketService';
 import { MessageException } from '../exceptions/MessageException';
 import { MarketType } from '../enums/MarketType';
 import { ItemCategoryService } from '../services/model/ItemCategoryService';
-import { hash } from 'omp-lib/dist/hasher/hash';
+import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { NotImplementedException } from '../exceptions/NotImplementedException';
 import { SellerMessage } from '../factories/message/ListingItemAddMessageFactory';
 

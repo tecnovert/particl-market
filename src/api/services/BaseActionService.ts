@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -17,7 +17,7 @@ import { SmsgMessageCreateParams } from '../factories/ModelCreateParams';
 import { MessageException } from '../exceptions/MessageException';
 import { ValidationException } from '../exceptions/ValidationException';
 import { SmsgMessageStatus } from '../enums/SmsgMessageStatus';
-import { strip } from 'omp-lib/dist/util';
+import { strip } from '@zasmilingidiot/omp-lib/dist/util';
 import { Logger as LoggerType } from '../../core/Logger';
 import { ActionMessageValidatorInterface } from '../messagevalidators/ActionMessageValidatorInterface';
 import { MarketplaceNotification } from '../messages/MarketplaceNotification';

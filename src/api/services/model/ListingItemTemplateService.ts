@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -49,13 +49,13 @@ import { MessagingInformation } from '../../models/MessagingInformation';
 import { ImageFactory } from '../../factories/model/ImageFactory';
 import { ImageCreateParams } from '../../factories/ModelCreateParams';
 import { BaseImageAddMessage } from '../../messages/action/BaseImageAddMessage';
-import { DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { HashMismatchException } from '../../exceptions/HashMismatchException';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
 import { ModelServiceInterface } from '../ModelServiceInterface';
 import { CryptocurrencyAddressCreateRequest } from '../../requests/model/CryptocurrencyAddressCreateRequest';
-import { EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
-import { CryptoAddress, CryptoAddressType } from 'omp-lib/dist/interfaces/crypto';
+import { EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { CryptoAddress, CryptoAddressType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { NotImplementedException } from '../../exceptions/NotImplementedException';
 import { CryptocurrencyAddressService } from './CryptocurrencyAddressService';
 import { ItemPriceService } from './ItemPriceService';

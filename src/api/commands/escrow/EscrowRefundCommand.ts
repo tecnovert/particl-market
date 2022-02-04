@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -15,7 +15,7 @@ import { BaseCommand } from '../BaseCommand';
 import { MessageException } from '../../exceptions/MessageException';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
 import { OrderItemService } from '../../services/model/OrderItemService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { SmsgSendResponse } from '../../responses/SmsgSendResponse';
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';

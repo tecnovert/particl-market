@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -25,8 +25,8 @@ import {
     StringValidationRule
 } from '../CommandParamValidation';
 import { CoreRpcService } from '../../services/CoreRpcService';
-import { CryptoAddress, OutputType } from 'omp-lib/dist/interfaces/crypto';
-import { RpcBlindSendToOutput } from 'omp-lib/dist/interfaces/rpc';
+import { CryptoAddress, OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { RpcBlindSendToOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { IdentityType } from '../../enums/IdentityType';
 import { MessageException } from '../../exceptions/MessageException';
 

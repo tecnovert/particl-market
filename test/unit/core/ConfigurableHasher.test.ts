@@ -1,10 +1,10 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * from 'jest';
 import { ImageProcessing } from '../../../src/core/helpers/ImageProcessing';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableImageCreateRequestConfig } from '../../../src/api/factories/hashableconfig/createrequest/HashableImageCreateRequestConfig';
 
 

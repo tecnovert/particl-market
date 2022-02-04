@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -28,11 +28,11 @@ import { VoteCreateParams } from '../../factories/ModelCreateParams';
 import { BaseActionService } from '../BaseActionService';
 import { SmsgMessageFactory } from '../../factories/model/SmsgMessageFactory';
 import { VoteRequest } from '../../requests/action/VoteRequest';
-import { RpcUnspentOutput } from 'omp-lib/dist/interfaces/rpc';
+import { RpcUnspentOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { VoteValidator } from '../../messagevalidators/VoteValidator';
-import { toSatoshis } from 'omp-lib/dist/util';
+import { toSatoshis } from '@zasmilingidiot/omp-lib/dist/util';
 import { ItemVote } from '../../enums/ItemVote';
-import { OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { MarketService } from '../model/MarketService';
 import { FlaggedItemService } from '../model/FlaggedItemService';
 import { BlacklistService } from '../model/BlacklistService';

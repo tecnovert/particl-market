@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -11,7 +11,7 @@ import { ListingItemAddActionService } from '../../services/action/ListingItemAd
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { MarketplaceMessageEvent } from '../../messages/MarketplaceMessageEvent';
 import { SmsgMessageService } from '../../services/model/SmsgMessageService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
 import { ProposalService } from '../../services/model/ProposalService';
@@ -61,6 +61,11 @@ export class ListingItemAddActionMessageProcessor extends BaseActionMessageProce
     public async onEvent(event: MarketplaceMessageEvent): Promise<SmsgMessageStatus> {
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
+
+        if (!smsgMessage || (smsgMessage.expiration <= Date.now())) {
+            return SmsgMessageStatus.IGNORED;
+        }
+
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
         const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
 

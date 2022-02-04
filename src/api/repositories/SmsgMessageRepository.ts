@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -78,8 +78,10 @@ export class SmsgMessageRepository {
         }
     }
 
-    public async destroy(id: number): Promise<void> {
-        let smsgMessage = this.SmsgMessageModel.forge<SmsgMessage>({ id });
+    public async destroy(id: number | string): Promise<void> {
+        const params = {};
+        params[typeof id === 'string' ? 'msgid' : 'id'] = id;
+        let smsgMessage = this.SmsgMessageModel.forge<SmsgMessage>(params);
         try {
             smsgMessage = await smsgMessage.fetch({ require: true });
         } catch (error) {

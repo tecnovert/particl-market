@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -17,7 +17,7 @@ import { CommentCreateRequest } from '../../src/api/requests/model/CommentCreate
 import { CommentUpdateRequest } from '../../src/api/requests/model/CommentUpdateRequest';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { MarketService } from '../../src/api/services/model/MarketService';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableCommentCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableCommentCreateRequestConfig';
 import { ListingItemTemplateService } from '../../src/api/services/model/ListingItemTemplateService';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';

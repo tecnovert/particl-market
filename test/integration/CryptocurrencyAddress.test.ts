@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -15,7 +15,7 @@ import { CryptocurrencyAddressService } from '../../src/api/services/model/Crypt
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model/CryptocurrencyAddressCreateRequest';
 import { CryptocurrencyAddressUpdateRequest } from '../../src/api/requests/model/CryptocurrencyAddressUpdateRequest';
-import { CryptoAddressType } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 describe('CryptocurrencyAddress', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;

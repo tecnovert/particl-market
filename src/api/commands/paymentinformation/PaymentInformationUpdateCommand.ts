@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -16,12 +16,12 @@ import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ItemPriceUpdateRequest } from '../../requests/model/ItemPriceUpdateRequest';
 import { ShippingPriceUpdateRequest } from '../../requests/model/ShippingPriceUpdateRequest';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
-import { SaleType } from 'omp-lib/dist/interfaces/omp-enums';
+import { SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { CryptocurrencyAddressUpdateRequest } from '../../requests/model/CryptocurrencyAddressUpdateRequest';
 import { ModelNotModifiableException } from '../../exceptions/ModelNotModifiableException';

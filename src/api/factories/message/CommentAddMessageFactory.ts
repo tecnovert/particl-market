@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -7,7 +7,7 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { CommentAddMessage } from '../../messages/action/CommentAddMessage';
 import { CommentAction } from '../../enums/CommentAction';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableCommentAddMessageConfig } from '../hashableconfig/message/HashableCommentAddMessageConfig';
 import { CommentAddRequest } from '../../requests/action/CommentAddRequest';
 import { CoreRpcService } from '../../services/CoreRpcService';

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -9,10 +9,10 @@ import { Core, Targets, Types } from '../../../constants';
 import { ImageVersion } from '../../../core/helpers/ImageVersion';
 import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequest';
 import { ImageVersions } from '../../../core/helpers/ImageVersionEnumType';
-import { DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ImageCreateParams } from '../ModelCreateParams';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableImageCreateRequestConfig } from '../hashableconfig/createrequest/HashableImageCreateRequestConfig';
 import { NotImplementedException } from '../../exceptions/NotImplementedException';
 import { BaseImageAddMessage } from '../../messages/action/BaseImageAddMessage';

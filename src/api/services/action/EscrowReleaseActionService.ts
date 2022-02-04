@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -28,7 +28,7 @@ import { EscrowReleaseRequest } from '../../requests/action/EscrowReleaseRequest
 import { EscrowReleaseMessage } from '../../messages/action/EscrowReleaseMessage';
 import { EscrowReleaseMessageFactory } from '../../factories/message/EscrowReleaseMessageFactory';
 import { EscrowReleaseValidator } from '../../messagevalidators/EscrowReleaseValidator';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ActionMessageObjects } from '../../enums/ActionMessageObjects';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 import { BaseBidActionService } from '../BaseBidActionService';

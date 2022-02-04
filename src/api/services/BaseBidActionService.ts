@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -13,7 +13,7 @@ import { ActionMessageValidatorInterface } from '../messagevalidators/ActionMess
 import { NotifyService } from './NotifyService';
 import { ActionMessageTypes } from '../enums/ActionMessageTypes';
 import { ActionMessageObjects } from './../enums/ActionMessageObjects';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { BaseActionService } from './BaseActionService';
 import { BidCreateRequest } from '../requests/model/BidCreateRequest';
 import { ListingItemService } from './model/ListingItemService';

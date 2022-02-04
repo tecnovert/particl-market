@@ -1,20 +1,20 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as _ from 'lodash';
 import * as resources from 'resources';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ValidationException } from '../exceptions/ValidationException';
-import { MPM} from 'omp-lib/dist/interfaces/omp';
+import { MPM} from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
-import { FV_MPA_BID } from 'omp-lib/dist/format-validators/mpa_bid';
+import { FV_MPA_BID } from '@zasmilingidiot/omp-lib/dist/format-validators/mpa_bid';
 import { decorate, injectable } from 'inversify';
 import { ActionDirection } from '../enums/ActionDirection';
 import { MessageException } from '../exceptions/MessageException';
 import { ActionMessageObjects } from '../enums/ActionMessageObjects';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 
 decorate(injectable(), FV_MPA_BID);
 export class BidValidator extends FV_MPA_BID implements ActionMessageValidatorInterface {

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -8,12 +8,12 @@ import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Types } from '../../../constants';
 import { ProposalAddMessage } from '../../messages/action/ProposalAddMessage';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableProposalAddMessageConfig } from '../hashableconfig/message/HashableProposalAddMessageConfig';
 import { HashableProposalOptionMessageConfig } from '../hashableconfig/message/HashableProposalOptionMessageConfig';
 import { HashableProposalAddField, HashableProposalOptionField } from '../hashableconfig/HashableField';
 import { GovernanceAction } from '../../enums/GovernanceAction';
-import { HashableFieldValueConfig } from 'omp-lib/dist/interfaces/configs';
+import { HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { ProposalAddRequest } from '../../requests/action/ProposalAddRequest';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';

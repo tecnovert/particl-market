@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -32,7 +32,7 @@ import { MessageException } from '../exceptions/MessageException';
 import { ProfileService } from '../services/model/ProfileService';
 import { CoreConnectionStatusServiceStatus } from '../enums/CoreConnectionStatusServiceStatus';
 import { ExpiredProposalService } from '../services/observer/ExpiredProposalService';
-import { RpcBlockchainInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcBlockchainInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 
 export class ServerStartedListener implements interfaces.Listener {
 

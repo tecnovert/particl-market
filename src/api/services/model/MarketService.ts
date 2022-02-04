@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -17,12 +17,13 @@ import { MarketUpdateRequest } from '../../requests/model/MarketUpdateRequest';
 import { IdentityService } from './IdentityService';
 import { MarketSearchParams } from '../../requests/search/MarketSearchParams';
 import { MarketFactory } from '../../factories/model/MarketFactory';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketCreateRequestConfig } from '../../factories/hashableconfig/createrequest/HashableMarketCreateRequestConfig';
 import { CoreRpcService } from '../CoreRpcService';
 import { MarketType } from '../../enums/MarketType';
 import { SmsgService } from '../SmsgService';
 import { ImageService } from './ImageService';
+import { ListingItemService } from './ListingItemService';
 
 
 export class MarketService {
@@ -35,6 +36,7 @@ export class MarketService {
         @inject(Types.Service) @named(Targets.Service.model.ImageService) public imageService: ImageService,
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
+        @inject(Types.Service) @named(Targets.Service.model.ListingItemService) private listingItemService: ListingItemService,
         @inject(Types.Factory) @named(Targets.Factory.model.MarketFactory) public marketFactory: MarketFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
@@ -160,8 +162,46 @@ export class MarketService {
     public async destroy(id: number): Promise<void> {
         const market = await this.findOne(id, false);
         const marketReceiveAddress = market.ReceiveAddress;
+
+        const marketData: resources.Market = market.toJSON();
+
+        // remove market image
+        const imageId = +market.Image().id;
+        if (imageId) {
+            await this.imageService.destroy(imageId).catch(err => {
+                this.log.warn(`Failed to remove image for Market with the address=${marketReceiveAddress}!`);
+            });
+        }
+
+        // first check that the market is not added for another identity or profile
+        const similarMarkets: resources.Market[] = await this.findAllByReceiveAddress(marketReceiveAddress).then(value => value.toJSON());
+        if (similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1) {
+
+            // remove listings
+            const listings: resources.ListingItem[] = await this.listingItemService.findAllByMarketReceiveAddress(marketReceiveAddress)
+                .then(value => value.toJSON())
+                .catch(err => {
+                    this.log.warn(`Failed to find listings for Market with the address=${marketReceiveAddress}! Will wait for any listings to expire...`);
+                    return [];
+                });
+
+            for (const listingItem of listings) {
+                await this.listingItemService.destroy(listingItem.id)
+                    .catch(reason => {
+                        this.log.error('Failed to remove expired ListingItem (' + listingItem.hash + ') on Market ('
+                            + listingItem.market + '): ' + JSON.stringify(reason, null, 2));
+                    });
+            }
+
+
+            // deregister the smsg listener for this market
+            await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
+                this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
+            });
+        }
+
+        // destroy the market
         await this.marketRepo.destroy(id);
-        await this.smsgService.smsgRemoveAddress(marketReceiveAddress);
     }
 
     public async joinMarket(market: resources.Market, rescan: boolean = false): Promise<void> {

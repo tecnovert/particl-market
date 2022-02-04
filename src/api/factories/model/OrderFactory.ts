@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -12,7 +12,7 @@ import { OrderCreateParams, OrderItemCreateParams } from '../ModelCreateParams';
 import { OrderCreateRequest } from '../../requests/model/OrderCreateRequest';
 import { OrderItemCreateRequest } from '../../requests/model/OrderItemCreateRequest';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableOrderCreateRequestConfig } from '../hashableconfig/createrequest/HashableOrderCreateRequestConfig';
 import { BidMessage } from '../../messages/action/BidMessage';
 import { ActionDirection } from '../../enums/ActionDirection';

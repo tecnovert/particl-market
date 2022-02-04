@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -11,7 +11,7 @@ import { MissingParamException } from '../../../src/api/exceptions/MissingParamE
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';
 import { MessageException } from '../../../src/api/exceptions/MessageException';
-import { OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 
 
 describe('IdentityFundCommand', () => {

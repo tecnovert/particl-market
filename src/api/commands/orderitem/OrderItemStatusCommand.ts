@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -16,7 +16,7 @@ import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
 import { SearchOrder } from '../../enums/SearchOrder';
 import { OrderItemStatusResponse } from '../../../core/helpers/OrderItemStatusResponse';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { BidSearchOrderField } from '../../enums/SearchOrderField';
 import { BidSearchParams } from '../../requests/search/BidSearchParams';
 import { BidService } from '../../services/model/BidService';

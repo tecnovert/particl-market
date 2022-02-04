@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -20,8 +20,8 @@ import { ValidationException } from '../../src/api/exceptions/ValidationExceptio
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { PaymentInformationCreateRequest } from '../../src/api/requests/model/PaymentInformationCreateRequest';
 import { PaymentInformationUpdateRequest } from '../../src/api/requests/model/PaymentInformationUpdateRequest';
-import { EscrowReleaseType, EscrowType, SaleType } from 'omp-lib/dist/interfaces/omp-enums';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { EscrowReleaseType, EscrowType, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ItemPriceCreateRequest } from '../../src/api/requests/model/ItemPriceCreateRequest';
 import { EscrowCreateRequest } from '../../src/api/requests/model/EscrowCreateRequest';
 import { EscrowRatioCreateRequest } from '../../src/api/requests/model/EscrowRatioCreateRequest';
@@ -33,7 +33,7 @@ import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { MarketService } from '../../src/api/services/model/MarketService';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
-import { toSatoshis } from 'omp-lib/dist/util';
+import { toSatoshis } from '@zasmilingidiot/omp-lib/dist/util';
 import { ShippingPriceCreateRequest } from '../../src/api/requests/model/ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model/CryptocurrencyAddressCreateRequest';
 

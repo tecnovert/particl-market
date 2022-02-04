@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -12,14 +12,14 @@ import { MissingParamException } from '../../exceptions/MissingParamException';
 import { MarketImageAddMessageFactory } from './MarketImageAddMessageFactory';
 import { MarketAddRequest } from '../../requests/action/MarketAddRequest';
 import { MPActionExtended } from '../../enums/MPActionExtended';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketAddMessageConfig } from '../hashableconfig/message/HashableMarketAddMessageConfig';
-import { ContentReference, DSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ListingItemImageAddMessageFactory } from './ListingItemImageAddMessageFactory';
 import { BaseMessageFactory } from '../BaseMessageFactory';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import {HashableBidCreateRequestConfig} from '../hashableconfig/createrequest/HashableBidCreateRequestConfig';
-import {HashableBidField} from 'omp-lib/dist/interfaces/omp-enums';
+import {HashableBidField} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import {HashableMarketField} from '../hashableconfig/HashableField';
 
 export class MarketAddMessageFactory extends BaseMessageFactory {

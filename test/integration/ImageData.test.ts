@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -15,7 +15,7 @@ import { ListingItemService } from '../../src/api/services/model/ListingItemServ
 import { ItemInformationService } from '../../src/api/services/model/ItemInformationService';
 import { ImageProcessing } from '../../src/core/helpers/ImageProcessing';
 import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageDataCreateRequest } from '../../src/api/requests/model/ImageDataCreateRequest';
 import { ImageDataUpdateRequest } from '../../src/api/requests/model/ImageDataUpdateRequest';
 

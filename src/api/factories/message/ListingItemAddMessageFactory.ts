@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -11,16 +11,16 @@ import { ShippingAvailability } from '../../enums/ShippingAvailability';
 import { MessageException } from '../../exceptions/MessageException';
 import { EscrowConfig, EscrowRatio, Item, ItemInfo, ItemObject, Location, LocationMarker,
     MessagingInfo, MessagingOption, PaymentInfo, PaymentInfoEscrow, PaymentOption, SellerInfo,
-    ShippingPrice } from 'omp-lib/dist/interfaces/omp';
-import { MessagingProtocol, MPAction, SaleType } from 'omp-lib/dist/interfaces/omp-enums';
+    ShippingPrice } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
+import { MessagingProtocol, MPAction, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ItemCategoryFactory } from '../model/ItemCategoryFactory';
-import { ContentReference, DSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { NotImplementedException } from '../../exceptions/NotImplementedException';
-import { CryptoAddress } from 'omp-lib/dist/interfaces/crypto';
-import { KVS } from 'omp-lib/dist/interfaces/common';
+import { CryptoAddress } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
-import { HashableListingMessageConfig } from 'omp-lib/dist/hasher/config/listingitemadd';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
+import { HashableListingMessageConfig } from '@zasmilingidiot/omp-lib/dist/hasher/config/listingitemadd';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { ListingItemImageAddMessageFactory } from './ListingItemImageAddMessageFactory';
 import { ListingItemAddRequest } from '../../requests/action/ListingItemAddRequest';

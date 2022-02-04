@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -147,7 +147,7 @@ export class SmsgMessageService {
         return await this.findOne(id);
     }
 
-    public async destroy(id: number): Promise<void> {
+    public async destroy(id: number | string): Promise<void> {
         await this.smsgMessageRepo.destroy(id);
     }
 

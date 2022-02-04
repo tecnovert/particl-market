@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -25,7 +25,7 @@ import { BidRejectMessage } from '../../messages/action/BidRejectMessage';
 import { BidRejectMessageFactory } from '../../factories/message/BidRejectMessageFactory';
 import { BidRejectValidator } from '../../messagevalidators/BidRejectValidator';
 import { BidRejectRequest } from '../../requests/action/BidRejectRequest';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { BaseBidActionService } from '../BaseBidActionService';
 import { ActionDirection } from '../../enums/ActionDirection';

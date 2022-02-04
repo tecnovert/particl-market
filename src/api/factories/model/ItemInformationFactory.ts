@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -15,9 +15,9 @@ import { ImageCreateRequest } from '../../requests/model/ImageCreateRequest';
 import { ItemLocationCreateRequest } from '../../requests/model/ItemLocationCreateRequest';
 import { ImageDataService } from '../../services/model/ImageDataService';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
-import { ItemInfo, Location, LocationMarker } from 'omp-lib/dist/interfaces/omp';
+import { ItemInfo, Location, LocationMarker } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ShippingDestinationCreateRequest } from '../../requests/model/ShippingDestinationCreateRequest';
-import { ContentReference, DSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ImageCreateParams, ListingItemCreateParams } from '../ModelCreateParams';
 import { ImageFactory } from './ImageFactory';

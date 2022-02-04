@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -12,7 +12,7 @@ import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamE
 import { CoreMessageVersion } from '../../../src/api/enums/CoreMessageVersion';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { CreatableModel } from '../../../src/api/enums/CreatableModel';
-import {ProtocolDSN} from 'omp-lib/dist/interfaces/dsn';
+import {ProtocolDSN} from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 
 
 describe('ListingItemTemplateCompressCommand', () => {

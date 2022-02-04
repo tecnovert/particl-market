@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -13,7 +13,7 @@ import { ImageProcessing } from '../../../src/core/helpers/ImageProcessing';
 import { GenerateListingItemTemplateParams } from '../../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { ListingItemTemplate } from '../../../src/api/models/ListingItemTemplate';
 import { Logger as LoggerType } from '../../../src/core/Logger';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelNotModifiableException } from '../../../src/api/exceptions/ModelNotModifiableException';
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';

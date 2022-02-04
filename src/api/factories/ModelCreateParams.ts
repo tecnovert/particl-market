@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -6,14 +6,14 @@ import * as resources from 'resources';
 import { ActionDirection } from '../enums/ActionDirection';
 import { AddressCreateRequest } from '../requests/model/AddressCreateRequest';
 import { CoreSmsgMessage } from '../messages/CoreSmsgMessage';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { SmsgMessageStatus } from '../enums/SmsgMessageStatus';
 import { ActionMessageInterface } from '../messages/action/ActionMessageInterface';
 import { BaseImageAddMessage } from '../messages/action/BaseImageAddMessage';
 import { BidMessageTypes } from './model/BidFactory';
 import { ProposalAddMessage } from '../messages/action/ProposalAddMessage';
 import { CommentAddMessage } from '../messages/action/CommentAddMessage';
-import { EscrowReleaseType, EscrowType, SaleType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { OrderItemStatus } from '../enums/OrderItemStatus';
 import { VoteMessage } from '../messages/action/VoteMessage';
 

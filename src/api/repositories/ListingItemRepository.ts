@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -49,6 +49,12 @@ export class ListingItemRepository {
         hash: string, marketReceiveAddress: string, withRelated: boolean = true
     ): Promise<Bookshelf.Collection<ListingItem>> {
         return this.ListingItemModel.fetchAllByHashAndMarketReceiveAddress(hash, marketReceiveAddress, withRelated);
+    }
+
+    public async findAllByMarketReceiveAddress(
+        marketReceiveAddress: string, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<ListingItem>> {
+        return this.ListingItemModel.fetchAllByMarketReceiveAddress(marketReceiveAddress, withRelated);
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ListingItem> {

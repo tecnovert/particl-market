@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -8,7 +8,7 @@ import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { MPActionExtended } from '../../enums/MPActionExtended';
-import { DSN } from 'omp-lib/dist/interfaces/dsn';
+import { DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageDataService } from '../../services/model/ImageDataService';
 import { ListingItemImageAddMessageFactory } from './ListingItemImageAddMessageFactory';
 import { MarketImageAddMessage } from '../../messages/action/MarketImageAddMessage';

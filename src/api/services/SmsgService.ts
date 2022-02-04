@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -14,7 +14,7 @@ import { MessageException } from '../exceptions/MessageException';
 import { CoreSmsgMessage } from '../messages/CoreSmsgMessage';
 import { SmsgSendParams } from '../requests/action/SmsgSendParams';
 import { SmsgMessageService } from './model/SmsgMessageService';
-import { RpcWallet, RpcWalletInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcWallet, RpcWalletInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { NotImplementedException } from '../exceptions/NotImplementedException';
 import { CoreMessageVersion } from '../enums/CoreMessageVersion';
 import { MessageVersions } from '../messages/MessageVersions';

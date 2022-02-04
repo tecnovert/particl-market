@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -29,7 +29,7 @@ import { FlaggedItemService } from '../model/FlaggedItemService';
 import { ListingItemTemplateService } from '../model/ListingItemTemplateService';
 import { MarketService } from '../model/MarketService';
 import { ActionDirection } from '../../enums/ActionDirection';
-import { MPAction} from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { MarketplaceNotification } from '../../messages/MarketplaceNotification';
 import { ListingItemNotification } from '../../messages/notification/ListingItemNotification';

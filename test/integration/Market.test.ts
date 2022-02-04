@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -18,12 +18,12 @@ import { MarketType } from '../../src/api/enums/MarketType';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { ValidationException } from '../../src/api/exceptions/ValidationException';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableMarketCreateRequestConfig';
 import { MarketAddMessage } from '../../src/api/messages/action/MarketAddMessage';
 import { MarketCreateParams } from '../../src/api/factories/ModelCreateParams';
 import { MarketFactory } from '../../src/api/factories/model/MarketFactory';
-import { RpcBlockchainInfo } from 'omp-lib/dist/interfaces/rpc';
+import { RpcBlockchainInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { PrivateKey, Networks } from 'particl-bitcore-lib';
 import { CoreRpcService } from '../../src/api/services/CoreRpcService';
 

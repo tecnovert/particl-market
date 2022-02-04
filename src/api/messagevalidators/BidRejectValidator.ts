@@ -1,13 +1,13 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ValidationException } from '../exceptions/ValidationException';
-import { MPM} from 'omp-lib/dist/interfaces/omp';
+import { MPM} from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
-import { FV_MPA_REJECT } from 'omp-lib/dist/format-validators/mpa_reject';
+import { FV_MPA_REJECT } from '@zasmilingidiot/omp-lib/dist/format-validators/mpa_reject';
 import { decorate, inject, injectable, named } from 'inversify';
 import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';

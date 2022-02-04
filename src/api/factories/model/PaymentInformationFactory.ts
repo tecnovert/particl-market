@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -15,10 +15,10 @@ import { ItemPriceCreateRequest } from '../../requests/model/ItemPriceCreateRequ
 import { ShippingPriceCreateRequest } from '../../requests/model/ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from '../../requests/model/CryptocurrencyAddressCreateRequest';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
-import { EscrowConfig, EscrowRatio, PaymentInfo, PaymentOption, ShippingPrice } from 'omp-lib/dist/interfaces/omp';
+import { EscrowConfig, EscrowRatio, PaymentInfo, PaymentOption, ShippingPrice } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ListingItemCreateParams } from '../ModelCreateParams';
-import { CryptoAddress, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { CryptoAddress, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { MessageException } from '../../exceptions/MessageException';
 // tslint:enable:max-line-length
 

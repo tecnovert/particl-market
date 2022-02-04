@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -24,7 +24,7 @@ import { BidCancelMessage } from '../../messages/action/BidCancelMessage';
 import { BidCancelMessageFactory } from '../../factories/message/BidCancelMessageFactory';
 import { BidCancelValidator } from '../../messagevalidators/BidCancelValidator';
 import { BaseBidActionService } from '../BaseBidActionService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotifyService } from '../NotifyService';
 import { ListingItemService } from '../model/ListingItemService';
 import { ActionDirection } from '../../enums/ActionDirection';
@@ -139,10 +139,10 @@ export class BidCancelActionService extends BaseBidActionService {
                     );
                 }
 
+                await this.bidService.unlockBidOutputs(bid);
+
                 await this.orderItemService.updateStatus(bid.ParentBid.OrderItem.id, nextOrderStatus);
                 await this.orderService.updateStatus(bid.ParentBid.OrderItem.Order.id, OrderStatus.CANCELED);
-
-                await this.bidService.unlockBidOutputs(bid);
 
                 return await this.bidService.findOne(bid.id, true).then(bidModel => bidModel.toJSON());
             });

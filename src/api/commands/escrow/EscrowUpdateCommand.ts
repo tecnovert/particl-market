@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -18,7 +18,7 @@ import { EscrowUpdateRequest } from '../../requests/model/EscrowUpdateRequest';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { EscrowRatioUpdateRequest } from '../../requests/model/EscrowRatioUpdateRequest';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
-import { EscrowReleaseType, EscrowType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelNotModifiableException } from '../../exceptions/ModelNotModifiableException';
 import {
     CommandParamValidationRules, EnumValidationRule,

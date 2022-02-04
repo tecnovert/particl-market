@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -6,7 +6,7 @@ import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../core/Logger';
 import { Types, Core, Targets } from '../../constants';
-import { BidConfiguration, Cryptocurrency, MPM, ompVersion, OpenMarketProtocol } from 'omp-lib/dist/omp';
+import { BidConfiguration, Cryptocurrency, MPM, ompVersion, OpenMarketProtocol } from '@zasmilingidiot/omp-lib/dist/omp';
 import { CoreRpcService } from './CoreRpcService';
 import { ListingItemAddMessage } from '../messages/action/ListingItemAddMessage';
 import { BidMessage } from '../messages/action/BidMessage';
@@ -14,8 +14,8 @@ import { EscrowLockMessage } from '../messages/action/EscrowLockMessage';
 import { BidAcceptMessage } from '../messages/action/BidAcceptMessage';
 import { ActionMessageInterface } from '../messages/action/ActionMessageInterface';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
-import { Config } from 'omp-lib/dist/abstract/config';
-import { RpcBlockchainInfo } from 'omp-lib/dist/interfaces/rpc';
+import { Config } from '@zasmilingidiot/omp-lib/dist/abstract/config';
+import { RpcBlockchainInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 
 export class OmpService {
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -45,13 +45,13 @@ import { LocationMarkerCreateRequest } from '../../src/api/requests/model/Locati
 import { ItemLocationCreateRequest } from '../../src/api/requests/model/ItemLocationCreateRequest';
 import { ShippingAvailability } from '../../src/api/enums/ShippingAvailability';
 import { ShippingDestinationCreateRequest } from '../../src/api/requests/model/ShippingDestinationCreateRequest';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
-import { EscrowReleaseType, EscrowType, MessagingProtocol, SaleType } from 'omp-lib/dist/interfaces/omp-enums';
+import { EscrowReleaseType, EscrowType, MessagingProtocol, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { EscrowRatioCreateRequest } from '../../src/api/requests/model/EscrowRatioCreateRequest';
 import { EscrowCreateRequest } from '../../src/api/requests/model/EscrowCreateRequest';
-import { CryptoAddressType, Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
-import { toSatoshis } from 'omp-lib/dist/util';
+import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
+import { toSatoshis } from '@zasmilingidiot/omp-lib/dist/util';
 import { ShippingPriceCreateRequest } from '../../src/api/requests/model/ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model/CryptocurrencyAddressCreateRequest';
 import { ItemPriceCreateRequest } from '../../src/api/requests/model/ItemPriceCreateRequest';
@@ -59,7 +59,7 @@ import { MessageException } from '../../src/api/exceptions/MessageException';
 import { ListingItemObjectType } from '../../src/api/enums/ListingItemObjectType';
 import { ListingItemObjectDataCreateRequest } from '../../src/api/requests/model/ListingItemObjectDataCreateRequest';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableListingItemTemplateCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableListingItemTemplateCreateRequestConfig';
 import { ListingItemTemplateUpdateRequest } from '../../src/api/requests/model/ListingItemTemplateUpdateRequest';
 import { ItemInformationUpdateRequest } from '../../src/api/requests/model/ItemInformationUpdateRequest';

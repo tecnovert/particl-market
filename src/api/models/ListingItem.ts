@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -77,6 +77,18 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
         const ListingItemCollection = ListingItem.forge<Model<ListingItem>>()
             .query(qb => {
                 qb.where('hash', '=', hash).andWhere('market', '=', marketReceiveAddress);
+            })
+            .orderBy('expiry_time', 'ASC');
+
+        return ListingItemCollection.fetchAll(withRelated ? {withRelated: this.RELATIONS} : undefined);
+    }
+
+    public static async fetchAllByMarketReceiveAddress(
+        marketReceiveAddress: string, withRelated: boolean = true
+    ): Promise<Collection<ListingItem>> {
+        const ListingItemCollection = ListingItem.forge<Model<ListingItem>>()
+            .query(qb => {
+                qb.where('market', '=', marketReceiveAddress);
             })
             .orderBy('expiry_time', 'ASC');
 

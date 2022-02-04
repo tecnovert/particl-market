@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -14,10 +14,10 @@ import { GenerateListingItemTemplateParams } from '../../../src/api/requests/tes
 import { MissingParamException } from '../../../src/api/exceptions/MissingParamException';
 import { InvalidParamException } from '../../../src/api/exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../../src/api/exceptions/ModelNotFoundException';
-import { OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { SearchOrder } from '../../../src/api/enums/SearchOrder';
 import { ListingItemSearchOrderField } from '../../../src/api/enums/SearchOrderField';
-import { ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { SmsgSendResponse } from '../../../src/api/responses/SmsgSendResponse';
 import { CoreMessageVersion } from '../../../src/api/enums/CoreMessageVersion';
 import { ImageVersions } from '../../../src/core/helpers/ImageVersionEnumType';

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -31,9 +31,9 @@ import { MarketAddRequest } from '../../requests/action/MarketAddRequest';
 import { MarketImageAddRequest } from '../../requests/action/MarketImageAddRequest';
 import { BooleanValidationRule, CommandParamValidationRules, EnumValidationRule, IdValidationRule, MessageRetentionValidationRule,
     ParamValidationRule, RingSizeValidationRule } from '../CommandParamValidation';
-import { OutputType } from 'omp-lib/dist/interfaces/crypto';
+import { OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
-import { RpcUnspentOutput } from 'omp-lib/dist/interfaces/rpc';
+import { RpcUnspentOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { BigNumber } from 'mathjs';
 
 

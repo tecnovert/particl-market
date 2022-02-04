@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -10,13 +10,13 @@ import { Types, Core, Targets } from '../../../constants';
 import { BidMessage } from '../../messages/action/BidMessage';
 import { BidCreateRequest } from '../../requests/model/BidCreateRequest';
 import { BidDataCreateRequest } from '../../requests/model/BidDataCreateRequest';
-import { HashableBidField, MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { HashableBidField, MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { BidCreateParams } from '../ModelCreateParams';
 import { BidAcceptMessage } from '../../messages/action/BidAcceptMessage';
 import { BidRejectMessage } from '../../messages/action/BidRejectMessage';
 import { BidCancelMessage } from '../../messages/action/BidCancelMessage';
-import { ConfigurableHasher } from 'omp-lib/dist/hasher/hash';
+import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableBidCreateRequestConfig } from '../hashableconfig/createrequest/HashableBidCreateRequestConfig';
 import { EscrowLockMessage } from '../../messages/action/EscrowLockMessage';
 import { EscrowReleaseMessage } from '../../messages/action/EscrowReleaseMessage';

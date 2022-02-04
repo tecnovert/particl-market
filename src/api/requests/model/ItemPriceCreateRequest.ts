@@ -1,10 +1,10 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import {IsNotEmpty, IsEnum, IsPositive, Min} from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
-import { Cryptocurrency } from 'omp-lib/dist/interfaces/crypto';
+import { Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ShippingPriceCreateRequest } from './ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from './CryptocurrencyAddressCreateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';

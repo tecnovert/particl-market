@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -18,7 +18,7 @@ import { ListingItemService } from '../../src/api/services/model/ListingItemServ
 import { BidDataCreateRequest } from '../../src/api/requests/model/BidDataCreateRequest';
 import { BidDataUpdateRequest } from '../../src/api/requests/model/BidDataUpdateRequest';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 

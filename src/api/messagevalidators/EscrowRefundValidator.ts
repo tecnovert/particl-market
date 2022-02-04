@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -13,7 +13,7 @@ import { inject, named } from 'inversify';
 import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';
 import { EscrowRefundMessage } from '../messages/action/EscrowRefundMessage';
-import { MPAction } from 'omp-lib/dist/interfaces/omp-enums';
+import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ActionDirection } from '../enums/ActionDirection';
 
 export class EscrowRefundValidator implements ActionMessageValidatorInterface {

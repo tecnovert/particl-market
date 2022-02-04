@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021, The Particl Market developers
+// Copyright (c) 2017-2022, The Particl Market developers
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
@@ -23,7 +23,7 @@ import { Market } from '../models/Market';
 import { MarketFactory } from '../factories/model/MarketFactory';
 import { MarketCreateParams } from '../factories/ModelCreateParams';
 import { MarketAddMessage } from '../messages/action/MarketAddMessage';
-import { ContentReference, DSN, ProtocolDSN } from 'omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ImageProcessing } from '../../core/helpers/ImageProcessing';
 
 
