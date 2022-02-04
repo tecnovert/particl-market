@@ -1,6 +1,6 @@
 {
   "name": "@zasmilingidiot/particl-marketplace",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "decentralized marketplace",
   "main": "dist/module.js",
   "scripts": {
@@ -73,6 +73,7 @@
     "dist/**/*"
   ],
   "dependencies": {
+    "@zasmilingidiot/omp-lib": "0.1.154",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.17.2",
@@ -113,7 +114,6 @@
     "merge": "1.2.1",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
-    "@zasmilingidiot/omp-lib": "0.1.154",
     "particl-bitcore-lib": "^0.16.0",
     "path": "^0.12.7",
     "piexifjs": "^1.0.3",
