@@ -23,7 +23,6 @@ import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException'
 import { CryptocurrencyAddressService } from '../../services/model/CryptocurrencyAddressService';
 import { ItemPriceService } from '../../services/model/ItemPriceService';
 import { ProfileService } from '../../services/model/ProfileService';
-import { DefaultMarketService } from '../../services/DefaultMarketService';
 import { IdentityService } from '../../services/model/IdentityService';
 import { MarketAddActionService } from '../../services/action/MarketAddActionService';
 import { MarketImageAddActionService } from '../../services/action/MarketImageAddActionService';
@@ -43,7 +42,6 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         // tslint:disable:max-line-length
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
-        @inject(Types.Service) @named(Targets.Service.DefaultMarketService) public defaultMarketService: DefaultMarketService,
         @inject(Types.Service) @named(Targets.Service.action.MarketAddActionService) public marketAddActionService: MarketAddActionService,
         @inject(Types.Service) @named(Targets.Service.action.MarketImageAddActionService) public marketImageAddActionService: MarketImageAddActionService,
         @inject(Types.Service) @named(Targets.Service.model.MarketService) public marketService: MarketService,
@@ -62,6 +60,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         return {
             params: [
                 new IdValidationRule('marketId', true, this.marketService),
+                new IdValidationRule('fromIdentityId', true, this.identityService),
                 new MessageRetentionValidationRule('daysRetention', true),
                 new BooleanValidationRule('estimateFee', false, false),
                 {
@@ -70,7 +69,6 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
                     required: false,
                     type: undefined
                 },
-                new IdValidationRule('fromIdentityId', false, this.identityService),
                 new BooleanValidationRule('usePaidImageMessages', false, false),
                 new EnumValidationRule('feeType', false, 'OutputType',
                     [OutputType.ANON, OutputType.PART] as string[], OutputType.PART),
@@ -86,10 +84,11 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
      *  [0]: promotedMarket: resources.Market
      *  [1]: daysRetention
      *  [2]: estimateFee
-     *  [3]: fromMarket: resources.Market
-     *  [4]: toMarket: resources.Market
-     *  [5]: fromIdentity: resources.Identity
-     *  [6]: toAddress: string
+     *  [3]: fromDetails: { walletName: string; publishAddress: string; }
+     *  [4]: toAddress: string
+     *  [5]: paidImageMessages: boolean
+     *  [6]: anonFee: boolean
+     *  [7]: ringSize: number
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -100,17 +99,14 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         const promotedMarket: resources.Market = data.params[0];
         const daysRetention: number = data.params[1];
         const estimateFee: boolean = data.params[2];
-        const fromMarket: resources.Market = data.params[3];            // from, optional
-        const toMarket: resources.Market = data.params[4];              // to, optional
-        const fromIdentity: resources.Identity = data.params[5];        // from, optional
-        let toAddress: string = data.params[6];                       // to, optional
-        const paidImageMessages: boolean = data.params[7];
-        const anonFee: boolean = data.params[8];
-        const ringSize: number = data.params[9];
+        const fromDetails: { walletName: string; publishAddress: string; } = data.params[3];
+        const toAddress: string = data.params[4];
+        const paidImageMessages: boolean = data.params[5];
+        const anonFee: boolean = data.params[6];
+        const ringSize: number = data.params[7];
 
-        const wallet = _.isNil(fromIdentity) ? fromMarket.Identity.wallet : fromIdentity.wallet;
-        const fromAddress = _.isNil(fromIdentity) ? fromMarket.publishAddress : fromIdentity.address;
-        toAddress = _.isNil(toAddress) ? toMarket.receiveAddress : toAddress;
+        const wallet = fromDetails.walletName;
+        const fromAddress = fromDetails.publishAddress;
 
         const marketAddRequest = {
             sendParams: {
@@ -161,26 +157,16 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
     /**
      * data.params[]:
      *  [0]: promotedMarketId
-     *  [1]: daysRetention
-     *  [2]: estimateFee, optional, default: false
-     *  [3]: toMarketIdOrAddress, optional, to which Markets address or to which address the message is sent to.
-     *       if number: toMarketId, if string: toAddress, default: default Profiles default Market receiveAddress
-     *  [4]: fromIdentityId, optional, overrides the toMarkets publishAddress,
-     *       default: default Profiles default Market publishAddress,
+     *  [1]: fromIdentityId
+     *  [2]: daysRetention
+     *  [3]: estimateFee, optional, default: false
+     *  [4]: toMarketIdOrAddress, optional, to which Markets address or to which address the message is sent to.
+     *       if number: toMarketId, if string: toAddress, default: the default broadcast/receive address
      *  [5]: paidImageMessages (optional, default: false)
      *  [6]: feeType (optional, default: PART)
      *  [7]: ringSize (optional, default: 12)
      *
      * Promotes a Market.
-     *
-     * - toMarketIdOrAddress === undefined && fromIdentityId === undefined:
-     *      -> send from default Market publishAddress to default Market receiveAddress.
-     * - toMarketIdOrAddress === number && fromIdentityId === undefined:
-     *      -> send from Market publishAddress to receiveAddress.
-     * - toMarketIdOrAddress === number && fromIdentityId === number:
-     *      -> send from fromIdentity.address to Market receiveAddress.
-     * - toMarketIdOrAddress === string && fromIdentityId === number:
-     *      -> send from fromIdentity.address to receiveAddress.
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -189,90 +175,73 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
 
         const promotedMarket: resources.Market = data.params[0];
-        const daysRetention = data.params[1];
-        const estimateFee = data.params[2];
-        const toMarketIdOrAddress: number | string = data.params[3];
-        const fromIdentity: resources.Identity = data.params[4];
+        const fromIdentity: resources.Identity = data.params[1];
+        const daysRetention = data.params[2];
+        const estimateFee = data.params[3];
+        const toMarketIdOrAddress: number | string = data.params[4];
         const paidImageMessages: boolean = data.params[5];
         const feeType: OutputType = data.params[6];
         const ringSize: number = data.params[7];
 
-        let toMarket: resources.Market | undefined;
         let toAddress: string | undefined;
 
-        let fromMarket: resources.Market | undefined;
-        // let fromIdentity: resources.Identity | undefined;
+        const fromDetails: { walletName: string; publishAddress: string; } = {
+            walletName: fromIdentity.wallet,
+            publishAddress: fromIdentity.address
+        };
 
         if (_.isNil(toMarketIdOrAddress)) {
-            // toMarketIdOrAddress === undefined && fromIdentityId === undefined:
+            // toMarketIdOrAddress === undefined:
             //  -> send from default Market publishAddress to default Market receiveAddress.
-            const defaultProfile: resources.Profile = await this.profileService.getDefault()
-                .then(value => value.toJSON())
-                .catch(reason => {
-                    throw new ModelNotFoundException('Profile');
-                });
-            toMarket = await this.defaultMarketService.getDefaultForProfile(defaultProfile.id)
-                .then(value => value.toJSON())
-                .catch(reason => {
-                    throw new ModelNotFoundException('Market');
-                });
-            fromMarket = toMarket;
-
-        } else if (!_.isNil(toMarketIdOrAddress) && typeof toMarketIdOrAddress === 'number' && _.isNil(fromIdentity)) {
-            // toMarketIdOrAddress === number && fromIdentityId === undefined:
-            //  -> send from Market publishAddress to receiveAddress.
-            toMarket = await this.marketService.findOne(toMarketIdOrAddress)
-                .then(value => value.toJSON())
-                .catch(reason => {
-                    throw new ModelNotFoundException('Market');
-                });
-            fromMarket = toMarket;
-
-        } else if (!_.isNil(toMarketIdOrAddress) && typeof toMarketIdOrAddress === 'number'
-            && !_.isNil(fromIdentity)) {
-            // toMarketIdOrAddress === number && fromIdentityId === number:
-            //  -> send from fromIdentity.address to Market receiveAddress.
-            toMarket = await this.marketService.findOne(toMarketIdOrAddress)
-                .then(value => value.toJSON())
-                .catch(reason => {
-                    throw new ModelNotFoundException('Market');
-                });
-
-        } else if (!_.isNil(toMarketIdOrAddress) && typeof toMarketIdOrAddress === 'string'
-            && !_.isNil(fromIdentity)) {
-            // toMarketIdOrAddress === string && fromIdentityId === number:
-            //  -> send from fromIdentity.address to receiveAddress.
-            toAddress = toMarketIdOrAddress;
+            toAddress = this.marketService.DEFAULT_BROADCAST_ADDRESS;
+            fromDetails.publishAddress = toAddress;
 
         } else {
+            if (typeof toMarketIdOrAddress === 'number') {
+                // toMarketIdOrAddress === number
+                //  -> send from identity's address to the indicated market's receiveAddress.
+                toAddress = await this.marketService.findOne(toMarketIdOrAddress)
+                    .then(value => value.toJSON() as resources.Market)
+                    .then(market => market.receiveAddress)
+                    .catch(reason => {
+                        throw new ModelNotFoundException('Market');
+                    });
+            } else if (typeof toMarketIdOrAddress === 'string') {
+                // toMarketIdOrAddress === string:
+                //  -> send from fromIdentity.address to the indicated address.
+                toAddress = toMarketIdOrAddress;
+            }
+        }
+
+        if (!toAddress) {
             throw new MessageException('Invalid parameters.');
         }
 
         data.params[0] = promotedMarket;
         data.params[1] = daysRetention;
         data.params[2] = estimateFee;
-        data.params[3] = fromMarket;
-        data.params[4] = !_.isNil(toMarket) ? toMarket : undefined;
-        data.params[5] = fromIdentity;
-        data.params[6] = !_.isNil(toAddress) ? toMarket : undefined;
-        data.params[7] = paidImageMessages;
-        data.params[8] = feeType === OutputType.ANON;
-        data.params[9] = ringSize;
+        data.params[3] = fromDetails;
+        data.params[4] = toAddress;
+        data.params[5] = paidImageMessages;
+        data.params[6] = feeType === OutputType.ANON;
+        data.params[7] = ringSize;
 
         return data;
     }
 
     public usage(): string {
-        return this.getName() + ' <promotedMarketId> [daysRetention] [estimateFee] [toMarketIdOrAddress] [fromIdentityId]';
+        // tslint:disable:max-line-length
+        return this.getName() + ' <promotedMarketId> <fromIdentityId> [daysRetention] [estimateFee] [toMarketIdOrAddress] [usePaidImageMessages] [feeType] [ringSize]';
+        // tslint:enable:max-line-length
     }
 
     public help(): string {
         return this.usage() + ' -  ' + this.description() + ' \n'
             + '    <promotedMarketId>           - number, The ID of the Market that we want to post. \n'
+            + '    <fromIdentityId>             - number, id of the Identity to use for posting.\n'
             + '    <daysRetention>              - [optional] number, days the market will be retained by network.\n'
             + '    <estimateFee>                - [optional] boolean, estimate the fee, don\'t post. \n'
             + '    <toMarketIdOrAddress>        - [optional] number|string, the Market Id to post to or address to post the message to.\n'
-            + '    <fromIdentityId>             - [optional] number, id of the Identity to use for posting.\n'
             + '    <usePaidImageMessages>       - [optional] boolean, send Images as paid messages. \n'
             + '    <feeType>                    - [optional] OutputType, default: PART. OutputType used to pay for the message fee.\n'
             + '    <ringSize>                   - [optional] number, default: 12. Ring size used if anon used for fee.\n';

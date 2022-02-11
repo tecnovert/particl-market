@@ -21,7 +21,6 @@ import { ImageVersions } from '../../src/core/helpers/ImageVersionEnumType';
 import { MarketService } from '../../src/api/services/model/MarketService';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { ListingItemTemplateService } from '../../src/api/services/model/ListingItemTemplateService';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ImageDataCreateRequest } from '../../src/api/requests/model/ImageDataCreateRequest';
 import { ImageCreateRequest } from '../../src/api/requests/model/ImageCreateRequest';
 import { ImageUpdateRequest } from '../../src/api/requests/model/ImageUpdateRequest';
@@ -36,7 +35,6 @@ describe('Image', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let imageService: ImageService;
     let imageDataService: ImageDataService;
     let marketService: MarketService;
@@ -70,7 +68,6 @@ describe('Image', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         imageService = app.IoC.getNamed<ImageService>(Types.Service, Targets.Service.model.ImageService);
         imageDataService = app.IoC.getNamed<ImageDataService>(Types.Service, Targets.Service.model.ImageDataService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
@@ -79,10 +76,10 @@ describe('Image', () => {
         listingItemTemplateService = app.IoC.getNamed<ListingItemTemplateService>(Types.Service, Targets.Service.model.ListingItemTemplateService);
 
         bidderProfile = await profileService.getDefault().then(value => value.toJSON());
-        bidderMarket = await defaultMarketService.getDefaultForProfile(bidderProfile.id).then(value => value.toJSON());
+        bidderMarket = await testDataService.getMarketForProfile(bidderProfile.id).then(value => value.toJSON());
 
         sellerProfile = await testDataService.generateProfile();
-        sellerMarket = await defaultMarketService.getDefaultForProfile(sellerProfile.id).then(value => value.toJSON());
+        sellerMarket = await testDataService.getMarketForProfile(sellerProfile.id).then(value => value.toJSON());
 
         listingItemTemplate = await testDataService.generateListingItemTemplate(sellerProfile, bidderMarket, false);
 

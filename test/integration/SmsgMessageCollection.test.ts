@@ -15,7 +15,6 @@ import { SmsgMessageCreateRequest } from '../../src/api/requests/model/SmsgMessa
 import { SmsgMessageFactory } from '../../src/api/factories/model/SmsgMessageFactory';
 import { ActionDirection } from '../../src/api/enums/ActionDirection';
 import { ListingItemAddMessage } from '../../src/api/messages/action/ListingItemAddMessage';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { ListingItemAddMessageFactory } from '../../src/api/factories/message/ListingItemAddMessageFactory';
 import { ProposalAddMessageFactory } from '../../src/api/factories/message/ProposalAddMessageFactory';
@@ -36,7 +35,6 @@ describe('SmsgMessageCollection', () => {
     let testDataService: TestDataService;
     let smsgMessageService: SmsgMessageService;
     let smsgMessageFactory: SmsgMessageFactory;
-    let defaultMarketService: DefaultMarketService;
     let profileService: ProfileService;
     let listingItemAddMessageFactory: ListingItemAddMessageFactory;
     let proposalAddMessageFactory: ProposalAddMessageFactory;
@@ -57,16 +55,15 @@ describe('SmsgMessageCollection', () => {
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
         smsgMessageService = app.IoC.getNamed<SmsgMessageService>(Types.Service, Targets.Service.model.SmsgMessageService);
         smsgMessageFactory = app.IoC.getNamed<SmsgMessageFactory>(Types.Factory, Targets.Factory.model.SmsgMessageFactory);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         listingItemAddMessageFactory = app.IoC.getNamed<ListingItemAddMessageFactory>(Types.Factory, Targets.Factory.message.ListingItemAddMessageFactory);
         proposalAddMessageFactory = app.IoC.getNamed<ProposalAddMessageFactory>(Types.Factory, Targets.Factory.message.ProposalAddMessageFactory);
 
         bidderProfile = await profileService.getDefault().then(value => value.toJSON());
-        bidderMarket = await defaultMarketService.getDefaultForProfile(bidderProfile.id).then(value => value.toJSON());
+        bidderMarket = await testDataService.getMarketForProfile(bidderProfile.id).then(value => value.toJSON());
 
         sellerProfile = await testDataService.generateProfile();
-        sellerMarket = await defaultMarketService.getDefaultForProfile(sellerProfile.id).then(value => value.toJSON());
+        sellerMarket = await testDataService.getMarketForProfile(sellerProfile.id).then(value => value.toJSON());
 
     });
 

@@ -28,7 +28,6 @@ import { CoreMessageProcessor } from '../../../src/api/messageprocessors/CoreMes
 import { ItemVote } from '../../../src/api/enums/ItemVote';
 import { VoteService } from '../../../src/api/services/model/VoteService';
 import { VoteActionMessageProcessor } from '../../../src/api/messageprocessors/action/VoteActionMessageProcessor';
-import { DefaultMarketService } from '../../../src/api/services/DefaultMarketService';
 import { ListingItemTemplateService } from '../../../src/api/services/model/ListingItemTemplateService';
 import { MarketplaceMessageProcessor } from '../../../src/api/messageprocessors/MarketplaceMessageProcessor';
 
@@ -40,7 +39,7 @@ describe('ProposalAddActionListener', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
+
     let marketService: MarketService;
     let profileService: ProfileService;
     let smsgMessageService: SmsgMessageService;
@@ -72,7 +71,7 @@ describe('ProposalAddActionListener', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
+
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         smsgMessageService = app.IoC.getNamed<SmsgMessageService>(Types.Service, Targets.Service.model.SmsgMessageService);
@@ -88,10 +87,10 @@ describe('ProposalAddActionListener', () => {
 
         // get default profile + market
         bidderProfile = await profileService.getDefault().then(value => value.toJSON());
-        bidderMarket = await defaultMarketService.getDefaultForProfile(bidderProfile.id).then(value => value.toJSON());
+        bidderMarket = await testDataService.getMarketForProfile(bidderProfile.id).then(value => value.toJSON());
 
         sellerProfile = await testDataService.generateProfile();
-        sellerMarket = await defaultMarketService.getDefaultForProfile(sellerProfile.id).then(value => value.toJSON());
+        sellerMarket = await testDataService.getMarketForProfile(sellerProfile.id).then(value => value.toJSON());
 
         listingItem = await testDataService.generateListingItemWithTemplate(sellerProfile, bidderMarket);
         listingItemTemplate = await listingItemTemplateService.findOne(listingItem.ListingItemTemplate.id).then(value => value.toJSON());

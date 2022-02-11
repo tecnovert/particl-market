@@ -72,6 +72,8 @@ describe('MarketJoinCommand', () => {
 
         sellerMarket = await testUtilSellerNode.getDefaultMarket(sellerProfile.id);
         buyerMarket = await testUtilBuyerNode.getDefaultMarket(buyerProfile.id);
+        expect(sellerMarket.Identity.id).toBeDefined();
+        expect(buyerMarket.Identity.id).toBeDefined();
         expect(sellerMarket.id).toBeDefined();
         expect(buyerMarket.id).toBeDefined();
         // log.debug('sellerMarket: ', JSON.stringify(sellerMarket, null, 2));
@@ -237,9 +239,9 @@ describe('MarketJoinCommand', () => {
 
     test('Should post the newMarket Market', async () => {
 
-        expect(sellerMarket.id).toBeDefined();
         const res: any = await testUtilSellerNode.rpc(marketCommand, [marketPostCommand,
             newMarketOnSellerNode.id,
+            sellerMarket.Identity.id,
             DAYS_RETENTION
         ]);
         res.expectJson();

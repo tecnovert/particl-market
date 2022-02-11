@@ -22,7 +22,6 @@ import { ListingItemService } from './model/ListingItemService';
 import { ListingItemTemplateService } from './model/ListingItemTemplateService';
 import { DefaultItemCategoryService } from './DefaultItemCategoryService';
 import { DefaultProfileService } from './DefaultProfileService';
-import { DefaultMarketService } from './DefaultMarketService';
 import { ProfileService } from './model/ProfileService';
 import { MarketService } from './model/MarketService';
 import { ItemCategoryService } from './model/ItemCategoryService';
@@ -72,7 +71,7 @@ import { ShippingDestinationCreateRequest } from '../requests/model/ShippingDest
 import { NotImplementedException } from '../exceptions/NotImplementedException';
 import { EscrowReleaseType, EscrowType, HashableBidField, MessagingProtocol, MPAction, SaleType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { CryptoAddressType, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
-import { DSN, ProtocolDSN} from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
+import { ContentReference, DSN, ProtocolDSN} from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { EscrowRatioCreateRequest } from '../requests/model/EscrowRatioCreateRequest';
 import { ShippingPriceCreateRequest } from '../requests/model/ShippingPriceCreateRequest';
 import { MessagingInformationCreateRequest } from '../requests/model/MessagingInformationCreateRequest';
@@ -80,7 +79,7 @@ import { ListingItemObjectCreateRequest } from '../requests/model/ListingItemObj
 import { ListingItemObjectDataCreateRequest } from '../requests/model/ListingItemObjectDataCreateRequest';
 import { ItemLocationCreateRequest } from '../requests/model/ItemLocationCreateRequest';
 import { OrderFactory } from '../factories/model/OrderFactory';
-import { CommentCreateParams, ImageCreateParams, OrderCreateParams } from '../factories/ModelCreateParams';
+import { CommentCreateParams, ImageCreateParams, OrderCreateParams, MarketCreateParams } from '../factories/ModelCreateParams';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableBidCreateRequestConfig } from '../factories/hashableconfig/createrequest/HashableBidCreateRequestConfig';
 import { HashableProposalCreateRequestConfig } from '../factories/hashableconfig/createrequest/HashableProposalCreateRequestConfig';
@@ -127,6 +126,12 @@ import { CommentFactory } from '../factories/model/CommentFactory';
 import { CommentAddMessage } from '../messages/action/CommentAddMessage';
 import { VoteTicket } from '../factories/message/VoteMessageFactory';
 import { FlaggedItemService } from './model/FlaggedItemService';
+import { MarketFactory } from '../factories/model/MarketFactory';
+import { MarketCreateRequest } from '../requests/model/MarketCreateRequest';
+import { MarketType } from '../enums/MarketType';
+import { MarketAddMessage } from '../messages/action/MarketAddMessage';
+import { Market } from '../models/Market';
+import { ImageProcessing } from '../../core/helpers/ImageProcessing';
 
 
 export class TestDataService {
@@ -137,7 +142,6 @@ export class TestDataService {
     constructor(
         @inject(Types.Service) @named(Targets.Service.DefaultItemCategoryService) private defaultItemCategoryService: DefaultItemCategoryService,
         @inject(Types.Service) @named(Targets.Service.DefaultProfileService) private defaultProfileService: DefaultProfileService,
-        @inject(Types.Service) @named(Targets.Service.DefaultMarketService) private defaultMarketService: DefaultMarketService,
         @inject(Types.Service) @named(Targets.Service.DefaultSettingService) private defaultSettingService: DefaultSettingService,
         @inject(Types.Service) @named(Targets.Service.model.MarketService) private marketService: MarketService,
         @inject(Types.Service) @named(Targets.Service.model.ProfileService) private profileService: ProfileService,
@@ -167,6 +171,7 @@ export class TestDataService {
         @inject(Types.Factory) @named(Targets.Factory.message.ListingItemAddMessageFactory) private listingItemAddMessageFactory: ListingItemAddMessageFactory,
         @inject(Types.Factory) @named(Targets.Factory.model.SmsgMessageFactory) private smsgMessageFactory: SmsgMessageFactory,
         @inject(Types.Factory) @named(Targets.Factory.model.CommentFactory) private commentFactory: CommentFactory,
+        @inject(Types.Factory) @named(Targets.Factory.model.MarketFactory) private marketFactory: MarketFactory,
         @inject(Types.Listener) @named(Targets.Listener.ServerStartedListener) private serverStartedListener: ServerStartedListener,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
@@ -315,15 +320,44 @@ export class TestDataService {
         } as TestDataGenerateRequest);
 
         // seed the default Market for default Profile, also creates the market Identity for the Profile
-        await this.defaultMarketService.seedDefaultMarketForProfile(profiles[0])
-            .catch(reason => {
-                this.log.error('ERROR: seedDefaultMarket, ' + reason);
-                throw reason;
-            });
+        const marketName = 'particl-market';
+        const marketIdentity: resources.Identity = await this.identityService.createMarketIdentityForProfile(profiles[0], marketName, true)
+            .then(value => value.toJSON());
+
+        const marketPKSetting = process.env[SettingValue.APP_DEFAULT_MARKETPLACE_PRIVATE_KEY];
+
+        const createRequest: MarketCreateRequest = await this.marketFactory.get({
+            actionMessage: {
+                name: marketName,
+                description: 'Particl Market',
+                marketType: MarketType.MARKETPLACE,
+                receiveKey: marketPKSetting,
+                publishKey: marketPKSetting,
+                image: {
+                    data: [{
+                        protocol: ProtocolDSN.REQUEST,  // using REQUEST to generate hash
+                        encoding: 'BASE64',
+                        data: ImageProcessing.particlLogo
+                    }] as DSN[],
+                    featured: false
+                } as ContentReference,
+                generated: Date.now()
+            } as MarketAddMessage,
+            identity: marketIdentity,
+            skipJoin: false
+        } as MarketCreateParams);
+
+        const newMarket: resources.Market = await this.marketService.create(createRequest).then(value => value.toJSON());
+        await this.marketService.joinMarket(newMarket);
 
         this.log.debug('generateProfile(), Profile generated.');
 
         return await this.profileService.findOne(profiles[0].id).then(value => value.toJSON());
+    }
+
+
+    public async getMarketForProfile(profileId: number): Promise<Market> {
+        return this.getProfileMarket(profileId);
     }
 
     /**
@@ -598,6 +632,13 @@ export class TestDataService {
     private async getTableNames(knex: any): Promise<any> {
         return await knex.raw("SELECT name FROM sqlite_master WHERE type='table';");
     }
+
+
+    private async getProfileMarket(profileId: number): Promise<Market> {
+        const market = await (await this.marketService.findAllByProfileId(profileId)).fetchOne();
+        return market;
+    }
+
 
     // -------------------
     // listingitemtemplates
@@ -1014,7 +1055,7 @@ export class TestDataService {
         let wallet: string;
         if (!generateParams.submitter) {
             const defaultProfile: resources.Profile = await this.profileService.getDefault().then(value => value.toJSON());
-            const defaultMarket = await this.defaultMarketService.getDefaultForProfile(defaultProfile.id).then(value => value.toJSON());
+            const defaultMarket = await this.getProfileMarket(defaultProfile.id).then(value => value.toJSON());
             wallet = defaultMarket.Identity.wallet;
         } else {
             const identity: resources.Identity = await this.identityService.findOneByAddress(generateParams.submitter).then(value => value.toJSON());
@@ -1058,7 +1099,7 @@ export class TestDataService {
         let submitter;
         if (!generateParams.submitter) {
             const defaultProfile: resources.Profile = await this.profileService.getDefault().then(value => value.toJSON());
-            const defaultMarket = await this.defaultMarketService.getDefaultForProfile(defaultProfile.id).then(value => value.toJSON());
+            const defaultMarket = await this.getProfileMarket(defaultProfile.id).then(value => value.toJSON());
             submitter = defaultMarket.Identity.address;
         } else {
             submitter = generateParams.submitter;
@@ -1349,7 +1390,7 @@ export class TestDataService {
         if (generateParams.soldOnMarketId) {
             market = await this.marketService.findOne(generateParams.soldOnMarketId).then(value => value.toJSON());
         } else {
-            market = await this.defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+            market = await this.getProfileMarket(profile.id).then(value => value.toJSON());
             generateParams.soldOnMarketId = market.id;
         }
 

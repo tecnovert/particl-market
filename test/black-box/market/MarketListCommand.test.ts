@@ -38,6 +38,7 @@ describe('MarketListCommand', () => {
         profile = await testUtil.getDefaultProfile();
         expect(profile.id).toBeDefined();
         market = await testUtil.getDefaultMarket(profile.id);
+        expect(market.Identity.id).toBeDefined();
         expect(market.id).toBeDefined();
 
     });
@@ -67,6 +68,7 @@ describe('MarketListCommand', () => {
         expect(market.id).toBeDefined();
         const res: any = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             DAYS_RETENTION
         ]);
         res.expectJson();

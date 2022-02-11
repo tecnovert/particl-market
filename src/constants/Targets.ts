@@ -107,7 +107,6 @@ export const Targets = {
         BaseBidActionService: 'BaseBidActionService',
         CoreRpcService: 'CoreRpcService',
         DefaultItemCategoryService: 'DefaultItemCategoryService',
-        DefaultMarketService: 'DefaultMarketService',
         DefaultProfileService: 'DefaultProfileService',
         DefaultSettingService: 'DefaultSettingService',
         ModelServiceInterface: 'ModelServiceInterface',
@@ -316,8 +315,7 @@ export const Targets = {
             MarketJoinCommand: 'MarketJoinCommand',
             MarketPostCommand: 'MarketPostCommand',
             MarketSearchCommand: 'MarketSearchCommand',
-            MarketRootCommand: 'MarketRootCommand',
-            MarketDefaultCommand: 'MarketDefaultCommand'
+            MarketRootCommand: 'MarketRootCommand'
         },
         messaginginformation: {
             MessagingInformationRootCommand: 'MessagingInformationRootCommand',
