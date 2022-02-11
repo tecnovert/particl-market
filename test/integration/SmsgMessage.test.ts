@@ -31,7 +31,6 @@ import { ListingItemAddMessage } from '../../src/api/messages/action/ListingItem
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { ListingItemService } from '../../src/api/services/model/ListingItemService';
 import { ListingItemTemplateService } from '../../src/api/services/model/ListingItemTemplateService';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ListingItemAddMessageFactory } from '../../src/api/factories/message/ListingItemAddMessageFactory';
 import { VoteService } from '../../src/api/services/model/VoteService';
 import { ProposalService } from '../../src/api/services/model/ProposalService';
@@ -52,7 +51,6 @@ describe('SmsgMessage', () => {
     let testDataService: TestDataService;
     let smsgMessageService: SmsgMessageService;
     let smsgMessageFactory: SmsgMessageFactory;
-    let defaultMarketService: DefaultMarketService;
     let profileService: ProfileService;
     let listingItemService: ListingItemService;
     let listingItemTemplateService: ListingItemTemplateService;
@@ -84,7 +82,7 @@ describe('SmsgMessage', () => {
         listingItemAddMessageFactory = app.IoC.getNamed<ListingItemAddMessageFactory>(Types.Factory, Targets.Factory.message.ListingItemAddMessageFactory);
         proposalAddMessageFactory = app.IoC.getNamed<ProposalAddMessageFactory>(Types.Factory, Targets.Factory.message.ProposalAddMessageFactory);
         voteMessageFactory = app.IoC.getNamed<VoteMessageFactory>(Types.Factory, Targets.Factory.message.VoteMessageFactory);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
+
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         listingItemService = app.IoC.getNamed<ListingItemService>(Types.Service, Targets.Service.model.ListingItemService);
         listingItemTemplateService = app.IoC.getNamed<ListingItemTemplateService>(Types.Service, Targets.Service.model.ListingItemTemplateService);
@@ -92,7 +90,7 @@ describe('SmsgMessage', () => {
         proposalService = app.IoC.getNamed<ProposalService>(Types.Service, Targets.Service.model.ProposalService);
 
         sellerProfile = await profileService.getDefault().then(value => value.toJSON());
-        sellerMarket = await defaultMarketService.getDefaultForProfile(sellerProfile.id).then(value => value.toJSON());
+        sellerMarket = await testDataService.getMarketForProfile(sellerProfile.id).then(value => value.toJSON());
 
     });
 

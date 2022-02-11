@@ -21,6 +21,7 @@ import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketCreateRequestConfig } from '../../factories/hashableconfig/createrequest/HashableMarketCreateRequestConfig';
 import { CoreRpcService } from '../CoreRpcService';
 import { MarketType } from '../../enums/MarketType';
+import { SettingValue } from '../../enums/SettingValue';
 import { SmsgService } from '../SmsgService';
 import { ImageService } from './ImageService';
 import { ListingItemService } from './ListingItemService';
@@ -29,6 +30,7 @@ import { ListingItemService } from './ListingItemService';
 export class MarketService {
 
     public log: LoggerType;
+    public readonly DEFAULT_BROADCAST_ADDRESS: string;
 
     constructor(
         @inject(Types.Repository) @named(Targets.Repository.MarketRepository) public marketRepo: MarketRepository,
@@ -41,6 +43,7 @@ export class MarketService {
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
         this.log = new Logger(__filename);
+        this.DEFAULT_BROADCAST_ADDRESS = process.env[SettingValue.APP_DEFAULT_MARKETPLACE_ADDRESS];
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Market>> {

@@ -21,7 +21,6 @@ import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableProposalAddMessageConfig } from '../../src/api/factories/hashableconfig/message/HashableProposalAddMessageConfig';
 import { HashableProposalAddField, HashableProposalOptionField } from '../../src/api/factories/hashableconfig/HashableField';
 import { HashableProposalOptionMessageConfig } from '../../src/api/factories/hashableconfig/message/HashableProposalOptionMessageConfig';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 
 
@@ -34,7 +33,6 @@ describe('Proposal', () => {
     let testDataService: TestDataService;
     let proposalService: ProposalService;
     let profileService: ProfileService;
-    let defaultMarketService: DefaultMarketService;
 
     let profile: resources.Profile;
     let market: resources.Market;
@@ -96,12 +94,11 @@ describe('Proposal', () => {
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
         proposalService = app.IoC.getNamed<ProposalService>(Types.Service, Targets.Service.model.ProposalService);
 
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         proposalService = app.IoC.getNamed<ProposalService>(Types.Service, Targets.Service.model.ProposalService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
     });
 

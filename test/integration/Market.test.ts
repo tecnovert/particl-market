@@ -17,7 +17,6 @@ import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { MarketType } from '../../src/api/enums/MarketType';
 import { NotFoundException } from '../../src/api/exceptions/NotFoundException';
 import { ValidationException } from '../../src/api/exceptions/ValidationException';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableMarketCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableMarketCreateRequestConfig';
 import { MarketAddMessage } from '../../src/api/messages/action/MarketAddMessage';
@@ -36,7 +35,6 @@ describe('Market', () => {
 
     let testDataService: TestDataService;
     let coreRpcService: CoreRpcService;
-    let defaultMarketService: DefaultMarketService;
     let marketService: MarketService;
     let profileService: ProfileService;
     let marketFactory: MarketFactory;
@@ -53,7 +51,6 @@ describe('Market', () => {
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
         coreRpcService = app.IoC.getNamed<CoreRpcService>(Types.Service, Targets.Service.CoreRpcService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
         marketFactory = app.IoC.getNamed<MarketFactory>(Types.Factory, Targets.Factory.model.MarketFactory);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
@@ -71,16 +68,6 @@ describe('Market', () => {
         await marketService.create({} as MarketCreateRequest).catch(e =>
             expect(e).toEqual(new ValidationException('Request body is not valid', []))
         );
-    });
-
-    test('Should get default default Market for Profile', async () => {
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
-
-        expect(market.name).toBe('DEFAULT');
-        expect(market.receiveKey).toBeDefined();
-        expect(market.receiveAddress).toBeDefined();
-        expect(market.publishKey).toBeDefined();
-        expect(market.publishAddress).toBeDefined();
     });
 
     test('Should create a new Market', async () => {

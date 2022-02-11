@@ -57,7 +57,6 @@ import { CryptocurrencyAddressCreateRequest } from '../../src/api/requests/model
 import { ItemPriceCreateRequest } from '../../src/api/requests/model/ItemPriceCreateRequest';
 import { ImageDataCreateRequest } from '../../src/api/requests/model/ImageDataCreateRequest';
 import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { HashableListingItemTemplateCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableListingItemTemplateCreateRequestConfig';
 import { ListingItemObjectType } from '../../src/api/enums/ListingItemObjectType';
 import { ListingItemObjectDataCreateRequest } from '../../src/api/requests/model/ListingItemObjectDataCreateRequest';
@@ -74,7 +73,6 @@ describe('ListingItem', () => {
 
     let testDataService: TestDataService;
     let coreRpcService: CoreRpcService;
-    let defaultMarketService: DefaultMarketService;
     let listingItemService: ListingItemService;
     let listingItemTemplateService: ListingItemTemplateService;
     let profileService: ProfileService;
@@ -107,7 +105,6 @@ describe('ListingItem', () => {
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
         coreRpcService = app.IoC.getNamed<CoreRpcService>(Types.Service, Targets.Service.CoreRpcService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         listingItemService = app.IoC.getNamed<ListingItemService>(Types.Service, Targets.Service.model.ListingItemService);
         listingItemTemplateService = app.IoC.getNamed<ListingItemTemplateService>(Types.Service, Targets.Service.model.ListingItemTemplateService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
@@ -130,7 +127,7 @@ describe('ListingItem', () => {
 
         // get default profile + market
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         randomImageData = await testDataService.generateRandomImage(10, 10);
     });

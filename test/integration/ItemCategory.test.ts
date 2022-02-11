@@ -17,7 +17,6 @@ import { ItemCategoryCreateRequest } from '../../src/api/requests/model/ItemCate
 import { ItemCategoryUpdateRequest } from '../../src/api/requests/model/ItemCategoryUpdateRequest';
 import { ProfileService } from '../../src/api/services/model/ProfileService';
 import { MarketService } from '../../src/api/services/model/MarketService';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { hash } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 
 describe('ItemCategory', () => {
@@ -27,7 +26,6 @@ describe('ItemCategory', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let itemCategoryService: ItemCategoryService;
     let profileService: ProfileService;
     let marketService: MarketService;
@@ -60,14 +58,13 @@ describe('ItemCategory', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         itemCategoryService = app.IoC.getNamed<ItemCategoryService>(Types.Service, Targets.Service.model.ItemCategoryService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
 
         // get default profile + market
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         defaultRootCategory = await itemCategoryService.findRoot().then(value => value.toJSON());
 

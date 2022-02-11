@@ -15,6 +15,7 @@ declare module 'resources' {
         mnemonic: string;
         passphrase: string;
         type: IdentityType;
+        name: string;
 
         createdAt: Date;
         updatedAt: Date;

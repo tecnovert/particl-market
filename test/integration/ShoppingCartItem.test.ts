@@ -19,7 +19,6 @@ import { ShoppingCartItemCreateRequest } from '../../src/api/requests/model/Shop
 import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
 describe('ShoppingCartItem', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;
@@ -28,7 +27,6 @@ describe('ShoppingCartItem', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let marketService: MarketService;
     let profileService: ProfileService;
     let shoppingCartItemService: ShoppingCartItemService;
@@ -50,7 +48,6 @@ describe('ShoppingCartItem', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         shoppingCartItemService = app.IoC.getNamed<ShoppingCartItemService>(Types.Service, Targets.Service.model.ShoppingCartItemService);
@@ -58,7 +55,7 @@ describe('ShoppingCartItem', () => {
 
         // get default profile + market + shoppingcart
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
         shoppingCart = market.Identity.ShoppingCarts[0];
 
         const generateParams = new GenerateListingItemTemplateParams([
