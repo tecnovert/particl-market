@@ -50,6 +50,7 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
                         return true;
                     }),
                 new StringValidationRule('longDescription', true),
+                new StringValidationRule('productCode', false),
                 new IdValidationRule('itemCategoryId', false, this.itemCategoryService)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
@@ -61,7 +62,8 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
      *  [1]: title
      *  [2]: shortDescription
      *  [3]: longDescription
-     *  [4]: itemCategory: resources.ItemCategory, optional
+     *  [4]: productCode
+     *  [5]: itemCategory: resources.ItemCategory, optional
      *
      * @param data
      * @returns {Promise<ItemInformation>}
@@ -72,12 +74,14 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
         const title = data.params[1];                                               // required
         const shortDescription = data.params[2];                                    // required
         const longDescription = data.params[3];                                     // required
-        const itemCategory: resources.ItemCategory = data.params[4];                // optional
+        const productCode = data.params[4];
+        const itemCategory: resources.ItemCategory = data.params[5];                // optional
 
         return await this.itemInformationService.update(listingItemTemplate.ItemInformation.id, {
             title,
             shortDescription,
             longDescription,
+            productCode,
             itemCategory: !_.isEmpty(itemCategory) ? {
                 key: itemCategory.key,
                 market: itemCategory.market
@@ -91,7 +95,8 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
      *  [1]: title
      *  [2]: shortDescription
      *  [3]: longDescription
-     *  [4]: itemCategory: resources.ItemCategory, optional
+     *  [4]: productCode
+     *  [5]: itemCategory: resources.ItemCategory, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -103,7 +108,7 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
         const title = data.params[1];                                               // required
         const shortDescription = data.params[2];                                    // required
         const longDescription = data.params[3];                                     // required
-        const itemCategory: resources.ItemCategory = data.params[4];                    // optional
+        const itemCategory: resources.ItemCategory = data.params[5];                    // optional
 
         // make sure ItemInformation exists
         if (_.isEmpty(listingItemTemplate.ItemInformation)) {
@@ -128,7 +133,7 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
     }
 
     public usage(): string {
-        return this.getName() + ' <listingItemTemplateId> <title> <shortDescription> <longDescription> [categoryId] ';
+        return this.getName() + ' <listingItemTemplateId> <title> <shortDescription> <longDescription> <productCode> [categoryId] ';
     }
 
     public help(): string {
@@ -137,6 +142,7 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
             + '    <title>                       - string, The title for the ItemInformation. \n'
             + '    <shortDescription>            - string, The short description for the ItemInformation. \n'
             + '    <longDescription>             - string, The long description for the ItemInformation. \n'
+            + '    <productCode>                 - string, The product code to use for this item. \n'
             + '    <categoryId>                  - number, optional - The ID of the ItemCategory for the ItemInformation.';
     }
 

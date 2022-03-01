@@ -3,10 +3,9 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
-import { Types, Core, Targets } from '../../../constants';
+import { Types, Core } from '../../../constants';
 import { ItemInformationCreateRequest } from '../../requests/model/ItemInformationCreateRequest';
 import { PaymentInformationCreateRequest } from '../../requests/model/PaymentInformationCreateRequest';
 import { EscrowCreateRequest } from '../../requests/model/EscrowCreateRequest';
@@ -43,7 +42,8 @@ export class ListingItemTemplateFactory implements ModelFactoryInterface {
                 title: params.title,
                 shortDescription: params.shortDescription,
                 longDescription: params.longDescription,
-                item_category_id: params.categoryId ? params.categoryId : undefined
+                item_category_id: params.categoryId ? params.categoryId : undefined,
+                productCode: params.productCode ? params.productCode : undefined
             } as ItemInformationCreateRequest,
             paymentInformation: {
                 type: params.saleType,

@@ -61,7 +61,8 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
                 new EscrowRatioValidationRule('buyerRatio', false),
                 new EscrowRatioValidationRule('sellerRatio', false),
                 new EnumValidationRule('escrowReleaseType', false, 'EscrowReleaseType',
-                    EnumHelper.getValues(EscrowReleaseType) as string[], EscrowReleaseType.ANON)
+                    EnumHelper.getValues(EscrowReleaseType) as string[], EscrowReleaseType.ANON),
+                new StringValidationRule('productCode', false)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
@@ -86,6 +87,7 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
      *  [11]: buyerRatio
      *  [12]: sellerRatio
      *  [13]: escrowReleaseType, default EscrowReleaseType.ANON
+     *  [14]: productCode, (optional)
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -118,23 +120,24 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
         }
 */
         const createRequest: ListingItemTemplateCreateRequest = await this.listingItemTemplateFactory.get({
-                profileId: profile.id,
-                title: data.params[1],
-                shortDescription: data.params[2],
-                longDescription: data.params[3],
-                categoryId: data.params[4],
-                saleType: data.params[5],
-                currency: data.params[6],
-                basePrice: data.params[7],
-                domesticShippingPrice: data.params[8],
-                internationalShippingPrice: data.params[9],
-                escrowType: data.params[10],
-                buyerRatio: data.params[11],
-                sellerRatio: data.params[12],
-                escrowReleaseType: data.params[13]
-                // paymentAddress: cryptoAddress.address,
-                // paymentAddressType: cryptoAddress.type
-            } as ListingItemTemplateCreateParams);
+            profileId: profile.id,
+            productCode: data.params[14],
+            title: data.params[1],
+            shortDescription: data.params[2],
+            longDescription: data.params[3],
+            categoryId: data.params[4],
+            saleType: data.params[5],
+            currency: data.params[6],
+            basePrice: data.params[7],
+            domesticShippingPrice: data.params[8],
+            internationalShippingPrice: data.params[9],
+            escrowType: data.params[10],
+            buyerRatio: data.params[11],
+            sellerRatio: data.params[12],
+            escrowReleaseType: data.params[13]
+            // paymentAddress: cryptoAddress.address,
+            // paymentAddressType: cryptoAddress.type
+        } as ListingItemTemplateCreateParams);
 
         return await this.listingItemTemplateService.create(createRequest);
     }
@@ -159,6 +162,7 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
      *  [11]: buyerRatio, (optional) default 100
      *  [12]: sellerRatio, (optional) default 100
      *  [13]: escrowReleaseType, (optional) default EscrowReleaseType.ANON
+     *  [14]: productCode, (optional)
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -186,7 +190,7 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
     public usage(): string {
         return this.getName() + ' <profileId> <title> <shortDescription> <longDescription> [categoryId]'
             + ' [saleType] [currency] [basePrice] [domesticShippingPrice] [internationalShippingPrice]'
-            + ' [escrowType] [buyerRatio] [sellerRatio] [escrowReleaseType] [parentListingItemTemplateId] ';
+            + ' [escrowType] [buyerRatio] [sellerRatio] [escrowReleaseType] [parentListingItemTemplateId] [productCode]';
     }
 
     public help(): string {
@@ -204,7 +208,8 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
             + '    <escrowType>                   - string - optional, default: MAD_CT. MAD_CT/MULTISIG \n'
             + '    <buyerRatio>                   - number - optional, default: 100 \n'
             + '    <sellerRatio>                  - number - optional, default: 100 \n'
-            + '    <escrowReleaseType>            - string - optional, default: ANON. ANON/BLIND \n';
+            + '    <escrowReleaseType>            - string - optional, default: ANON. ANON/BLIND \n'
+            + '    <productCode>                  - string - optional, this item\'s specific seller-defined product code \n';
     }
 
     public description(): string {

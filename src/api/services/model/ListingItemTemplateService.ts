@@ -25,7 +25,6 @@ import { MessagingInformationUpdateRequest } from '../../requests/model/Messagin
 import { ListingItemObjectCreateRequest } from '../../requests/model/ListingItemObjectCreateRequest';
 import { ListingItemObjectUpdateRequest } from '../../requests/model/ListingItemObjectUpdateRequest';
 import { ImageVersions } from '../../../core/helpers/ImageVersionEnumType';
-import { ImageProcessing } from '../../../core/helpers/ImageProcessing';
 import { ListingItemFactory } from '../../factories/model/ListingItemFactory';
 import { ImageDataFactory } from '../../factories/model/ImageDataFactory';
 import { Image } from '../../models/Image';
@@ -45,7 +44,6 @@ import { ImageCreateRequest } from '../../requests/model/ImageCreateRequest';
 import { ItemLocationCreateRequest } from '../../requests/model/ItemLocationCreateRequest';
 import { LocationMarkerCreateRequest } from '../../requests/model/LocationMarkerCreateRequest';
 import { ListingItemObjectDataCreateRequest } from '../../requests/model/ListingItemObjectDataCreateRequest';
-import { MessagingInformation } from '../../models/MessagingInformation';
 import { ImageFactory } from '../../factories/model/ImageFactory';
 import { ImageCreateParams } from '../../factories/ModelCreateParams';
 import { BaseImageAddMessage } from '../../messages/action/BaseImageAddMessage';
@@ -63,10 +61,6 @@ import { CoreRpcService } from '../CoreRpcService';
 
 
 export class ListingItemTemplateService implements ModelServiceInterface<ListingItemTemplate> {
-
-    // todo: move elsewhere?
-    private static IMG_BOUNDING_WIDTH = 600;
-    private static IMG_BOUNDING_HEIGHT = 600;
 
     public log: LoggerType;
 
@@ -490,39 +484,6 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         });
     }
 
-    // find highest order number from listingItemObjects
-    private async findHighestOrderNumber(listingItemObjects: resources.ListingItemObject[]): Promise<number> {
-        const highestOrder = await _.maxBy(listingItemObjects, (itemObject) => {
-            return itemObject['order'];
-        });
-        return highestOrder ? highestOrder['order'] : 0;
-    }
-
-    /**
-     *  Reads ORIGINAL version of an image from file (throws exception if file cannot be read), resizes and reduces quality,
-     *  returning the modified image value.
-     *
-     * @param {string} imageHash
-     * @param {boolean} qualityFactor
-     * @returns {Promise<string>}
-     */
-    private async getResizedImage(imageHash: string, qualityFactor: number): Promise<string> {
-        if (qualityFactor <= 0) {
-            return '';
-        }
-        const originalImage = await this.imageDataService.loadImageFile(imageHash, ImageVersions.ORIGINAL.propName);
-
-        let compressedImage = await ImageProcessing.resizeImageToFit(
-            originalImage,
-            ListingItemTemplateService.IMG_BOUNDING_WIDTH,
-            ListingItemTemplateService.IMG_BOUNDING_HEIGHT
-        );
-        compressedImage = await ImageProcessing.downgradeQuality(
-            compressedImage,
-            qualityFactor
-        );
-        return compressedImage;
-    }
 
     /**
      *
@@ -629,6 +590,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
                     title: templateToClone.ItemInformation.title,
                     shortDescription: templateToClone.ItemInformation.shortDescription,
                     longDescription: templateToClone.ItemInformation.longDescription,
+                    productCode: templateToClone.ItemInformation.productCode,
                     // for now, we are not cloning the categories
                     // item_category_id: templateToClone.ItemInformation.ItemCategory ? templateToClone.ItemInformation.ItemCategory.id : undefined,
                     shippingDestinations,

@@ -24,6 +24,7 @@ export interface ModelCreateParams {
 
 export interface ListingItemTemplateCreateParams extends ModelCreateParams {
     profileId: number;
+    productCode: string;
     title: string;
     shortDescription: string;
     longDescription: string;
