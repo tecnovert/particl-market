@@ -194,12 +194,18 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
      * @param listingItemTemplate: resources.ListingItemTemplate
      * @param targetParentId
      * @param market: resources.Market
+     * @param cloneProductCode boolean (default: false)
      */
-    public async clone(listingItemTemplate: resources.ListingItemTemplate, targetParentId?: number, market?: resources.Market): Promise<ListingItemTemplate> {
+    public async clone(
+        listingItemTemplate: resources.ListingItemTemplate,
+        targetParentId?: number,
+        market?: resources.Market,
+        cloneProductCode: boolean = false
+    ): Promise<ListingItemTemplate> {
         // this.log.debug('clone(), listingItemTemplateId: ' + listingItemTemplate.id + ', targetParentId: '
         //    + targetParentId + ', market: ' + (market ? market.id : undefined));
         this.log.debug('clone(), targetParentId: ', targetParentId);
-        const createRequest = await this.getCloneCreateRequest(listingItemTemplate, targetParentId, market);
+        const createRequest = await this.getCloneCreateRequest(listingItemTemplate, targetParentId, market, cloneProductCode);
 
         listingItemTemplate = await this.create(createRequest).then(value => value.toJSON());
 
@@ -490,9 +496,14 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
      * @param templateToClone
      * @param targetParentId
      * @param targetMarket
+     * @param cloneProductCode
      */
-    private async getCloneCreateRequest(templateToClone: resources.ListingItemTemplate, targetParentId?: number, targetMarket?: resources.Market):
-        Promise<ListingItemTemplateCreateRequest> {
+    private async getCloneCreateRequest(
+        templateToClone: resources.ListingItemTemplate,
+        targetParentId?: number,
+        targetMarket?: resources.Market,
+        cloneProductCode: boolean = false
+    ): Promise<ListingItemTemplateCreateRequest> {
 
         let shippingDestinations: ShippingDestinationCreateRequest[] = [];
 
@@ -590,7 +601,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
                     title: templateToClone.ItemInformation.title,
                     shortDescription: templateToClone.ItemInformation.shortDescription,
                     longDescription: templateToClone.ItemInformation.longDescription,
-                    productCode: templateToClone.ItemInformation.productCode,
+                    productCode: cloneProductCode ? templateToClone.ItemInformation.productCode : undefined,
                     // for now, we are not cloning the categories
                     // item_category_id: templateToClone.ItemInformation.ItemCategory ? templateToClone.ItemInformation.ItemCategory.id : undefined,
                     shippingDestinations,

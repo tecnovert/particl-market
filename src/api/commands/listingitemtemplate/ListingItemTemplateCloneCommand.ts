@@ -17,7 +17,7 @@ import { ListingItemTemplate } from '../../models/ListingItemTemplate';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { MessageException } from '../../exceptions/MessageException';
 import { MarketService } from '../../services/model/MarketService';
-import { CommandParamValidationRules, EnumValidationRule, IdValidationRule, NumberValidationRule, ParamValidationRule,
+import { BooleanValidationRule, CommandParamValidationRules, EnumValidationRule, IdValidationRule, NumberValidationRule, ParamValidationRule,
     ScalingValueValidationRule } from '../CommandParamValidation';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
 import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
@@ -45,7 +45,8 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
                     EnumHelper.getValues(CoreMessageVersion) as string[], CoreMessageVersion.FREE),
                 new ScalingValueValidationRule('scalingFraction', false, 0.9),
                 new ScalingValueValidationRule('qualityFraction', false, 0.9),
-                new NumberValidationRule('maxIterations', false, 10)
+                new NumberValidationRule('maxIterations', false, 10),
+                new BooleanValidationRule('cloneProductCode', false, false)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
@@ -75,8 +76,10 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
         const scalingFraction: number = data.params[4];
         const qualityFraction: number = data.params[5];
         const maxIterations: number = data.params[6];
+        const cloneProductCode: boolean = data.params[7];
 
-        listingItemTemplate = await this.listingItemTemplateService.clone(listingItemTemplate, targetParentId, market).then(value => value.toJSON());
+        listingItemTemplate = await this.listingItemTemplateService.clone(listingItemTemplate, targetParentId, market, cloneProductCode)
+            .then(value => value.toJSON());
 
         return await this.listingItemTemplateService.createResizedTemplateImages(listingItemTemplate, messageVersionToFit, scalingFraction,
             qualityFraction, maxIterations);
@@ -163,8 +166,9 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
         return await this.listingItemTemplateService.findOne(id).then(value => value.toJSON());
     }
 
+    // tslint:disable:max-line-length
     public usage(): string {
-        return this.getName() + ' <listingItemTemplateId> [marketId]';
+        return this.getName() + ' <listingItemTemplateId> [marketId] [messageVersionToFit] [scalingFraction] [qualityFraction] [maxIterations] [cloneProductCode]';
     }
 
     public help(): string {
@@ -174,9 +178,11 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
             + '    <messageVersionToFit>            - [optional] string, CoreMessageVersion to fit (for Image msgs), default FREE. '
             + '    <scalingFraction>                - [optional] number used to scale the Image size, default 0.9. '
             + '    <qualityFraction>                - [optional] number used to scale the Image quality, default 0.9. '
-            + '    <maxIterations>                  - [optional] number of max iterations run, default 10. ';
+            + '    <maxIterations>                  - [optional] number of max iterations run, default 10. '
+            + '    <cloneProductCode>               - [optional] boolean (true/false), default: false; indicates whether the product code of the source template should be cloned to the target template';
 
     }
+    // tslint:enable:max-line-length
 
     public description(): string {
         return 'Clone a ListingItemTemplate.';
