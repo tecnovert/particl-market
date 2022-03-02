@@ -9,6 +9,7 @@ declare module 'resources' {
         title: string;
         shortDescription: string;
         longDescription: string;
+        productCode: string;
         createdAt: Date;
         updatedAt: Date;
         ShippingDestinations: ShippingDestination[];
