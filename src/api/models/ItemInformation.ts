@@ -45,6 +45,9 @@ export class ItemInformation extends Bookshelf.Model<ItemInformation> {
     public get LongDescription(): string { return this.get('longDescription'); }
     public set LongDescription(value: string) { this.set('longDescription', value); }
 
+    public get ProductCode(): string { return this.get('productCode'); }
+    public set ProductCode(value: string) { this.set('productCode', value); }
+
     public get UpdatedAt(): Date { return this.get('updatedAt'); }
     public set UpdatedAt(value: Date) { this.set('updatedAt', value); }
 

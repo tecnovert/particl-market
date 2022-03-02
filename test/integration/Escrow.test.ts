@@ -24,7 +24,6 @@ import { MarketService } from '../../src/api/services/model/MarketService';
 import { EscrowReleaseType, EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { EscrowRatioCreateRequest } from '../../src/api/requests/model/EscrowRatioCreateRequest';
 import { EscrowRatioUpdateRequest } from '../../src/api/requests/model/EscrowRatioUpdateRequest';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { EscrowRatioService } from '../../src/api/services/model/EscrowRatioService';
 
 describe('Escrow', () => {
@@ -34,7 +33,6 @@ describe('Escrow', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let marketService: MarketService;
     let escrowService: EscrowService;
     let escrowRatioService: EscrowRatioService;
@@ -72,7 +70,6 @@ describe('Escrow', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         escrowService = app.IoC.getNamed<EscrowService>(Types.Service, Targets.Service.model.EscrowService);
         escrowRatioService = app.IoC.getNamed<EscrowRatioService>(Types.Service, Targets.Service.model.EscrowRatioService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
@@ -81,7 +78,7 @@ describe('Escrow', () => {
         paymentInformationService = app.IoC.getNamed<PaymentInformationService>(Types.Service, Targets.Service.model.PaymentInformationService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         // generate ListingItemTemplate without Escrow
         const templateGenerateParams = new GenerateListingItemTemplateParams([

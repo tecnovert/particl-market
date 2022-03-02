@@ -22,7 +22,6 @@ import { GenerateProposalParams } from '../../src/api/requests/testdata/Generate
 import { FlaggedItemCreateRequest } from '../../src/api/requests/model/FlaggedItemCreateRequest';
 import { FlaggedItem } from '../../src/api/models/FlaggedItem';
 import { FlaggedItemUpdateRequest } from '../../src/api/requests/model/FlaggedItemUpdateRequest';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
 
 describe('FlaggedItem', () => {
@@ -33,7 +32,6 @@ describe('FlaggedItem', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let flaggedItemService: FlaggedItemService;
     let profileService: ProfileService;
     let marketService: MarketService;
@@ -52,7 +50,6 @@ describe('FlaggedItem', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         flaggedItemService = app.IoC.getNamed<FlaggedItemService>(Types.Service, Targets.Service.model.FlaggedItemService);
         proposalService = app.IoC.getNamed<ProposalService>(Types.Service, Targets.Service.model.ProposalService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
@@ -60,7 +57,7 @@ describe('FlaggedItem', () => {
         listingItemService = app.IoC.getNamed<ListingItemService>(Types.Service, Targets.Service.model.ListingItemService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         randomCategory = await testDataService.getRandomCategory();
 

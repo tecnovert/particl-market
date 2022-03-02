@@ -49,10 +49,20 @@ describe('MarketPostCommand', () => {
         expect(res.error.error.message).toBe(new MissingParamException('marketId').getMessage());
     });
 
+    test('Should fail to post because missing identityId', async () => {
+        const res = await testUtil.rpc(marketCommand, [marketPostCommand,
+            market.id
+        ]);
+        res.expectJson();
+        res.expectStatusCode(404);
+        expect(res.error.error.message).toBe(new MissingParamException('fromIdentityId').getMessage());
+    });
+
 
     test('Should fail to post because missing daysRetention', async () => {
         const res = await testUtil.rpc(marketCommand, [marketPostCommand,
-            market.id
+            market.id,
+            market.Identity.id
         ]);
         res.expectJson();
         res.expectStatusCode(404);
@@ -63,6 +73,7 @@ describe('MarketPostCommand', () => {
     test('Should fail to post because invalid promotedMarketId', async () => {
         const res = await testUtil.rpc(marketCommand, [marketPostCommand,
             'INVALID',
+            market.Identity.id,
             DAYS_RETENTION
         ]);
         res.expectJson();
@@ -71,9 +82,22 @@ describe('MarketPostCommand', () => {
     });
 
 
+    test('Should fail to post because invalid fromIdentityId', async () => {
+        const res = await testUtil.rpc(marketCommand, [marketPostCommand,
+            market.id,
+            'INVALID',
+            DAYS_RETENTION
+        ]);
+        res.expectJson();
+        res.expectStatusCode(400);
+        expect(res.error.error.message).toBe(new InvalidParamException('fromIdentityId', 'number').getMessage());
+    });
+
+
     test('Should fail to post because invalid daysRetention', async () => {
         const res = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             'INVALID'
         ]);
         res.expectJson();
@@ -85,6 +109,7 @@ describe('MarketPostCommand', () => {
     test('Should fail to post because invalid estimateFee', async () => {
         const res = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             DAYS_RETENTION,
             0
         ]);
@@ -97,6 +122,7 @@ describe('MarketPostCommand', () => {
     test('Should fail to post because Market not found', async () => {
         const res = await testUtil.rpc(marketCommand, [marketPostCommand,
             0,
+            market.Identity.id,
             DAYS_RETENTION,
             true
         ]);
@@ -106,10 +132,24 @@ describe('MarketPostCommand', () => {
     });
 
 
+    test('Should fail to post because Identity not found', async () => {
+        const res = await testUtil.rpc(marketCommand, [marketPostCommand,
+            market.id,
+            0,
+            DAYS_RETENTION,
+            true
+        ]);
+        res.expectJson();
+        res.expectStatusCode(404);
+        expect(res.error.error.message).toBe(new ModelNotFoundException('Identity').getMessage());
+    });
+
+
     test('Should estimate post cost without actually posting', async () => {
         expect(market.id).toBeDefined();
         const res: any = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             DAYS_RETENTION,
             true
         ]);
@@ -128,6 +168,7 @@ describe('MarketPostCommand', () => {
         expect(market.id).toBeDefined();
         const res: any = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             DAYS_RETENTION,
             true,
             null,
@@ -153,6 +194,7 @@ describe('MarketPostCommand', () => {
         expect(market.id).toBeDefined();
         const res: any = await testUtil.rpc(marketCommand, [marketPostCommand,
             market.id,
+            market.Identity.id,
             DAYS_RETENTION
         ]);
         res.expectJson();

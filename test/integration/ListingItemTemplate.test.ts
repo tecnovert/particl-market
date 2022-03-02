@@ -58,7 +58,6 @@ import { ItemPriceCreateRequest } from '../../src/api/requests/model/ItemPriceCr
 import { MessageException } from '../../src/api/exceptions/MessageException';
 import { ListingItemObjectType } from '../../src/api/enums/ListingItemObjectType';
 import { ListingItemObjectDataCreateRequest } from '../../src/api/requests/model/ListingItemObjectDataCreateRequest';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableListingItemTemplateCreateRequestConfig } from '../../src/api/factories/hashableconfig/createrequest/HashableListingItemTemplateCreateRequestConfig';
 import { ListingItemTemplateUpdateRequest } from '../../src/api/requests/model/ListingItemTemplateUpdateRequest';
@@ -82,7 +81,6 @@ describe('ListingItemTemplate', async () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let listingItemTemplateService: ListingItemTemplateService;
     let itemInformationService: ItemInformationService;
     let itemLocationService: ItemLocationService;
@@ -115,7 +113,6 @@ describe('ListingItemTemplate', async () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         listingItemTemplateService = app.IoC.getNamed<ListingItemTemplateService>(Types.Service, Targets.Service.model.ListingItemTemplateService);
         itemInformationService = app.IoC.getNamed<ItemInformationService>(Types.Service, Targets.Service.model.ItemInformationService);
         itemLocationService = app.IoC.getNamed<ItemLocationService>(Types.Service, Targets.Service.model.ItemLocationService);
@@ -136,7 +133,7 @@ describe('ListingItemTemplate', async () => {
         listingItemObjectDataService = app.IoC.getNamed<ListingItemObjectDataService>(Types.Service, Targets.Service.model.ListingItemObjectDataService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         randomImageData = await testDataService.generateRandomImage(10, 10);
 

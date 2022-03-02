@@ -20,7 +20,6 @@ import { GenerateListingItemTemplateParams } from '../../src/api/requests/testda
 import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ListingItemService } from '../../src/api/services/model/ListingItemService';
 import { OrderStatus } from '../../src/api/enums/OrderStatus';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
 describe('TestDataService', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;
@@ -29,7 +28,6 @@ describe('TestDataService', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let itemCategoryService: ItemCategoryService;
     let addressService: AddressService;
     let profileService: ProfileService;
@@ -52,7 +50,6 @@ describe('TestDataService', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         itemCategoryService = app.IoC.getNamed<ItemCategoryService>(Types.Service, Targets.Service.model.ItemCategoryService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         addressService = app.IoC.getNamed<AddressService>(Types.Service, Targets.Service.model.AddressService);
@@ -61,7 +58,7 @@ describe('TestDataService', () => {
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
 
         sellerProfile = await profileService.getDefault().then(value => value.toJSON());
-        sellerMarket = await defaultMarketService.getDefaultForProfile(sellerProfile.id).then(value => value.toJSON());
+        sellerMarket = await testDataService.getMarketForProfile(sellerProfile.id).then(value => value.toJSON());
         // log.debug('sellerProfile: ', JSON.stringify(sellerProfile, null, 2));
         // log.debug('sellerMarket: ', JSON.stringify(sellerMarket, null, 2));
 
@@ -79,7 +76,7 @@ describe('TestDataService', () => {
         expect(result).toHaveLength(1 + 3);
 
         bidderProfile = result[1];
-        bidderMarket = await defaultMarketService.getDefaultForProfile(bidderProfile.id).then(value => value.toJSON());
+        bidderMarket = await testDataService.getMarketForProfile(bidderProfile.id).then(value => value.toJSON());
 
         // log.debug('bidderProfile: ', JSON.stringify(bidderProfile, null, 2));
         // log.debug('bidderMarket: ', JSON.stringify(bidderMarket, null, 2));

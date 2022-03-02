@@ -17,6 +17,8 @@ export class ItemInformationUpdateRequest extends RequestBody implements ModelRe
     // public listing_item_id: number;
     // public listing_item_template_id: number;
 
+    public productCode: string;
+
     @IsNotEmpty()
     public title: string;
 

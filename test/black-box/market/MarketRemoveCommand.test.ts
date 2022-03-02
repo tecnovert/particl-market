@@ -93,14 +93,4 @@ describe('MarketRemoveCommand', () => {
         res.expectStatusCode(404);
         expect(res.error.error.message).toBe(new ModelNotFoundException('Market').getMessage());
     });
-
-    test('Should fail to remove default Market', async () => {
-        const res = await testUtil.rpc(marketCommand, [marketRemoveCommand,
-            market.id
-        ]);
-        res.expectJson();
-        res.expectStatusCode(404);
-        expect(res.error.error.message).toBe(new MessageException('Default Market cannot be removed.').getMessage());
-    });
-
 });

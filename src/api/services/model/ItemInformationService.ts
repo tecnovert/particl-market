@@ -134,6 +134,7 @@ export class ItemInformationService {
         itemInformation.Title = body.title;
         itemInformation.ShortDescription = body.shortDescription;
         itemInformation.LongDescription = body.longDescription;
+        itemInformation.ProductCode = body.productCode;
 
         // const itemInfoToSave = itemInformation.toJSON();
 

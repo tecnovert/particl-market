@@ -27,7 +27,6 @@ import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { ShippingPriceUpdateRequest } from '../../src/api/requests/model/ShippingPriceUpdateRequest';
 import { CryptocurrencyAddressUpdateRequest } from '../../src/api/requests/model/CryptocurrencyAddressUpdateRequest';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 
 
 describe('ItemPrice', () => {
@@ -37,7 +36,6 @@ describe('ItemPrice', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let itemPriceService: ItemPriceService;
     let profileService: ProfileService;
     let marketService: MarketService;
@@ -55,7 +53,6 @@ describe('ItemPrice', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         itemPriceService = app.IoC.getNamed<ItemPriceService>(Types.Service, Targets.Service.model.ItemPriceService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
@@ -64,7 +61,7 @@ describe('ItemPrice', () => {
         escrowService = app.IoC.getNamed<EscrowService>(Types.Service, Targets.Service.model.EscrowService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
         const randomCategory: resources.ItemCategory = await testDataService.getRandomCategory();
 
         const generateListingItemTemplateParams = new GenerateListingItemTemplateParams([

@@ -14,7 +14,6 @@ import { Commands } from '../CommandEnumType';
 import { MarketService } from '../../services/model/MarketService';
 import { MessageException } from '../../exceptions/MessageException';
 import { ProfileService } from '../../services/model/ProfileService';
-import { DefaultMarketService } from '../../services/DefaultMarketService';
 import { DefaultProfileService } from '../../services/DefaultProfileService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
 
@@ -22,7 +21,6 @@ import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } fr
 export class MarketRemoveCommand extends BaseCommand implements RpcCommandInterface<void> {
 
     constructor(
-        @inject(Types.Service) @named(Targets.Service.DefaultMarketService) private defaultMarketService: DefaultMarketService,
         @inject(Types.Service) @named(Targets.Service.DefaultProfileService) private defaultProfileService: DefaultProfileService,
         @inject(Types.Service) @named(Targets.Service.model.MarketService) private marketService: MarketService,
         @inject(Types.Service) @named(Targets.Service.model.ProfileService) private profileService: ProfileService,
@@ -66,15 +64,6 @@ export class MarketRemoveCommand extends BaseCommand implements RpcCommandInterf
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
 
         const market: resources.Market = data.params[0];
-
-        const defaultProfile: resources.Profile = await this.defaultProfileService.getDefault();
-        const defaultMarket: resources.Market = await this.defaultMarketService.getDefaultForProfile(defaultProfile.id, false)
-            .then(value => value.toJSON());
-
-        if (market.id === defaultMarket.id) {
-            throw new MessageException('Default Market cannot be removed.');
-        }
-
         data.params[0] = market;
 
         return data;

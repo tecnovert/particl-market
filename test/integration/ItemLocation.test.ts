@@ -25,7 +25,6 @@ import { CreatableModel } from '../../src/api/enums/CreatableModel';
 import { TestDataGenerateRequest } from '../../src/api/requests/testdata/TestDataGenerateRequest';
 import { LocationMarkerCreateRequest } from '../../src/api/requests/model/LocationMarkerCreateRequest';
 import { LocationMarkerUpdateRequest } from '../../src/api/requests/model/LocationMarkerUpdateRequest';
-import { DefaultMarketService } from '../../src/api/services/DefaultMarketService';
 import { GenerateListingItemTemplateParams } from '../../src/api/requests/testdata/GenerateListingItemTemplateParams';
 import { ShippingCountries } from '../../src/core/helpers/ShippingCountries';
 
@@ -36,7 +35,6 @@ describe('ItemLocation', () => {
     const testUtil = new TestUtil();
 
     let testDataService: TestDataService;
-    let defaultMarketService: DefaultMarketService;
     let itemLocationService: ItemLocationService;
     let marketService: MarketService;
     let profileService: ProfileService;
@@ -77,7 +75,6 @@ describe('ItemLocation', () => {
         await testUtil.bootstrapAppContainer(app);  // bootstrap the app
 
         testDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);
-        defaultMarketService = app.IoC.getNamed<DefaultMarketService>(Types.Service, Targets.Service.DefaultMarketService);
         itemLocationService = app.IoC.getNamed<ItemLocationService>(Types.Service, Targets.Service.model.ItemLocationService);
         marketService = app.IoC.getNamed<MarketService>(Types.Service, Targets.Service.model.MarketService);
         profileService = app.IoC.getNamed<ProfileService>(Types.Service, Targets.Service.model.ProfileService);
@@ -86,7 +83,7 @@ describe('ItemLocation', () => {
         locationMarkerService = app.IoC.getNamed<LocationMarkerService>(Types.Service, Targets.Service.model.LocationMarkerService);
 
         profile = await profileService.getDefault().then(value => value.toJSON());
-        market = await defaultMarketService.getDefaultForProfile(profile.id).then(value => value.toJSON());
+        market = await testDataService.getMarketForProfile(profile.id).then(value => value.toJSON());
 
         // create ListingItemTemplate without ItemLocation
         const templateGenerateParams = new GenerateListingItemTemplateParams([
