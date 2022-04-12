@@ -163,10 +163,11 @@ export class MarketService {
     }
 
     public async destroy(id: number): Promise<void> {
+        this.log.info(`Requested destroy of market with id=${id}!`);
         const market = await this.findOne(id, false);
         const marketReceiveAddress = market.ReceiveAddress;
 
-        const marketData: resources.Market = market.toJSON();
+        const marketData = market.toJSON();
 
         // remove market image
         const imageId = +market.Image().id;
@@ -176,31 +177,34 @@ export class MarketService {
             });
         }
 
-        // first check that the market is not added for another identity or profile
-        const similarMarkets: resources.Market[] = await this.findAllByReceiveAddress(marketReceiveAddress).then(value => value.toJSON());
-        if (similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1) {
+        // only be concerned with removing listings, smsg messages, etc if the market is joined (ie: ignore running these steps for a promoted market)
+        if (+marketData.identityId > 0) {
+            // first check that the market is not added for another identity or profile
+            const similarMarkets: resources.Market[] = await this.findAllByReceiveAddress(marketReceiveAddress).then(value => value.toJSON());
+            if (similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1) {
 
-            // remove listings
-            const listings: resources.ListingItem[] = await this.listingItemService.findAllByMarketReceiveAddress(marketReceiveAddress)
-                .then(value => value.toJSON())
-                .catch(err => {
-                    this.log.warn(`Failed to find listings for Market with the address=${marketReceiveAddress}! Will wait for any listings to expire...`);
-                    return [];
-                });
-
-            for (const listingItem of listings) {
-                await this.listingItemService.destroy(listingItem.id)
-                    .catch(reason => {
-                        this.log.error('Failed to remove expired ListingItem (' + listingItem.hash + ') on Market ('
-                            + listingItem.market + '): ' + JSON.stringify(reason, null, 2));
+                // remove listings
+                const listings: resources.ListingItem[] = await this.listingItemService.findAllByMarketReceiveAddress(marketReceiveAddress)
+                    .then(value => value.toJSON())
+                    .catch(err => {
+                        this.log.warn(`Failed to find listings for Market with the address=${marketReceiveAddress}! Will wait for any listings to expire...`);
+                        return [];
                     });
+
+                for (const listingItem of listings) {
+                    await this.listingItemService.destroy(listingItem.id)
+                        .catch(reason => {
+                            this.log.error('Failed to remove expired ListingItem (' + listingItem.hash + ') on Market ('
+                                + listingItem.market + '): ' + JSON.stringify(reason, null, 2));
+                        });
+                }
+
+
+                // deregister the smsg listener for this market
+                await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
+                    this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
+                });
             }
-
-
-            // deregister the smsg listener for this market
-            await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
-                this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
-            });
         }
 
         // destroy the market

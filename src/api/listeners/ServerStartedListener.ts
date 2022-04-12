@@ -24,12 +24,14 @@ import { SmsgService } from '../services/SmsgService';
 import { CoreConnectionStatusService } from '../services/observer/CoreConnectionStatusService';
 import { IdentityService } from '../services/model/IdentityService';
 import { ExpiredListingItemService } from '../services/observer/ExpiredListingItemService';
-import { IdentityType } from '../enums/IdentityType';
 import { MarketService } from '../services/model/MarketService';
 import { ProfileService } from '../services/model/ProfileService';
 import { CoreConnectionStatusServiceStatus } from '../enums/CoreConnectionStatusServiceStatus';
 import { ExpiredProposalService } from '../services/observer/ExpiredProposalService';
 import { RpcBlockchainInfo } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
+import { SettingValue } from '../enums/SettingValue';
+import { SettingUpdateRequest } from '../requests/model/SettingUpdateRequest';
+import { SettingCreateRequest } from '../requests/model/SettingCreateRequest';
 
 export class ServerStartedListener implements interfaces.Listener {
 
@@ -183,6 +185,8 @@ export class ServerStartedListener implements interfaces.Listener {
             await this.identityService.createMarketIdentityForProfile(defaultProfile, defaultIdentityName, true);
         }
 
+        await this.enforceSingleRunTasks();
+
         this.log.info('bootstrap(), done.');
 
         return true;
@@ -205,6 +209,58 @@ export class ServerStartedListener implements interfaces.Listener {
         });
         this.log.debug('loadWalletsForProfile(), walletsToLoad: ', JSON.stringify(walletsToLoad, null, 2));
         return await this.coreRpcService.loadWallets(walletsToLoad);
+    }
+
+
+    /**
+     * Yucky, but very quick means to ensure single run tasks for various tasks have occurred
+    */
+    private async enforceSingleRunTasks(): Promise<void> {
+        const foundSettings: resources.Setting[] = await this.settingService.findAllByKey(SettingValue.SCRIPT_TASK_MIGRATION)
+            .then(value => value.toJSON())
+            .catch(() => []);
+
+        const TASK_COUNT = 1;
+        const settingID = (foundSettings.length > 0) && (+foundSettings[0].id > 0) ? foundSettings[0].id : 0;
+        const tasksRun: number = (foundSettings.length > 0) && foundSettings[0] && (+foundSettings[0].value >= 0) ? +foundSettings[0].value : 0;
+        let requiresUpdate = tasksRun < TASK_COUNT;
+
+        // tslint:disable:no-small-switch
+        switch (tasksRun) {
+            case 0:
+                // once-off fix for joined market keys having been removed from particl-core when the equivalent promoted market expires
+                this.log.info('Running once-off task 0...');
+                const marketslist: resources.Market[] = await this.marketService.findAll().then(value => value.toJSON()).catch(() => []);
+                for (const market of marketslist) {
+                    if (market.Identity && market.Profile) {
+                        await this.marketService.importMarketKeys(market, false).catch((err) => {
+                            /* do nothing for now - might fail because it already exists */
+                        });
+                    }
+                }
+                // for further tasks, remove the break here to let fallthrough to the next case statement occur; except last statement
+                break;
+            default:
+                requiresUpdate = false;
+        }
+        // tslint:enable:no-small-switch
+
+        if (requiresUpdate) {
+            if (settingID > 0) {
+                await this.settingService.update(
+                    settingID,
+                    {
+                        key: SettingValue.SCRIPT_TASK_MIGRATION.toString(),
+                        value: '' + TASK_COUNT
+                    } as SettingUpdateRequest
+                ).catch(() => null);
+            } else {
+                await this.settingService.create({
+                    key: SettingValue.SCRIPT_TASK_MIGRATION.toString(),
+                    value: '' + TASK_COUNT
+                } as SettingCreateRequest).catch(() => null);
+            }
+        }
     }
 
 }

@@ -271,15 +271,18 @@ export class ImageService {
 
     public async destroy(id: number): Promise<void> {
         const image: resources.Image = await this.findOne(id, true).then(value => value.toJSON());
+        let allImages = [image];
 
-        const altImages: resources.Image[] = await this.findAllByHashAndTarget(image.hash, image.ItemInformation.ListingItem.hash)
+        if (image.ItemInformation && image.ItemInformation.ListingItem) {
+            const altImages: resources.Image[] = await this.findAllByHashAndTarget(image.hash, image.ItemInformation.ListingItem.hash)
             .then(value => value.toJSON())
             .catch(err => {
                 this.log.warn(`Error retrieving associated listing images for image hash=${image.hash}`, err);
                 return [];
             });
 
-        const allImages = [image, ...altImages];
+            allImages = [...allImages, ...altImages];
+        }
 
         for (const img of allImages) {
             for (const imgData of img.ImageDatas) {
