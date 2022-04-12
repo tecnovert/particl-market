@@ -214,7 +214,7 @@ export class ServerStartedListener implements interfaces.Listener {
 
     /**
      * Yucky, but very quick means to ensure single run tasks for various tasks have occurred
-    */
+     */
     private async enforceSingleRunTasks(): Promise<void> {
         const foundSettings: resources.Setting[] = await this.settingService.findAllByKey(SettingValue.SCRIPT_TASK_MIGRATION)
             .then(value => value.toJSON())
