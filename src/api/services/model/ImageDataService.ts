@@ -115,7 +115,7 @@ export class ImageDataService {
     public async destroy(id: number): Promise<void> {
         const imageData: resources.ImageData = await this.findOne(id, false).then(value => value.toJSON());
         if (imageData.protocol === ProtocolDSN.FILE) {
-            this.log.info(`will attempt to remove local file for imagedata=${id} ...`);
+            // this.log.info(`will attempt to remove local file for imagedata=${id} ...`);
             await this.removeImageFile(imageData.imageHash, imageData.imageVersion)
                 .catch(err =>
                     this.log.error(`error removing file for image hash=${imageData.imageHash} version=${imageData.imageVersion}`, err)
