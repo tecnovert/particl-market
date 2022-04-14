@@ -220,7 +220,7 @@ export class ServerStartedListener implements interfaces.Listener {
             .then(value => value.toJSON())
             .catch(() => []);
 
-        const TASK_COUNT = 1;
+        const TASK_COUNT = 2;
         const settingID = (foundSettings.length > 0) && (+foundSettings[0].id > 0) ? foundSettings[0].id : 0;
         const tasksRun: number = (foundSettings.length > 0) && foundSettings[0] && (+foundSettings[0].value >= 0) ? +foundSettings[0].value : 0;
         let requiresUpdate = tasksRun < TASK_COUNT;
@@ -228,11 +228,12 @@ export class ServerStartedListener implements interfaces.Listener {
         // tslint:disable:no-small-switch
         switch (tasksRun) {
             case 0:
+            case 1:
                 // once-off fix for joined market keys having been removed from particl-core when the equivalent promoted market expires
-                this.log.info('Running once-off task 0...');
-                const marketslist: resources.Market[] = await this.marketService.findAll().then(value => value.toJSON()).catch(() => []);
+                this.log.info('Running once-off task 1...');
+                const marketslist: any[] = await this.marketService.findAll().then(value => value.toJSON()).catch(() => []);
                 for (const market of marketslist) {
-                    if (market.Identity && market.Profile) {
+                    if (+market.identityId > 0) {
                         await this.marketService.importMarketKeys(market, false).catch((err) => {
                             /* do nothing for now - might fail because it already exists */
                         });
