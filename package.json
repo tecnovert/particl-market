@@ -1,6 +1,6 @@
 {
   "name": "@zasmilingidiot/particl-marketplace",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "decentralized marketplace",
   "main": "dist/module.js",
   "scripts": {
