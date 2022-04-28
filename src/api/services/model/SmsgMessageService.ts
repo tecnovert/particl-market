@@ -16,6 +16,7 @@ import { SmsgMessageUpdateRequest } from '../../requests/model/SmsgMessageUpdate
 import { SmsgMessageSearchParams } from '../../requests/search/SmsgMessageSearchParams';
 import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { ActionDirection } from '../../enums/ActionDirection';
+import { ActionMessageTypes } from '../../enums/ActionMessageTypes';
 import { MessageException } from '../../exceptions/MessageException';
 
 export class SmsgMessageService {
@@ -56,6 +57,10 @@ export class SmsgMessageService {
             throw new NotFoundException(id);
         }
         return smsgMessage;
+    }
+
+    public async cleanupByType(msgType: ActionMessageTypes): Promise<void> {
+        await this.smsgMessageRepo.cleanupByType(msgType);
     }
 
     public async findOneByMsgIdAndDirection(msgId: string, direction: ActionDirection = ActionDirection.BOTH,

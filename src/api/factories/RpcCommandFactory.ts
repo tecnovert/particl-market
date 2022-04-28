@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { inject, named, multiInject } from 'inversify';
+import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../core/Logger';
 import { Types, Core, Targets } from '../../constants';
 import { RpcCommandInterface } from '../commands/RpcCommandInterface';
@@ -152,6 +152,15 @@ import { NotificationRootCommand } from '../commands/notification/NotificationRo
 import { NotificationSetReadCommand } from '../commands/notification/NotificationSetReadCommand';
 import { NotificationRemoveCommand } from '../commands/notification/NotificationRemoveCommand';
 import { NotificationSearchCommand } from '../commands/notification/NotificationSearchCommand';
+import { ChatMessagePostCommand } from './../commands/chat/ChatMessagePostCommand';
+import { ChatChannelListCommand } from './../commands/chat/ChatChannelListCommand';
+import { ChatChannelMessagesCommand } from './../commands/chat/ChatChannelMessagesCommand';
+import { ChatChannelFollowCommand } from './../commands/chat/ChatChannelFollowCommand';
+import { ChatChannelUnfollowCommand } from './../commands/chat/ChatChannelUnfollowCommand';
+import { ChatChannelSetReadCommand } from './../commands/chat/ChatChannelSetReadCommand';
+import { ChatParticipantListCommand } from './../commands/chat/ChatParticipantListCommand';
+import { ChatParticipantUpdateCommand } from './../commands/chat/ChatParticipantUpdateCommand';
+import { ChatRootCommand } from './../commands/chat/ChatRootCommand';
 
 // tslint:disable:array-type
 // tslint:disable:max-line-length
@@ -170,6 +179,16 @@ export class RpcCommandFactory {
         @inject(Types.Command) @named(Targets.Command.bid.BidRejectCommand) private bidRejectCommand: BidRejectCommand,
         @inject(Types.Command) @named(Targets.Command.bid.BidSendCommand) private bidSendCommand: BidSendCommand,
         @inject(Types.Command) @named(Targets.Command.bid.BidRootCommand) private bidRootCommand: BidRootCommand,
+
+        @inject(Types.Command) @named(Targets.Command.chat.ChatRootCommand) private chatRootCommand: ChatRootCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatMessagePostCommand) private chatMessagePostCommand: ChatMessagePostCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatChannelListCommand) private chatChannelListCommand: ChatChannelListCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatChannelMessagesCommand) private chatChannelMessagesCommand: ChatChannelMessagesCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatChannelSetReadCommand) private chatChannelSetReadCommand: ChatChannelSetReadCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatChannelFollowCommand) private chatChannelFollowCommand: ChatChannelFollowCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatChannelUnfollowCommand) private chatChannelUnfollowCommand: ChatChannelUnfollowCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatParticipantListCommand) private chatParticipantListCommand: ChatParticipantListCommand,
+        @inject(Types.Command) @named(Targets.Command.chat.ChatParticipantUpdateCommand) private chatParticipantUpdateCommand: ChatParticipantUpdateCommand,
 
         @inject(Types.Command) @named(Targets.Command.comment.CommentRootCommand) private commentRootCommand: CommentRootCommand,
         @inject(Types.Command) @named(Targets.Command.comment.CommentPostCommand) private commentPostCommand: CommentPostCommand,
@@ -355,6 +374,16 @@ export class RpcCommandFactory {
         this.commands.push(bidRejectCommand);
         this.commands.push(bidSendCommand);
 
+        this.commands.push(chatRootCommand);
+        this.commands.push(chatMessagePostCommand);
+        this.commands.push(chatChannelListCommand);
+        this.commands.push(chatChannelMessagesCommand);
+        this.commands.push(chatChannelSetReadCommand);
+        this.commands.push(chatChannelFollowCommand);
+        this.commands.push(chatChannelUnfollowCommand);
+        this.commands.push(chatParticipantListCommand);
+        this.commands.push(chatParticipantUpdateCommand);
+
         this.commands.push(commentRootCommand);
         this.commands.push(commentPostCommand);
         this.commands.push(commentGetCommand);
@@ -519,6 +548,13 @@ export class RpcCommandFactory {
         this.commands.push(notificationRemoveCommand);
         this.commands.push(notificationSetReadCommand);
         this.commands.push(notificationRootCommand);
+
+        this.commands.push(dataRootCommand);
+        this.commands.push(dataGenerateCommand);
+        this.commands.push(dataCleanCommand);
+        this.commands.push(dataAddCommand);
+
+        this.commands.push(adminCommand);
 
         this.commands.push(helpCommand);
 

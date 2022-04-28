@@ -23,6 +23,7 @@ import { CoreCookieService } from '../services/observer/CoreCookieService';
 import { SmsgService } from '../services/SmsgService';
 import { CoreConnectionStatusService } from '../services/observer/CoreConnectionStatusService';
 import { IdentityService } from '../services/model/IdentityService';
+import { ChatCleanupService } from '../services/observer/ChatCleanupService';
 import { ExpiredListingItemService } from '../services/observer/ExpiredListingItemService';
 import { MarketService } from '../services/model/MarketService';
 import { ProfileService } from '../services/model/ProfileService';
@@ -67,6 +68,8 @@ export class ServerStartedListener implements interfaces.Listener {
         @inject(Types.Service) @named(Targets.Service.observer.ProposalResultRecalcService) public proposalResultRecalcService: ProposalResultRecalcService,
         @inject(Types.Service) @named(Targets.Service.observer.ExpiredListingItemService) public expiredListingItemService: ExpiredListingItemService,
         @inject(Types.Service) @named(Targets.Service.observer.ExpiredProposalService) public expiredProposalService: ExpiredProposalService,
+        @inject(Types.Service) @named(Targets.Service.observer.ChatCleanupService) public chatCleanupService: ChatCleanupService,
+
 
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,

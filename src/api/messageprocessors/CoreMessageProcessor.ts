@@ -80,7 +80,7 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
                     const marketplaceMessage: MarketplaceMessage | undefined = await this.smsgMessageFactory.getMarketplaceMessage(smsgMessage)
                         .then(value => value)
                         .catch(async reason => {
-                            this.log.error('Could not parse the MarketplaceMessage.');
+                            this.log.error('Could not parse the MarketplaceMessage, reason: ', reason);
                             return undefined;
                         });
 
@@ -141,6 +141,7 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
             const actionValue: string = (marketplaceMessage.action && marketplaceMessage.action.type) || '';
             return hasActionMessageType(actionValue);
         } catch (e) {
+            this.log.error('Invalid Marketplace Message, reason: ', e);
             return false;
         }
     }

@@ -17,6 +17,7 @@ import { Bid } from './Bid';
 import { FlaggedItem } from './FlaggedItem';
 import { ShoppingCartItem } from './ShoppingCartItem';
 import { SearchOrder } from '../enums/SearchOrder';
+import { ChatChannelType } from '../enums/Chat';
 import { ListingItemSearchOrderField } from '../enums/SearchOrderField';
 import { Blacklist } from './Blacklist';
 
@@ -141,9 +142,24 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                         GROUP BY listing_item_id
                     ) cart_totals
                     ON cart_totals.cart_item_id = listing_items.id`);
+                qb.joinRaw(`
+                    LEFT JOIN (
+                        SELECT	hash
+                                , 1 AS has_follows
+                        FROM	chat_channels
+                        WHERE	hash_type = '${ChatChannelType.LISTINGITEM}'
+                        AND		chat_channels.id IN (
+                                    SELECT 	chat_channel_id
+                                    FROM	chat_follows
+                                    GROUP BY chat_channel_id
+                                )
+                    ) has_chat_follows
+                    ON has_chat_follows.hash = listing_items.hash
+                `);
                 qb.where('expired_at', '<=', Date.now());
                 qb.andWhereRaw('bid_totals.bid_totals IS NULL');
                 qb.andWhereRaw('cart_totals.cart_item_count IS NULL');
+                qb.andWhereRaw('has_chat_follows.has_follows IS NULL');
                 qb.groupBy('listing_items.id');
             });
         return listingCollection.fetchAll();

@@ -31,6 +31,10 @@ export class OrderRepository {
         return this.OrderModel.fetchById(id, withRelated);
     }
 
+    public async findOneByHash(hash: string, withRelated: boolean = true): Promise<Order> {
+        return this.OrderModel.fetchByHash(hash, withRelated);
+    }
+
     /**
      *
      * @param options, OrderSearchParams

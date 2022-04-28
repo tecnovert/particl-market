@@ -39,6 +39,28 @@ export class CommandEnumType extends Enum<Command> {
     public COMMENT_ROOT: Command    = new Command('comment', 'comment', true,
         [this.COMMENT_POST, this.COMMENT_GET, this.COMMENT_SEARCH, this.COMMENT_COUNT], EnvironmentType.ALL);
 
+    public CHAT_CHANNEL_POST: Command         = new Command('chatmessagepost', 'messagepost', false);
+    public CHAT_CHANNEL_LIST: Command         = new Command('chatchannellist', 'channellist', false);
+    public CHAT_CHANNEL_MESSAGES: Command     = new Command('chatchannelmessages', 'channelmessages', false);
+    public CHAT_CHANNEL_SET_READ: Command     = new Command('chatchannelsetread', 'channelsetread', false);
+    public CHAT_CHANNEL_FOLLOW: Command       = new Command('chatchannelfollow', 'channelfollow', false);
+    public CHAT_CHANNEL_UNFOLLOW: Command     = new Command('chatchannelunfollow', 'channelunfollow', false);
+    public CHAT_PARTICIPANT_LIST: Command     = new Command('chatparticipantlist', 'participantlist', false);
+    public CHAT_PARTICIPANT_UPDATE: Command     = new Command('chatparticipantupdate', 'participantupdate', false);
+
+    public CHAT_ROOT: Command                 = new Command('chat', 'chat', true,
+        [
+            this.CHAT_CHANNEL_POST,
+            this.CHAT_CHANNEL_LIST,
+            this.CHAT_CHANNEL_FOLLOW,
+            this.CHAT_CHANNEL_UNFOLLOW,
+            this.CHAT_CHANNEL_SET_READ,
+            this.CHAT_CHANNEL_MESSAGES,
+            this.CHAT_PARTICIPANT_LIST,
+            this.CHAT_PARTICIPANT_UPDATE
+        ],
+        EnvironmentType.ALL);
+
     public ITEM_SEARCH: Command         = new Command('itemsearch', 'search', false);
     public ITEM_GET: Command            = new Command('itemget', 'get', false);
     public ITEM_POST_UPDATE: Command    = new Command('itempostupdate', 'update', false);

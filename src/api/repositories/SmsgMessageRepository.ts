@@ -11,6 +11,7 @@ import { NotFoundException } from '../exceptions/NotFoundException';
 import { Logger as LoggerType } from '../../core/Logger';
 import { SmsgMessageSearchParams } from '../requests/search/SmsgMessageSearchParams';
 import { ActionDirection } from '../enums/ActionDirection';
+import { ActionMessageTypes } from '../enums/ActionMessageTypes';
 import { SmsgMessageCreateRequest } from '../requests/model/SmsgMessageCreateRequest';
 
 
@@ -32,6 +33,10 @@ export class SmsgMessageRepository {
     public async findAll(): Promise<Bookshelf.Collection<SmsgMessage>> {
         const list = await this.SmsgMessageModel.fetchAll();
         return list as Bookshelf.Collection<SmsgMessage>;
+    }
+
+    public async cleanupByType(msgType: ActionMessageTypes): Promise<void> {
+        return this.SmsgMessageModel.cleanupByType(msgType);
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<SmsgMessage> {

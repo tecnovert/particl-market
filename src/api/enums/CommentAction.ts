@@ -9,6 +9,6 @@
 
 export enum CommentAction {
 
-    MPA_COMMENT_ADD = 'MPA_COMMENT_ADD'
-
+    MPA_COMMENT_ADD = 'MPA_COMMENT_ADD',
+    MPA_CHAT_MESSAGE_ADD = 'MPA_CHAT_MESSAGE'
 }

@@ -33,7 +33,6 @@ import {
     ParamValidationRule,
     StringValidationRule
 } from '../CommandParamValidation';
-import {BidRequest} from '../../requests/action/BidRequest';
 
 
 export class CommentPostCommand extends BaseCommand implements RpcCommandInterface<SmsgSendResponse> {

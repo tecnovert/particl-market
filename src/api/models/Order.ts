@@ -38,6 +38,10 @@ export class Order extends Bookshelf.Model<Order> {
         return await Order.where<Order>({ id: value }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
 
+    public static async fetchByHash(value: string, withRelated: boolean = true): Promise<Order> {
+        return await Order.where<Order>({ hash: value }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
+    }
+
     public static async searchBy(options: OrderSearchParams, withRelated: boolean = true): Promise<Collection<Order>> {
         options.page = options.page || 0;
         options.pageLimit = options.pageLimit || 10;

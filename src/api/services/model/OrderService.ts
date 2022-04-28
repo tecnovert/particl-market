@@ -48,6 +48,14 @@ export class OrderService {
         return order;
     }
 
+    public async findOneByHash(hash: string, withRelated: boolean = true): Promise<Order> {
+        const order = await this.orderRepo.findOneByHash(hash, withRelated);
+        if (order === null) {
+            throw new NotFoundException(hash);
+        }
+        return order;
+    }
+
     /**
      * searchBy Order using given OrderSearchParams
      *

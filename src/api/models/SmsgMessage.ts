@@ -90,6 +90,11 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
         return messageCollection.fetchAll(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
 
+
+    public static async cleanupByType(msgType: ActionMessageTypes): Promise<void> {
+        await Bookshelf.knex('smsg_messages').where({type: msgType}).andWhere('expiration', '<', Date.now()).del().catch(() => null);
+    }
+
     public static async fetchLast(): Promise<SmsgMessage> {
         const options = {
             page: 0,

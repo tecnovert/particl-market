@@ -69,7 +69,7 @@ export class ZmqWorker {
             this.log.debug('ZMQ: receive(smsg): ', msgid.toString('hex'));
             msgid = msgid.toString('hex').slice(4); // 4 first ones are the msg version
             await this.actionQueue.add(async () =>
-                await this.coreMessageProcessor.process(msgid).catch(() => this.log.error('Failed to process msgid: ', + msgid))
+                await this.coreMessageProcessor.process(msgid).catch((err) => this.log.error(`Failed to process msgid: ${msgid} - `, err))
             );
         });
 

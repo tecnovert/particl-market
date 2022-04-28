@@ -2,8 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -16,6 +14,7 @@ import { CommandParamValidationRules, ParamValidationRule } from '../CommandPara
 import { ObserverStatus } from '../../enums/ObserverStatus';
 import { CoreConnectionStatusService } from '../../services/observer/CoreConnectionStatusService';
 import { CoreCookieService } from '../../services/observer/CoreCookieService';
+import { ChatCleanupService } from '../../services/observer/ChatCleanupService';
 import { ExpiredListingItemService } from '../../services/observer/ExpiredListingItemService';
 import { ExpiredMarketService } from '../../services/observer/ExpiredMarketService';
 import { ExpiredProposalService } from '../../services/observer/ExpiredProposalService';
@@ -26,6 +25,7 @@ import { WaitingMessageService } from '../../services/observer/WaitingMessageSer
 interface ServiceStatus {
     coreConnectionStatusService: ObserverStatus;
     coreCookieService: ObserverStatus;
+    chatCleanupService: ObserverStatus;
     expiredListingItemService: ObserverStatus;
     expiredMarketService: ObserverStatus;
     expiredProposalService: ObserverStatus;
@@ -41,6 +41,7 @@ export class StatusCommand extends BaseCommand implements RpcCommandInterface<Se
         @inject(Types.Service) @named(Targets.Service.observer.CoreCookieService) public coreCookieService: CoreCookieService,
         @inject(Types.Service) @named(Targets.Service.observer.ExpiredListingItemService) public expiredListingItemService: ExpiredListingItemService,
         @inject(Types.Service) @named(Targets.Service.observer.ExpiredMarketService) public expiredMarketService: ExpiredMarketService,
+        @inject(Types.Service) @named(Targets.Service.observer.ChatCleanupService) public chatCleanupService: ChatCleanupService,
         @inject(Types.Service) @named(Targets.Service.observer.ExpiredProposalService) public expiredProposalService: ExpiredProposalService,
         @inject(Types.Service) @named(Targets.Service.observer.ProposalResultRecalcService) public proposalResultRecalcService: ProposalResultRecalcService,
         @inject(Types.Service) @named(Targets.Service.observer.WaitingMessageService) public waitingMessageService: WaitingMessageService
@@ -61,6 +62,7 @@ export class StatusCommand extends BaseCommand implements RpcCommandInterface<Se
         return {
             coreConnectionStatusService: this.coreConnectionStatusService.status,
             coreCookieService: this.coreCookieService.status,
+            chatCleanupService: this.chatCleanupService.status,
             expiredListingItemService: this.expiredListingItemService.status,
             expiredMarketService: this.expiredMarketService.status,
             expiredProposalService: this.expiredProposalService.status,

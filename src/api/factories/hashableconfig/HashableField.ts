@@ -71,3 +71,10 @@ export enum HashableCommentAddField {
     COMMENT_TYPE = 'type',
     COMMENT_PARENT_COMMENT_HASH = 'parent_comment_hash'
 }
+
+export enum HashableChatAddField {
+    CHAT_SENDER = 'sender',
+    CHAT_RECEIVER = 'receiver',
+    CHAT_CHANNEL = 'channel',
+    CHAT_MESSAGE = 'message'
+}

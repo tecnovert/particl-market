@@ -36,6 +36,7 @@ export enum MessageQueuePriority {
 
     // comment events
     MPA_COMMENT_ADD = 70,
+    MPA_CHAT_ADD = 70,
 
     // unknown events
     UNKNOWN = 10

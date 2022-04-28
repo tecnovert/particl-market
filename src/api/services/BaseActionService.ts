@@ -34,8 +34,6 @@ import { AuthOptions, RequestOptions, Headers} from 'web-request';
 import { Environment } from '../../core/helpers/Environment';
 import { BlacklistService } from './model/BlacklistService';
 import { BlacklistSearchParams } from '../requests/search/BlacklistSearchParams';
-import { BlacklistType } from '../enums/BlacklistType';
-import {MarketAddMessage} from '../messages/action/MarketAddMessage';
 
 
 export abstract class BaseActionService implements ActionServiceInterface {

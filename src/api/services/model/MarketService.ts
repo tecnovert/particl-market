@@ -25,6 +25,8 @@ import { SettingValue } from '../../enums/SettingValue';
 import { SmsgService } from '../SmsgService';
 import { ImageService } from './ImageService';
 import { ListingItemService } from './ListingItemService';
+import { ChatService } from './ChatService';
+import { ChatChannelType, ChannelListItem } from '../../enums/Chat';
 
 
 export class MarketService {
@@ -39,6 +41,7 @@ export class MarketService {
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.model.ListingItemService) private listingItemService: ListingItemService,
+        @inject(Types.Service) @named(Targets.Service.model.ChatService) private chatService: ChatService,
         @inject(Types.Factory) @named(Targets.Factory.model.MarketFactory) public marketFactory: MarketFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
@@ -183,6 +186,8 @@ export class MarketService {
             const similarMarkets: resources.Market[] = await this.findAllByReceiveAddress(marketReceiveAddress).then(value => value.toJSON());
             if (similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1) {
 
+                const identityID = similarMarkets[0] ? +similarMarkets[0].Identity.id : 0;
+
                 // remove listings
                 const listings: resources.ListingItem[] = await this.listingItemService.findAllByMarketReceiveAddress(marketReceiveAddress)
                     .then(value => value.toJSON())
@@ -191,19 +196,31 @@ export class MarketService {
                         return [];
                     });
 
+                const chatSet: Set<string> = new Set();
+                const identityFollowedChannels = await this.chatService
+                    .listFollowedChannels({identityId: identityID, channelType: ChatChannelType.LISTINGITEM })
+                    .catch(err => {
+                        this.log.warn(`Failed to fetch chat messages applicable to this market... `, err);
+                        return [] as ChannelListItem[];
+                    });
+                identityFollowedChannels.forEach((c: ChannelListItem) => chatSet.add(c.channel));
+
                 for (const listingItem of listings) {
+                    if (chatSet.has(listingItem.hash)) {
+                        // failure to remove will be addressed during the regular chat cleanup process
+                        await this.chatService.unFollowChannel(identityID, listingItem.hash, ChatChannelType.LISTINGITEM);
+                    }
                     await this.listingItemService.destroy(listingItem.id)
                         .catch(reason => {
                             this.log.error('Failed to remove expired ListingItem (' + listingItem.hash + ') on Market ('
                                 + listingItem.market + '): ' + JSON.stringify(reason, null, 2));
                         });
+
+                    // deregister the smsg listener for this market
+                    await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
+                        this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
+                    });
                 }
-
-
-                // deregister the smsg listener for this market
-                await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
-                    this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
-                });
             }
         }
 
