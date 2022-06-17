@@ -41,13 +41,13 @@ export class PaymentInformationUpdateCommand extends BaseCommand implements RpcC
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: paymentType
-     *  [2]: currency
-     *  [3]: basePrice
-     *  [4]: domesticShippingPrice
-     *  [5]: internationalShippingPrice
-     *  [6]: paymentAddress, optional
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: paymentType
+     * [2]: currency
+     * [3]: basePrice
+     * [4]: domesticShippingPrice
+     * [5]: internationalShippingPrice
+     * [6]: paymentAddress, optional
      *
      * @param data
      * @returns {Promise<PaymentInformation>}
@@ -84,13 +84,13 @@ export class PaymentInformationUpdateCommand extends BaseCommand implements RpcC
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: saleType
-     *  [2]: currency
-     *  [3]: basePrice
-     *  [4]: domesticShippingPrice
-     *  [5]: internationalShippingPrice
-     *  [6]: paymentAddress, optional
+     * [0]: listingItemTemplateId
+     * [1]: saleType
+     * [2]: currency
+     * [3]: basePrice
+     * [4]: domesticShippingPrice
+     * [5]: internationalShippingPrice
+     * [6]: paymentAddress, optional
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -131,10 +131,8 @@ export class PaymentInformationUpdateCommand extends BaseCommand implements RpcC
 
         // make sure ListingItemTemplate with the id exists
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(data.params[0])
-            .then(value => {
-                return value.toJSON();
-            })
-            .catch(reason => {
+            .then(value => value.toJSON())
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItemTemplate');
             });
 

@@ -39,6 +39,7 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class EscrowRefundActionService extends BaseBidActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -71,6 +72,7 @@ export class EscrowRefundActionService extends BaseBidActionService {
             bidFactory
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -120,7 +122,7 @@ export class EscrowRefundActionService extends BaseBidActionService {
      * called after post is executed and message is sent
      *
      * - create the bidCreateRequest to save the Bid (MPA_REFUND) in the Database
-     *   - the previous Bid should be added as parentBid to create the relation
+     * - the previous Bid should be added as parentBid to create the relation
      * - call createBid to create the Bid and update Order and OrderItem statuses
      *
      * @param actionRequest
@@ -128,8 +130,12 @@ export class EscrowRefundActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: EscrowRefundRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: EscrowRefundRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
 
         return smsgSendResponse;
     }
@@ -146,10 +152,12 @@ export class EscrowRefundActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: EscrowRefundRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: EscrowRefundRequest
+    ): Promise<resources.SmsgMessage> {
 
         const escrowRefundMessage: EscrowRefundMessage = marketplaceMessage.action as EscrowRefundMessage;
         const bidCreateRequest: BidCreateRequest = await this.createChildBidCreateRequest(escrowRefundMessage, smsgMessage);
@@ -173,9 +181,11 @@ export class EscrowRefundActionService extends BaseBidActionService {
      * @param actionDirection
      * @param smsgMessage
      */
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {

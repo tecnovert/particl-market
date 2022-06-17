@@ -12,7 +12,6 @@ import { Types, Core, Targets } from '../../../constants';
 import { BaseCommand } from '../BaseCommand';
 import { Commands } from '../CommandEnumType';
 import { MarketService } from '../../services/model/MarketService';
-import { MessageException } from '../../exceptions/MessageException';
 import { ProfileService } from '../../services/model/ProfileService';
 import { DefaultProfileService } from '../../services/DefaultProfileService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
@@ -40,7 +39,7 @@ export class MarketRemoveCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: market: resources.Market
+     * [0]: market: resources.Market
      *
      * @param data
      * @returns {Promise<void>}
@@ -55,7 +54,7 @@ export class MarketRemoveCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: marketId
+     * [0]: marketId
      *
      * @param data
      * @returns {Promise<RpcRequest>}

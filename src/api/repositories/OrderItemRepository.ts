@@ -23,8 +23,8 @@ export class OrderItemRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<OrderItem>> {
-        const list = await this.OrderItemModel.fetchAll();
-        return list as Bookshelf.Collection<OrderItem>;
+        const list = await this.OrderItemModel.fetchAll<OrderItem>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<OrderItem> {

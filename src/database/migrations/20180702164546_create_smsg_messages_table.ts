@@ -5,8 +5,8 @@
 import * as Knex from 'knex';
 
 
-exports.up = (db: Knex): Promise<any> => {
-    return Promise.all([
+exports.up = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.createTable('smsg_messages', (table: Knex.CreateTableBuilder) => {
 
             table.increments('id').notNullable().primary();
@@ -40,10 +40,9 @@ exports.up = (db: Knex): Promise<any> => {
             table.unique(['msgid', 'direction']);
         })
     ]);
-};
 
-exports.down = (db: Knex): Promise<any> => {
-    return Promise.all([
+
+exports.down = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.dropTable('smsg_messages')
     ]);
-};

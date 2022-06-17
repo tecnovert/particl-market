@@ -12,12 +12,11 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { Market } from '../../models/Market';
 import { MarketService } from '../../services/model/MarketService';
 import { ImageDataService } from '../../services/model/ImageDataService';
 import { BooleanValidationRule, CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
 import { MarketType } from '../../enums/MarketType';
-import { PublicKey, PrivateKey, Networks } from 'particl-bitcore-lib';
+import { PrivateKey } from 'particl-bitcore-lib';
 
 
 export class MarketGetCommand extends BaseCommand implements RpcCommandInterface<resources.Market> {
@@ -36,14 +35,14 @@ export class MarketGetCommand extends BaseCommand implements RpcCommandInterface
             params: [
                 new IdValidationRule('marketId', true, this.marketService),
                 new BooleanValidationRule('returnImageData', false, false)
-             ] as ParamValidationRule[]
+            ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
 
     /**
      * data.params[]:
-     *  [0]: market: resources.Market
-     *  [1]: returnImageData: boolean
+     * [0]: market: resources.Market
+     * [1]: returnImageData: boolean
      *
      * @param data
      * @returns {Promise<Market>}
@@ -70,8 +69,8 @@ export class MarketGetCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: marketId
-     *  [1]: returnImageData (optional), default false
+     * [0]: marketId
+     * [1]: returnImageData (optional), default false
      *
      * @param data
      * @returns {Promise<RpcRequest>}

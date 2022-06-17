@@ -23,6 +23,7 @@ import { IdentityService } from '../../services/model/IdentityService';
 import { ProfileService } from '../../services/model/ProfileService';
 import { MessageException } from '../../exceptions/MessageException';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 
 
 export class BidAcceptCommand extends BaseCommand implements RpcCommandInterface<SmsgSendResponse> {
@@ -68,7 +69,7 @@ export class BidAcceptCommand extends BaseCommand implements RpcCommandInterface
                 fromAddress: identity.address,      // send from the given identity
                 toAddress: bid.bidder,              // send to the address that sent the bid
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}` , 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -106,7 +107,7 @@ export class BidAcceptCommand extends BaseCommand implements RpcCommandInterface
 
         const listingItem: resources.ListingItem = await this.listingItemService.findOne(bid.ListingItem.id)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItem');
             });
 

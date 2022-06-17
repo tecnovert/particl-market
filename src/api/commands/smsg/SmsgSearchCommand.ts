@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as Bookshelf from 'bookshelf';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -58,15 +57,15 @@ export class SmsgSearchCommand extends BaseSearchCommand implements RpcCommandIn
     /**
      *
      * data.params[]:
-     *  [0]: page, number
-     *  [1]: pageLimit, number, default=10
-     *  [2]: order, SearchOrder, ASC/DESC, orders by createdAt
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: types, ActionMessageTypes[], * for all, optional
-     *  [5]: status, SmsgMessageStatus, ENUM{NEW, PARSING_FAILED, PROCESSING, PROCESSED, PROCESSING_FAILED, WAITING}, * for all
-     *  [6]: direction, ActionDirection, ENUM{INCOMING, OUTGOING, BOTH}, * for all
-     *  [7]: age, number, SmsgMessage minimum message age in ms, default 2 min
-     *  [8]: msgid, string, * for all, optional // todo: SmsgGetCommand
+     * [0]: page, number
+     * [1]: pageLimit, number, default=10
+     * [2]: order, SearchOrder, ASC/DESC, orders by createdAt
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: types, ActionMessageTypes[], * for all, optional
+     * [5]: status, SmsgMessageStatus, ENUM{NEW, PARSING_FAILED, PROCESSING, PROCESSED, PROCESSING_FAILED, WAITING}, * for all
+     * [6]: direction, ActionDirection, ENUM{INCOMING, OUTGOING, BOTH}, * for all
+     * [7]: age, number, SmsgMessage minimum message age in ms, default 2 min
+     * [8]: msgid, string, * for all, optional // todo: SmsgGetCommand
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<Bid>>}
@@ -94,15 +93,15 @@ export class SmsgSearchCommand extends BaseSearchCommand implements RpcCommandIn
     /**
      *
      * data.params[]:
-     *  [0]: page, number
-     *  [1]: pageLimit, number, default=10
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: types, ActionMessageTypes[], optional
-     *  [5]: status, SmsgMessageStatus
-     *  [6]: direction, ActionDirection
-     *  [7]: age, number, SmsgMessage SmsgMessage minimum message age in ms, default 2 min
-     *  [8]: msgid, string, optional
+     * [0]: page, number
+     * [1]: pageLimit, number, default=10
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: types, ActionMessageTypes[], optional
+     * [5]: status, SmsgMessageStatus
+     * [6]: direction, ActionDirection
+     * [7]: age, number, SmsgMessage SmsgMessage minimum message age in ms, default 2 min
+     * [8]: msgid, string, optional
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<Bid>>}
@@ -132,7 +131,7 @@ export class SmsgSearchCommand extends BaseSearchCommand implements RpcCommandIn
     }
 
     public description(): string {
-            return 'Search for SmsgMessages.';
+        return 'Search for SmsgMessages.';
     }
 
     public example(): string {

@@ -5,8 +5,8 @@
 import * as Knex from 'knex';
 
 
-exports.up = (db: Knex): Promise<any> => {
-    return Promise.all([
+exports.up = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.createTable('favorite_items', (table: Knex.CreateTableBuilder) => {
             table.increments('id').primary();
 
@@ -24,10 +24,9 @@ exports.up = (db: Knex): Promise<any> => {
             table.unique(['listing_item_id', 'profile_id']);
         })
     ]);
-};
 
-exports.down = (db: Knex): Promise<any> => {
-    return Promise.all([
+
+exports.down = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.dropTable('favorite_items')
     ]);
-};

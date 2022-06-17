@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { ActionNotificationInterface } from './ActionNotificationInterface';
-import { MPActionExtended } from '../../enums/MPActionExtended';
+
 
 export class MarketImageNotification implements ActionNotificationInterface {
     public objectId: number;

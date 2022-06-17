@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
 import { ValidationException } from '../exceptions/ValidationException';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
@@ -80,14 +79,14 @@ export class ListingItemImageAddValidator implements ActionMessageValidatorInter
 
         if (ActionDirection.INCOMING === direction) {
             // no need for this anymore
-/*
+            /*
             const actionMessage = message.action as ListingItemImageAddMessage;
             const listingItems: resources.ListingItem[] = await this.listingItemService.findAllByHash(actionMessage.target).then(value => value.toJSON());
             if (_.isEmpty(listingItems)) {
                 this.log.error('LISTINGITEM_ADD has not been received or processed yet.');
                 return false;
             }
-*/
+            */
         }
         return true;
     }

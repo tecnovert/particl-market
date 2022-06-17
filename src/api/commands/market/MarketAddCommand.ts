@@ -10,7 +10,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { MarketService } from '../../services/model/MarketService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { Market } from '../../models/Market';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { MarketCreateRequest } from '../../requests/model/MarketCreateRequest';
 import { Commands} from '../CommandEnumType';
@@ -34,7 +33,7 @@ import {
     ParamValidationRule,
     StringValidationRule
 } from '../CommandParamValidation';
-import { PublicKey, PrivateKey, Networks } from 'particl-bitcore-lib';
+import { PublicKey, PrivateKey } from 'particl-bitcore-lib';
 import {InvalidParamException} from '../../exceptions/InvalidParamException';
 
 
@@ -96,15 +95,15 @@ export class MarketAddCommand extends BaseCommand implements RpcCommandInterface
                         return type;
                     }),
                 new StringValidationRule('receiveKey', false, undefined,
-                    async (value, index, allValues) => {
-                            // if set, should be a valid public/private key
+                    async (value) => {
+                        // if set, should be a valid public/private key
                         if (!_.isNil(value) && !this.isPublicKey(value) && !this.isPrivateKey(value)) {
                             throw new InvalidParamException('receiveKey');
                         }
                         return true;
                     }),
                 new StringValidationRule('publishKey', false, undefined,
-                    async (value, index, allValues) => {
+                    async (value) => {
                         // if set, should be a valid public/private key
                         if (!_.isNil(value) && !this.isPublicKey(value) && !this.isPrivateKey(value)) {
                             throw new InvalidParamException('publishKey');
@@ -123,15 +122,15 @@ export class MarketAddCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: name
-     *  [2]: type: MarketType
-     *  [3]: receiveKey: private key in wif format
-     *  [4]: publishKey: private key in wif format or public key as DER hex encoded string
-     *  [5]: identity: resources.Identity
-     *  [6]: description
-     *  [7]: region
-     *  [8]: skipJoin
+     * [0]: profile: resources.Profile
+     * [1]: name
+     * [2]: type: MarketType
+     * [3]: receiveKey: private key in wif format
+     * [4]: publishKey: private key in wif format or public key as DER hex encoded string
+     * [5]: identity: resources.Identity
+     * [6]: description
+     * [7]: region
+     * [8]: skipJoin
      *
      * @param data
      * @returns {Promise<Market>}
@@ -185,11 +184,11 @@ export class MarketAddCommand extends BaseCommand implements RpcCommandInterface
         } else {
             // make sure joined Market with the same receiveAddress doesnt exists
             await this.marketService.findOneByProfileIdAndReceiveAddress(profile.id, createRequest.receiveAddress)
-                .then(value => {
-                    throw new MessageException('Market with the receiveAddress: ' + createRequest.receiveAddress + ' already exists.');
-                })
-                .catch(reason => {
-                    //
+                .catch(() => false)
+                .then((resp) => {
+                    if (resp !== false) {
+                        throw new MessageException('Market with the receiveAddress: ' + createRequest.receiveAddress + ' already exists.');
+                    }
                 });
         }
 
@@ -210,17 +209,18 @@ export class MarketAddCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: name
-     *  [2]: type: MarketType, optional, default=MARKETPLACE
-     *  [3]: receiveKey, optional, private key in wif format
-     *  [4]: publishKey, optional, if type === STOREFRONT -> public key as DER hex encoded string
-     *                             if type === STOREFRONT_ADMIN -> private key in wif format
-     *  [5]: identityId, optional
-     *  [6]: description, optional
-     *  [7]: region, optional, default: MarketRegion.WORLDWIDE
-     *  [8]: skipJoin, optional, default: false
-     *  [9]: rescan, optional, default: false
+     * [0]: profileId
+     * [1]: name
+     * [2]: type: MarketType, optional, default=MARKETPLACE
+     * [3]: receiveKey, optional, private key in wif format
+     * [4]: publishKey, optional...
+     * if type === STOREFRONT -> public key as DER hex encoded string
+     * if type === STOREFRONT_ADMIN -> private key in wif format
+     * [5]: identityId, optional
+     * [6]: description, optional
+     * [7]: region, optional, default: MarketRegion.WORLDWIDE
+     * [8]: skipJoin, optional, default: false
+     * [9]: rescan, optional, default: false
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -301,9 +301,7 @@ export class MarketAddCommand extends BaseCommand implements RpcCommandInterface
         await this.marketService.findAllByProfileId(profileId)
             .then(values => {
                 const markets: resources.Market[] = values.toJSON();
-                const found = _.find(markets, market => {
-                    return market.name === name;
-                });
+                const found = _.find(markets, market => market.name === name);
                 if (!_.isNil(found)) {
                     throw new MessageException('Market with the name: ' + name + ' already exists.');
                 }

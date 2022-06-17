@@ -69,16 +69,16 @@ export class BidSearchCommand extends BaseSearchCommand implements RpcCommandInt
     /**
      *
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: identity, resources.Identity
-     *  [5]: listingItem, resources.ListingItem, optional
-     *  [6]: type, ActionMessageTypes, optional
-     *  [7]: searchString, string, optional
-     *  [8]: market, string, optional
-     *  [9...]: bidder: particl address, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: identity, resources.Identity
+     * [5]: listingItem, resources.ListingItem, optional
+     * [6]: type, ActionMessageTypes, optional
+     * [7]: searchString, string, optional
+     * [8]: market, string, optional
+     * [9...]: bidder: particl address, optional
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<Bid>>}
@@ -126,17 +126,17 @@ export class BidSearchCommand extends BaseSearchCommand implements RpcCommandInt
     /**
      *
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, BidSearchOrderField, field to which the SearchOrder is applied
-     *  [4]: profileId, number
-     *  [5]: identityId, number, optional
-     *  [6]: listingItemId, number, optional
-     *  [7]: type, ActionMessageTypes, optional
-     *  [8]: searchString, string, optional
-     *  [9]: market, string, optional
-     *  [10...]: bidder: particl address, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, BidSearchOrderField, field to which the SearchOrder is applied
+     * [4]: profileId, number
+     * [5]: identityId, number, optional
+     * [6]: listingItemId, number, optional
+     * [7]: type, ActionMessageTypes, optional
+     * [8]: searchString, string, optional
+     * [9]: market, string, optional
+     * [10...]: bidder: particl address, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -203,7 +203,7 @@ export class BidSearchCommand extends BaseSearchCommand implements RpcCommandInt
     }
 
     public description(): string {
-            return 'Search Bids.';
+        return 'Search Bids.';
     }
 
     public example(): string {

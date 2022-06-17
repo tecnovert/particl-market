@@ -95,7 +95,7 @@ export class MakeEnumCommand extends AbstractMakeCommand {
                 database: types[0]
             };
         }
-/*
+        /*
         properties.map(p => {
             const types = p.type.replace(/[()]/g, '').split(' ');
             p.type = {
@@ -104,7 +104,7 @@ export class MakeEnumCommand extends AbstractMakeCommand {
             };
             return p;
         });
-*/
+        */
         console.log('');
         return properties;
     }

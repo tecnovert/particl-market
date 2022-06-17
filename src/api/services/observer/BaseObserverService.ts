@@ -21,22 +21,23 @@ export abstract class BaseObserverService {
         this.log = new Logger(observerClass);
         this.INTERVAL = observerLoopInterval;
 
-        const seconds = observerLoopInterval / 1000;
-        this.log.info('Starting up, loop run interval: ' + (observerLoopInterval / 1000) + ' second'
-                + (seconds !== 1 ? 's' : '') + '.');
-
-        this.start();
+        if (this.INTERVAL >= 0) {
+            const seconds = observerLoopInterval / 1000;
+            this.log.info(`Starting up, loop run interval: ${(seconds)} second${(seconds !== 1 ? 's' : '')}.`);
+            this.start();
+        }
     }
 
     /**
      * loop to handle the whatever observing you need to do...
+     *
      * @param currentStatus
      */
-    public abstract async run(currentStatus: ObserverStatus): Promise<ObserverStatus>;
+    public abstract run(currentStatus: ObserverStatus): Promise<ObserverStatus>;
 
     public async start(): Promise<void> {
 
-        await pForever(async (previousValue) => {
+        const fn = async (previousValue: any) => {
             previousValue++;
 
             // this.log.info('running... ' + previousValue);
@@ -53,7 +54,9 @@ export abstract class BaseObserverService {
             await delay(this.INTERVAL);
 
             return previousValue;
-        }, 0)
+        };
+
+        await pForever(fn, 0)
             .catch(async reason => {
                 this.status = ObserverStatus.ERROR;
                 this.log.error('ERROR: ', reason);

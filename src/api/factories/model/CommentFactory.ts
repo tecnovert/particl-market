@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -13,7 +12,6 @@ import { CommentCreateRequest } from '../../requests/model/CommentCreateRequest'
 import { CommentUpdateRequest } from '../../requests/model/CommentUpdateRequest';
 import { CommentAddMessage } from '../../messages/action/CommentAddMessage';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
-import { HashMismatchException } from '../../exceptions/HashMismatchException';
 import { HashableCommentCreateRequestConfig } from '../hashableconfig/createrequest/HashableCommentCreateRequestConfig';
 
 
@@ -54,7 +52,7 @@ export class CommentFactory implements ModelFactoryInterface {
 
         createRequest.hash = ConfigurableHasher.hash(createRequest, new HashableCommentCreateRequestConfig());
 
-/*
+        /*
         commentRequest.hash = ConfigurableHasher.hash({
             ...commentRequest,
             parentCommentHash: actionMessage.parentCommentHash
@@ -66,7 +64,7 @@ export class CommentFactory implements ModelFactoryInterface {
             this.log.error(error.getMessage());
             throw error;
         }
-*/
+        */
         return createRequest;
     }
 }

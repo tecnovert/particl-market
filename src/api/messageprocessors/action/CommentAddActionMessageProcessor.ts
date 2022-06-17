@@ -17,7 +17,7 @@ import { CommentAction } from '../../enums/CommentAction';
 import { CommentService } from '../../services/model/CommentService';
 import { CommentAddActionService } from '../../services/action/CommentAddActionService';
 import { ProposalService } from '../../services/model/ProposalService';
-import { CommentAddMessage } from '../../messages/action/CommentAddMessage';
+// import { CommentAddMessage } from '../../messages/action/CommentAddMessage';
 import { CommentAddValidator } from '../../messagevalidators/CommentAddValidator';
 import { ActionDirection } from '../../enums/ActionDirection';
 import { NotificationService } from '../../services/model/NotificationService';
@@ -57,7 +57,7 @@ export class CommentAddActionMessageProcessor extends BaseActionMessageProcessor
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: CommentAddMessage = marketplaceMessage.action as CommentAddMessage;
+        // const actionMessage: CommentAddMessage = marketplaceMessage.action as CommentAddMessage;
 
         // processProposal will create or update the Proposal
         return await this.actionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)

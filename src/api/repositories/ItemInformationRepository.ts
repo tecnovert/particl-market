@@ -22,8 +22,8 @@ export class ItemInformationRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ItemInformation>> {
-        const list = await this.ItemInformationModel.fetchAll();
-        return list as Bookshelf.Collection<ItemInformation>;
+        const list = await this.ItemInformationModel.fetchAll<ItemInformation>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ItemInformation> {

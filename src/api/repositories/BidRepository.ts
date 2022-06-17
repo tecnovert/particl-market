@@ -31,8 +31,8 @@ export class BidRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Bid>> {
-        const list = await this.BidModel.fetchAll();
-        return list as Bookshelf.Collection<Bid>;
+        const list = await this.BidModel.fetchAll<Bid>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Bid> {

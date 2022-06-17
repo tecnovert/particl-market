@@ -30,7 +30,7 @@ export class ProfileGetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: id or name
+     * [0]: id or name
      *
      * when data.params[0] is number then findById, else findByName
      *
@@ -43,12 +43,12 @@ export class ProfileGetCommand extends BaseCommand implements RpcCommandInterfac
             return await this.profileService.getDefault();
         } else if (typeof data.params[0] === 'number') {
             return await this.profileService.findOne(data.params[0])
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Profile');
                 });
         } else {
             return await this.profileService.findOneByName(data.params[0])
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Profile');
                 });
         }

@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -17,7 +16,7 @@ import { BidFactory } from '../../factories/model/BidFactory';
 import { BidService } from '../../services/model/BidService';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 import { EscrowRefundActionService } from '../../services/action/EscrowRefundActionService';
-import { EscrowRefundMessage } from '../../messages/action/EscrowRefundMessage';
+// import { EscrowRefundMessage } from '../../messages/action/EscrowRefundMessage';
 import { ProposalService } from '../../services/model/ProposalService';
 import { BaseBidActionMessageProcessor } from '../BaseBidActionMessageProcessor';
 import { EscrowRefundValidator } from '../../messagevalidators/EscrowRefundValidator';
@@ -62,18 +61,14 @@ export class EscrowRefundActionMessageProcessor extends BaseBidActionMessageProc
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: EscrowRefundMessage = marketplaceMessage.action as EscrowRefundMessage;
+        // const actionMessage: EscrowRefundMessage = marketplaceMessage.action as EscrowRefundMessage;
 
         // - first get the previous Bid (MPA_BID), fail if it doesn't exist
         // - then get the ListingItem the Bid is for, fail if it doesn't exist
         // - then, save the new Bid (MPA_REFUND) and update the OrderItem.status and Order.status
 
         return await this.escrowRefundActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
-                return SmsgMessageStatus.PROCESSED;
-            })
-            .catch(reason => {
-                return SmsgMessageStatus.PROCESSING_FAILED;
-            });
+            .then(() => SmsgMessageStatus.PROCESSED)
+            .catch(() => SmsgMessageStatus.PROCESSING_FAILED);
     }
 }

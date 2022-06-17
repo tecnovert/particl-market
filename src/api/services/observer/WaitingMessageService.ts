@@ -23,13 +23,13 @@ import { MarketplaceMessageProcessor } from '../../messageprocessors/Marketplace
 export class WaitingMessageService extends BaseObserverService {
 
     constructor(
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.MessageProcessor) @named(Targets.MessageProcessor.MarketplaceMessageProcessor) private marketplaceMessageProcessor: MarketplaceMessageProcessor,
         @inject(Types.Factory) @named(Targets.Factory.model.SmsgMessageFactory) private smsgMessageFactory: SmsgMessageFactory,
         @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super(__filename, 5 * 1000, Logger);
     }
@@ -39,7 +39,7 @@ export class WaitingMessageService extends BaseObserverService {
      *
      * @param currentStatus
      */
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         const smsgMessages: resources.SmsgMessage[] = await this.getWaitingSmsgMessages();
 
@@ -104,7 +104,7 @@ export class WaitingMessageService extends BaseObserverService {
         const smsgMessages: resources.SmsgMessage[] = await this.smsgMessageService.searchBy(searchParams).then(value => value.toJSON());
 
         if (!_.isEmpty(smsgMessages) && smsgMessages.length > 0) {
-            this.log.debug('getWaitingSmsgMessages(), found ' + smsgMessages.length + ' messages.');
+            this.log.debug(`getWaitingSmsgMessages(), found ${smsgMessages.length} messages.`);
         }
 
         return smsgMessages;

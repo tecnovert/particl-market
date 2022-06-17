@@ -11,7 +11,7 @@ import { ActionMessageInterface } from '../messages/action/ActionMessageInterfac
 
 export abstract class BaseMessageFactory implements MessageFactoryInterface {
 
-    public abstract async get(actionRequest: ActionRequestInterface): Promise<MarketplaceMessage>;
+    public abstract get(actionRequest: ActionRequestInterface): Promise<MarketplaceMessage>;
 
     public async getMarketplaceMessage(actionMessage: ActionMessageInterface): Promise<MarketplaceMessage> {
         return {

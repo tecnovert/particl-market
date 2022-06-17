@@ -33,7 +33,7 @@ export class DefaultProfileService {
 
     /**
      * if no default Profile exists:
-     *      -> create Profile with new Identity (+wallet)
+     * -> create Profile with new Identity (+wallet)
      *
      * else return default Profile
      */
@@ -55,9 +55,7 @@ export class DefaultProfileService {
                 profile = profiles[0];
 
                 // try to find the Profile Identity
-                const profileIdentity: resources.Identity | undefined = _.find(profile.Identities, identity => {
-                    return identity.type === IdentityType.PROFILE;
-                });
+                const profileIdentity: resources.Identity | undefined = _.find(profile.Identities, identity => identity.type === IdentityType.PROFILE);
 
                 if (!profileIdentity) {
                     // no Profile Identity was found -> create

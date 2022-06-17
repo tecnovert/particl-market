@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
+
 import * as resources from 'resources';
 import { BlackBoxTestUtil } from '../lib/BlackBoxTestUtil';
 import { Commands } from '../../../src/api/commands/CommandEnumType';
@@ -15,7 +15,7 @@ import { Logger as LoggerType } from '../../../src/core/Logger';
 
 describe('AddressAddCommand', () => {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = +process.env.JASMINE_TIMEOUT;
 
     const log: LoggerType = new LoggerType(__filename);
 

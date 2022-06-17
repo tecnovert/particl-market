@@ -15,7 +15,6 @@ import { Blacklist } from '../../models/Blacklist';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
 import { BlacklistType } from '../../enums/BlacklistType';
 import { ProfileService } from '../../services/model/ProfileService';
@@ -52,15 +51,15 @@ export class BlacklistListCommand extends BaseCommand implements RpcCommandInter
      * command description
      *
      * data.params[]:
-     *  [0]: type: BlacklistType
-     *  [1]: profile: resources.Profile, optional
+     * [0]: type: BlacklistType
+     * [1]: profile: resources.Profile, optional
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<Bookshelf.Collection<Blacklist>>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Bookshelf.Collection<Blacklist>> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Bookshelf.Collection<Blacklist>> {
         const type: BlacklistType = data.params[0];
         const profile: resources.Profile = data.params[1];
 
@@ -73,7 +72,7 @@ export class BlacklistListCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: type: BlacklistType
+     * [0]: type: BlacklistType
      *
      * @param data
      * @returns {Promise<RpcRequest>}

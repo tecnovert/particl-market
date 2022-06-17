@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { RpcRequest } from '../../requests/RpcRequest';
@@ -11,11 +10,9 @@ import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { Commands } from '../CommandEnumType';
 import { CurrencyPriceService } from '../../services/model/CurrencyPriceService';
 import { MessageException } from '../../exceptions/MessageException';
-import { CurrencyPrice } from '../../models/CurrencyPrice';
 import { SupportedCurrencies } from '../../enums/SupportedCurrencies';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -47,7 +44,7 @@ export class CurrencyPriceRootCommand extends BaseCommand implements RpcCommandI
      *
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<resources.CurrencyPrice[]> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.CurrencyPrice[]> {
 
         const fromCurrency = data.params.shift().toUpperCase();
 

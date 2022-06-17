@@ -13,7 +13,6 @@ import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 
 export class AddressRemoveCommand extends BaseCommand implements RpcCommandInterface<void> {
 
@@ -29,14 +28,14 @@ export class AddressRemoveCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: addressId
+     * [0]: addressId
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<void>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<void> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<void> {
         return await this.addressService.destroy(data.params[0]);
     }
 

@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -30,13 +29,14 @@ import { NotifyService } from '../NotifyService';
 import { BaseBidActionService } from '../BaseBidActionService';
 import { ActionDirection } from '../../enums/ActionDirection';
 import { MarketplaceNotification } from '../../messages/MarketplaceNotification';
-import { BidCancelRequest } from '../../requests/action/BidCancelRequest';
+// import { BidCancelRequest } from '../../requests/action/BidCancelRequest';
 import { BlacklistService } from '../model/BlacklistService';
 import { MessageException } from '../../exceptions/MessageException';
 
 
 export class BidRejectActionService extends BaseBidActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -66,6 +66,7 @@ export class BidRejectActionService extends BaseBidActionService {
             bidFactory
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -90,7 +91,7 @@ export class BidRejectActionService extends BaseBidActionService {
      * called after post is executed and message is sent
      *
      * - create the bidCreateRequest to save the Bid (MPA_REJECT) in the Database
-     *   - the previous Bid should be added as parentBid to create the relation
+     * - the previous Bid should be added as parentBid to create the relation
      * - call createBid to create the Bid and update Order and OrderItem statuses
      *
      * @param actionRequest
@@ -98,8 +99,12 @@ export class BidRejectActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: BidRejectRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: BidRejectRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
 
         return smsgSendResponse;
     }
@@ -114,10 +119,12 @@ export class BidRejectActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: BidCancelRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: BidCancelRequest
+    ): Promise<resources.SmsgMessage> {
 
         const bidRejectMessage: BidRejectMessage = marketplaceMessage.action as BidRejectMessage;
         const bidCreateRequest: BidCreateRequest = await this.createChildBidCreateRequest(bidRejectMessage, smsgMessage);
@@ -156,9 +163,11 @@ export class BidRejectActionService extends BaseBidActionService {
      * @param actionDirection
      * @param smsgMessage
      */
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {

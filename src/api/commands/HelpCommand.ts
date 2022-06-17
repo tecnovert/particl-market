@@ -5,7 +5,7 @@
 import { inject, named } from 'inversify';
 import { validate, request } from '../../core/api/Validate';
 import { Logger as LoggerType } from '../../core/Logger';
-import { Types, Core, Targets } from '../../constants';
+import { Types, Core } from '../../constants';
 import { RpcRequest } from '../requests/RpcRequest';
 import { RpcCommandInterface } from './RpcCommandInterface';
 import { Commands} from './CommandEnumType';
@@ -49,9 +49,9 @@ export class HelpCommand extends BaseCommand implements RpcCommandInterface<stri
                     let command;
                     try {
                         command = rpcCommandFactory.get(rootCommand);
-                        helpStr += command.usage() + '\n';
+                        helpStr += `${command.usage()}\n`;
                     } catch ( ex ) {
-                        this.log.warn(`help(): Couldn't find ${rootCommand}.`);
+                        this.log.warn(`help(): Couldn't find ${rootCommand as any}.`);
                         continue;
                     }
                 }
@@ -66,7 +66,7 @@ export class HelpCommand extends BaseCommand implements RpcCommandInterface<stri
                     }
                 }
             } catch ( ex ) {
-                throw new NotFoundException(`Command <${commandName}> not found.`);
+                throw new NotFoundException(`Command <${commandName ? commandName : 'undefined'}> not found.`);
             }
         }
         throw new NotFoundException(`Command not found.`);
@@ -87,7 +87,7 @@ export class HelpCommand extends BaseCommand implements RpcCommandInterface<stri
                     let commandCommand;
                     try {
                         commandCommand = rpcCommandFactory.get(childCommand);
-                        retStr += commandCommand.help() + '\n\n';
+                        retStr += `${commandCommand.help()}\n\n`;
                     } catch ( ex ) {
                         this.log.warn(`Command <${command} ${childCommand}> not found.`);
                         continue;
@@ -104,7 +104,7 @@ export class HelpCommand extends BaseCommand implements RpcCommandInterface<stri
                     throw new NotFoundException(`Command <${command}> not found.`);
                 }
                 const example = commandCommand.example();
-                return commandCommand.help() + '\n' + (example ? 'example:\n' + example : '') + '\n';
+                return `${commandCommand.help()}\n${(example ? 'example:\n' + (example as string) : '')}\n`;
             }
         }
 

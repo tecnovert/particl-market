@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -32,7 +31,7 @@ interface ChatResponse {
 
 export class ChatChannelFollowCommand extends BaseCommand implements RpcCommandInterface<ChatResponse> {
 
-    private HELP_FIELDS: Array<{ name: string; description: string, required: boolean, valueType: string, exampleValue: string }> = [
+    private HELP_FIELDS: Array<{ name: string; description: string; required: boolean; valueType: string; exampleValue: string }> = [
         {
             name: 'identityId',
             description: 'The ID of the identity making the request',
@@ -117,11 +116,11 @@ export class ChatChannelFollowCommand extends BaseCommand implements RpcCommandI
     }
 
     public help(): string {
-        return this.usage() + ' -  ' + this.description() + ' \n' + this.HELP_FIELDS.map(f => {
+        return `${this.usage()} -  ${this.description()} \n` + this.HELP_FIELDS.map<string>(f => {
             const n = `   <${f.name}>`;
             const p = ' '.repeat((n.length > 5) && (n.length < 26) ? 26 - n.length : 0);
             return n + p + `- [${f.required ? 'required' : 'optional'}] ${f.valueType} ; ${f.description}.\n`;
-        });
+        }).join('');
     }
 
     public description(): string {

@@ -66,7 +66,7 @@ export class ItemInformationService {
 
     @validate()
     public async create( @request(ItemInformationCreateRequest) data: ItemInformationCreateRequest): Promise<ItemInformation> {
-        const body: ItemInformationCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ItemInformationCreateRequest> = JSON.parse(JSON.stringify(data));
 
         // this.log.debug('create(), body: ', JSON.stringify(body, null, 2));
 
@@ -77,8 +77,8 @@ export class ItemInformationService {
 
         // extract and remove related models from request
         // body.item_category_id might also exist
-        const itemCategory: ItemCategoryCreateRequest | ItemCategoryUpdateRequest = body.itemCategory;
-        const itemLocation: ItemLocationCreateRequest = body.itemLocation || {};
+        const itemCategory: ItemCategoryCreateRequest | ItemCategoryUpdateRequest | undefined = body.itemCategory;
+        const itemLocation: ItemLocationCreateRequest | undefined = body.itemLocation || undefined;
         const shippingDestinations: ShippingDestinationCreateRequest[] = body.shippingDestinations || [];
         const images: ImageCreateRequest[] = body.images || [];
 
@@ -87,7 +87,7 @@ export class ItemInformationService {
         delete body.shippingDestinations;
         delete body.images;
 
-        if (!_.isEmpty(itemCategory)) {
+        if (itemCategory && !_.isEmpty(itemCategory)) {
             // get existing ItemCategory or create new one
             const existingItemCategory: resources.ItemCategory = await this.getOrCreateItemCategory(itemCategory).then(value => value.toJSON());
             body.item_category_id = existingItemCategory.id;
@@ -96,7 +96,7 @@ export class ItemInformationService {
         // ready to save, if the request body was valid, create the itemInformation
         const itemInformation: resources.ItemInformation = await this.itemInformationRepo.create(body).then(value => value.toJSON());
 
-        if (!_.isEmpty(itemLocation)) {
+        if (itemLocation && !_.isEmpty(itemLocation)) {
             itemLocation.item_information_id = itemInformation.id;
             await this.itemLocationService.create(itemLocation);
         }
@@ -219,6 +219,7 @@ export class ItemInformationService {
 
     /**
      * fetch or create the given ItemCategory from db
+     *
      * @returns {Promise<ItemCategory>}
      * @param createRequest
      */

@@ -22,8 +22,8 @@ export class ShippingPriceRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ShippingPrice>> {
-        const list = await this.ShippingPriceModel.fetchAll();
-        return list as Bookshelf.Collection<ShippingPrice>;
+        const list = await this.ShippingPriceModel.fetchAll<ShippingPrice>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ShippingPrice> {

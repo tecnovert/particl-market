@@ -35,7 +35,7 @@ export class BidGetCommand extends BaseCommand implements RpcCommandInterface<re
 
     /**
      * data.params[]:
-     *  [1]: bid: resources.Bid
+     * [1]: bid: resources.Bid
      *
      * @param data
      * @returns {Promise<ItemCategory>}
@@ -47,7 +47,7 @@ export class BidGetCommand extends BaseCommand implements RpcCommandInterface<re
 
     /**
      * data.params[]:
-     *  [1]: id
+     * [1]: id
      *
      * @param data
      * @returns {Promise<RpcRequest>}

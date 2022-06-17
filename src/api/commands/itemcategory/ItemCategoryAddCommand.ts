@@ -37,10 +37,10 @@ export class ItemCategoryAddCommand extends BaseCommand implements RpcCommandInt
      * creates a new user defined category
      *
      * params[]:
-     *  [0]: market: resources.Market
-     *  [1]: categoryName
-     *  [2]: description
-     *  [3]: parentItemCategory: resources.ItemCategory
+     * [0]: market: resources.Market
+     * [1]: categoryName
+     * [2]: description
+     * [3]: parentItemCategory: resources.ItemCategory
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -77,10 +77,10 @@ export class ItemCategoryAddCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: marketId
-     *  [1]: categoryName
-     *  [2]: description
-     *  [3]: parentItemCategoryId
+     * [0]: marketId
+     * [1]: categoryName
+     * [2]: description
+     * [3]: parentItemCategoryId
      *
      * parentItemCategoryId is not optional since creating root categories should not be allowed this way.
      * root category should be created when market is created.
@@ -92,8 +92,8 @@ export class ItemCategoryAddCommand extends BaseCommand implements RpcCommandInt
         await super.validate(data);
 
         const market: resources.Market = data.params[0];                            // required
-        const categoryName = data.params[1];                                        // required
-        const description = data.params[2];                                         // required
+        // const categoryName = data.params[1];                                        // required
+        // const description = data.params[2];                                         // required
         const parentItemCategory: resources.ItemCategory = data.params[3];          // required
 
         if (market.type !== MarketType.STOREFRONT_ADMIN) {

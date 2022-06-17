@@ -26,11 +26,11 @@ export class ListingItemRepository {
         const list = await this.ListingItemModel.fetchAll<ListingItem>();
         return list;
     }
-/*
+    /*
     public async findAllByCategory(categoryId: number, withRelated: boolean = true): Promise<Bookshelf.Collection<ListingItem>> {
         return await this.ListingItemModel.fetchAllByCategory(categoryId, withRelated);
     }
-*/
+    */
     public async findAllExpired(): Promise<Bookshelf.Collection<ListingItem>> {
         return this.ListingItemModel.fetchAllExpired();
     }
@@ -85,7 +85,7 @@ export class ListingItemRepository {
             const listingItemCreated = await listingItem.save();
             const result = this.ListingItemModel.fetchById(listingItemCreated.id);
             return result;
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not create the listingItem!', error);
         }
@@ -96,7 +96,7 @@ export class ListingItemRepository {
         try {
             const listingItemUpdated = await listingItem.save(data, { patch: true });
             return this.ListingItemModel.fetchById(listingItemUpdated.id);
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not update the listingItem!', error);
         }
@@ -106,7 +106,7 @@ export class ListingItemRepository {
         let listingItem = this.ListingItemModel.forge<ListingItem>({ id });
         try {
             listingItem = await listingItem.fetch({ require: true });
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new NotFoundException(id);
         }
@@ -114,7 +114,7 @@ export class ListingItemRepository {
         try {
             await listingItem.destroy();
             return;
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not delete the listingItem!', error);
         }

@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { BaseHashableConfig, HashableConfig, HashableFieldConfig, HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
+import { BaseHashableConfig, HashableFieldConfig, HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
 import { HashableCommonField, HashableItemField } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 export class HashableListingItemTemplateCreateRequestConfig extends BaseHashableConfig {
@@ -10,10 +10,10 @@ export class HashableListingItemTemplateCreateRequestConfig extends BaseHashable
         from: 'generatedAt',
         to: HashableCommonField.GENERATED
     }, {
-// we can't use seller for the template right now as it would be the selected market identity and theres no relation to that
-//        from: 'seller',
-//        to: HashableItemField.SELLER
-//    }, {
+    // we can't use seller for the template right now as it would be the selected market identity and theres no relation to that
+    //        from: 'seller',
+    //        to: HashableItemField.SELLER
+    //    }, {
         from: 'itemInformation.title',
         to: HashableItemField.TITLE
     }, {

@@ -13,16 +13,17 @@ import { inject, named } from 'inversify';
 import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';
 import { EscrowReleaseMessage } from '../messages/action/EscrowReleaseMessage';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 
 export class EscrowReleaseValidator implements ActionMessageValidatorInterface {
 
     constructor(
         @inject(Types.Service) @named(Targets.Service.model.BidService) public bidService: BidService
     ) {
+        // empty constructor
     }
 
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (!message.version) {
             throw new MessageException('version: missing');
         }
@@ -41,19 +42,15 @@ export class EscrowReleaseValidator implements ActionMessageValidatorInterface {
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // both MPA_COMPLETE and MPA_SHIP should exists
         // -> (msg.action as MPA_RELEASE).bid is the hash of MPA_BID and should be found
         // -> Bid of the type MPA_BID should have ChildBid of type MPA_LOCK
         return await this.bidService.findOneByHash((message.action as EscrowReleaseMessage).bid, true)
             .then( (value) => {
                 const mpaBid: resources.Bid = value.toJSON();
-                const completeBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => {
-                    return child.type === MPActionExtended.MPA_COMPLETE;
-                });
-                const shipBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => {
-                    return child.type === MPActionExtended.MPA_SHIP;
-                });
+                const completeBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => child.type === MPActionExtended.MPA_COMPLETE);
+                const shipBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => child.type === MPActionExtended.MPA_SHIP);
 
                 return (completeBid !== undefined) || (shipBid !== undefined);
             })

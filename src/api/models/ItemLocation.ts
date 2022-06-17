@@ -15,8 +15,8 @@ export class ItemLocation extends Bookshelf.Model<ItemLocation> {
 
     public static async fetchById(value: number, withRelated: boolean = true): Promise<ItemLocation> {
         return ItemLocation.where<ItemLocation>({ id: value }).fetch({
-                withRelated: withRelated ? this.RELATIONS : undefined
-            });
+            withRelated: withRelated ? this.RELATIONS : undefined
+        });
     }
 
     public get tableName(): string { return 'item_locations'; }

@@ -32,13 +32,13 @@ import { ListingItemImageAddActionService } from '../../services/action/ListingI
 export class ListingItemTemplateSizeCommand extends BaseCommand implements RpcCommandInterface<MessageSize> {
 
     constructor(
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Service) @named(Targets.Service.model.ListingItemTemplateService) public listingItemTemplateService: ListingItemTemplateService,
         @inject(Types.Service) @named(Targets.Service.model.MarketService) public marketService: MarketService,
         @inject(Types.Service) @named(Targets.Service.action.ListingItemAddActionService) public listingItemAddActionService: ListingItemAddActionService,
         @inject(Types.Service) @named(Targets.Service.action.ListingItemImageAddActionService) public listingItemImageAddActionService: ListingItemImageAddActionService
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super(Commands.TEMPLATE_SIZE);
         this.log = new Logger(__filename);
@@ -46,8 +46,8 @@ export class ListingItemTemplateSizeCommand extends BaseCommand implements RpcCo
 
     /**
      * params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: paidImageMessages (optional, default: false)
+     * [0]: listingItemTemplateId
+     * [1]: paidImageMessages (optional, default: false)
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
@@ -61,9 +61,9 @@ export class ListingItemTemplateSizeCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: paidImageMessages (optional, default: false)
-     *  [2]: market: resources.Market
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: paidImageMessages (optional, default: false)
+     * [2]: market: resources.Market
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -136,7 +136,7 @@ export class ListingItemTemplateSizeCommand extends BaseCommand implements RpcCo
         const market: resources.Market = await this.marketService.findOneByProfileIdAndReceiveAddress(listingItemTemplate.Profile.id,
             listingItemTemplate.market)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Market');
             });
 
@@ -165,8 +165,11 @@ export class ListingItemTemplateSizeCommand extends BaseCommand implements RpcCo
         return 'template ' + this.getName() + ' 1';
     }
 
-    private async getImageMessageSizes(listingItemTemplate: resources.ListingItemTemplate, listingItemAddRequest: ListingItemAddRequest,
-                                       usePaid: boolean = false): Promise<MessageSize[] | undefined> {
+    private async getImageMessageSizes(
+        listingItemTemplate: resources.ListingItemTemplate,
+        listingItemAddRequest: ListingItemAddRequest,
+        usePaid: boolean = false
+    ): Promise<MessageSize[] | undefined> {
 
         if (!_.isEmpty(listingItemTemplate.ItemInformation.Images)) {
             const imageAddRequest = {

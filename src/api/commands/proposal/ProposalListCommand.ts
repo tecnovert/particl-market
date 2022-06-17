@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import * as Bookshelf from 'bookshelf';
 import { inject, named } from 'inversify';
@@ -15,7 +14,6 @@ import { Proposal } from '../../models/Proposal';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ProposalSearchParams } from '../../requests/search/ProposalSearchParams';
 import { SearchOrder } from '../../enums/SearchOrder';
 import { ProposalCategory } from '../../enums/ProposalCategory';
@@ -66,7 +64,7 @@ export class ProposalListCommand extends BaseCommand implements RpcCommandInterf
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Bookshelf.Collection<Proposal>> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Bookshelf.Collection<Proposal>> {
 
         const timeStart: number = data.params[0];
         const timeEnd: number = data.params[1];

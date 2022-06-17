@@ -5,8 +5,8 @@
 import * as Knex from 'knex';
 
 
-exports.up = (db: Knex): Promise<any> => {
-    return Promise.all([
+exports.up = (db: Knex): Promise<any> =>
+    Promise.all([
 
         db.schema.createTableIfNotExists('identities', (table: Knex.CreateTableBuilder) => {
             table.increments('id').primary();
@@ -33,10 +33,9 @@ exports.up = (db: Knex): Promise<any> => {
         })
 
     ]);
-};
 
-exports.down = (db: Knex): Promise<any> => {
-    return Promise.all([
+
+exports.down = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.dropTable('identities')
     ]);
-};

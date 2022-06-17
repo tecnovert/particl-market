@@ -9,7 +9,6 @@ import { Vote } from '../models/Vote';
 import { DatabaseException } from '../exceptions/DatabaseException';
 import { NotFoundException } from '../exceptions/NotFoundException';
 import { Logger as LoggerType } from '../../core/Logger';
-import {SmsgMessage} from '../models/SmsgMessage';
 
 export class VoteRepository {
 
@@ -23,8 +22,8 @@ export class VoteRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Vote>> {
-        const list = await this.VoteModel.fetchAll();
-        return list as Bookshelf.Collection<Vote>;
+        const list = await this.VoteModel.fetchAll<Vote>();
+        return list;
     }
 
     public async findAllByProposalHash(hash: string, withRelated: boolean = true): Promise<Bookshelf.Collection<Vote>> {
@@ -56,9 +55,8 @@ export class VoteRepository {
         try {
             const voteCreated = await vote.save();
             return this.VoteModel.fetchById(voteCreated.id);
-        } catch (error) {
-            this.log.error('Could not create the vote! ' + error);
-            throw new DatabaseException('Could not create the vote!' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not create the vote! ${error}`, error);
         }
     }
 
@@ -67,8 +65,8 @@ export class VoteRepository {
         try {
             const voteUpdated = await vote.save(data, { patch: true });
             return this.VoteModel.fetchById(voteUpdated.id);
-        } catch (error) {
-            throw new DatabaseException('Could not update the vote! ' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not update the vote! ${error}`, error);
         }
     }
 
@@ -83,8 +81,8 @@ export class VoteRepository {
         try {
             await vote.destroy();
             return;
-        } catch (error) {
-            throw new DatabaseException('Could not delete the vote! ' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not delete the vote! ${error}`, error);
         }
     }
 

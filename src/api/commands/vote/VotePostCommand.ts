@@ -13,7 +13,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { MarketService } from '../../services/model/MarketService';
 import { ProposalService } from '../../services/model/ProposalService';
 import { SmsgSendResponse } from '../../responses/SmsgSendResponse';
@@ -49,16 +48,16 @@ export class VotePostCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * data.params[]:
-     *   [0]: market: resources.Market
-     *   [1]: proposal: resources.Proposal
-     *   [2]: proposalOption: resources.ProposalOption
+     * [0]: market: resources.Market
+     * [1]: proposal: resources.Proposal
+     * [2]: proposalOption: resources.ProposalOption
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<SmsgSendResponse> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
 
         const market: resources.Market = data.params[0];
         const proposal: resources.Proposal = data.params[1];
@@ -67,7 +66,7 @@ export class VotePostCommand extends BaseCommand implements RpcCommandInterface<
         // fetch Market Identity
         const identity: resources.Identity = await this.identityService.findOne(market.Identity.id)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 
@@ -99,9 +98,9 @@ export class VotePostCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * data.params[]:
-     *  [0]: marketId
-     *  [1]: proposalHash
-     *  [2]: proposalOptionId
+     * [0]: marketId
+     * [1]: proposalHash
+     * [2]: proposalOptionId
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -113,17 +112,16 @@ export class VotePostCommand extends BaseCommand implements RpcCommandInterface<
 
         // make sure Proposal with the id exists
         const proposal: resources.Proposal = await this.proposalService.findOneByHash(data.params[1])
-            .then(value => {
-                return value.toJSON();
-            })
-            .catch(reason => {
+            .then(value => value.toJSON())
+            .catch(() => {
                 throw new ModelNotFoundException('Proposal');
             });
 
         // make sure ProposalOption exists
-        const proposalOption: resources.ProposalOption | undefined = _.find(proposal.ProposalOptions, (o: resources.ProposalOption) => {
-            return o.optionId === data.params[2];
-        });
+        const proposalOption: resources.ProposalOption | undefined = _.find(
+            proposal.ProposalOptions,
+            (o: resources.ProposalOption) => o.optionId === data.params[2]
+        );
         if (!proposalOption) {
             throw new ModelNotFoundException('ProposalOption');
         }

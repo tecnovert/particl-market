@@ -56,7 +56,7 @@ export class SmsgMessageFactory implements ModelFactoryInterface {
 
                 return createRequest;
             })
-            .catch(reason => {
+            .catch(() => {
 
                 const createRequest = {
                     type: MPAction.UNKNOWN,
@@ -85,9 +85,7 @@ export class SmsgMessageFactory implements ModelFactoryInterface {
 
     public async getMarketplaceMessage(message: resources.SmsgMessage): Promise<MarketplaceMessage> {
         return await this.parseJSONSafe(message.text)
-            .then( marketplaceMessage => {
-                return marketplaceMessage;
-            });
+            .then(marketplaceMessage => marketplaceMessage);
     }
 
     private async parseJSONSafe(json: string): Promise<MarketplaceMessage> {

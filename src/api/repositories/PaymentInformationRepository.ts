@@ -22,8 +22,8 @@ export class PaymentInformationRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<PaymentInformation>> {
-        const list = await this.PaymentInformationModel.fetchAll();
-        return list as Bookshelf.Collection<PaymentInformation>;
+        const list = await this.PaymentInformationModel.fetchAll<PaymentInformation>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<PaymentInformation> {
@@ -35,7 +35,7 @@ export class PaymentInformationRepository {
         try {
             const paymentInformationCreated = await paymentInformation.save();
             return this.PaymentInformationModel.fetchById(paymentInformationCreated.id);
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not create the paymentInformation!', error);
         }

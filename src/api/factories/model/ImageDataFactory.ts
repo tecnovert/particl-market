@@ -5,7 +5,7 @@
 import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
-import { Core, Targets, Types } from '../../../constants';
+import { Core, Types } from '../../../constants';
 import { ImageVersion } from '../../../core/helpers/ImageVersion';
 import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequest';
 import { ImageVersions } from '../../../core/helpers/ImageVersionEnumType';
@@ -45,26 +45,26 @@ export class ImageDataFactory  implements ModelFactoryInterface {
         let hash = actionMessage.hash;
 
         switch (dsn.protocol) {
-            case ProtocolDSN.FILE:
-                // todo: try to load an existing local file
-                break;
-            case ProtocolDSN.REQUEST:
-                // data is in dsn.data, called from ImageAddCommand
+        case ProtocolDSN.FILE:
+            // todo: try to load an existing local file
+            break;
+        case ProtocolDSN.REQUEST:
+            // data is in dsn.data, called from ImageAddCommand
+            dsn.protocol = ProtocolDSN.FILE;
+            // only calculate hash when uploading new image
+            hash = ConfigurableHasher.hash({data: dsn.data}, new HashableImageCreateRequestConfig());
+            break;
+        case ProtocolDSN.SMSG:
+            // data will be received in a separate smsg.
+            // ...this could also be the separate smsg, so if data exists, store as FILE
+            if (!_.isEmpty(dsn.data)) {
                 dsn.protocol = ProtocolDSN.FILE;
-                // only calculate hash when uploading new image
-                hash = ConfigurableHasher.hash({data: dsn.data}, new HashableImageCreateRequestConfig());
-                break;
-            case ProtocolDSN.SMSG:
-                // data will be received in a separate smsg.
-                // ...this could also be the separate smsg, so if data exists, store as FILE
-                if (!_.isEmpty(dsn.data)) {
-                    dsn.protocol = ProtocolDSN.FILE;
-                }
-                break;
-            case ProtocolDSN.IPFS:
-            case ProtocolDSN.URL:
-            default:
-                throw new NotImplementedException();
+            }
+            break;
+        case ProtocolDSN.IPFS:
+        case ProtocolDSN.URL:
+        default:
+            throw new NotImplementedException();
         }
 
         const imageDataCreateRequest = {
@@ -81,8 +81,15 @@ export class ImageDataFactory  implements ModelFactoryInterface {
 
 
     // todo: remove
-    public async getImageDataCreateRequest(itemImageId: number, imageVersion: ImageVersion, imageHash: string, protocol: ProtocolDSN, data: string | undefined,
-                                           encoding: string | undefined, originalMime: string | undefined, originalName: string | undefined
+    public async getImageDataCreateRequest(
+        itemImageId: number,
+        imageVersion: ImageVersion,
+        imageHash: string,
+        protocol: ProtocolDSN,
+        data: string | undefined,
+        encoding: string | undefined,
+        originalMime: string | undefined,
+        originalName: string | undefined
     ): Promise<ImageDataCreateRequest> {
 
         const imageData = {
@@ -100,9 +107,8 @@ export class ImageDataFactory  implements ModelFactoryInterface {
     }
 
     public getImageUrl(itemImageId: number, version: string): string {
-        return process.env.APP_HOST
-            + (process.env.APP_PORT ? ':' + process.env.APP_PORT : '')
-            + '/api/images/' + itemImageId + '/' + version;
+        return `${process.env.APP_HOST || ''}${(process.env.APP_PORT ? ':' : '')}${(process.env.APP_PORT ? process.env.APP_PORT : '')}` +
+        `/api/images/${itemImageId}/${version}`;
     }
 
 }

@@ -9,7 +9,7 @@ import { MPActionExtended } from '../../enums/MPActionExtended';
 import { MarketType } from '../../enums/MarketType';
 import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { ContentReference } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
-import {MarketRegion} from '../../enums/MarketRegion';
+// import {MarketRegion} from '../../enums/MarketRegion';
 
 export class MarketAddMessage extends MessageBody implements ActionMessageInterface {
 

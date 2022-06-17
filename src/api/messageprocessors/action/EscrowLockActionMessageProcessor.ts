@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -16,7 +15,7 @@ import { ListingItemService } from '../../services/model/ListingItemService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BidFactory } from '../../factories/model/BidFactory';
 import { BidService } from '../../services/model/BidService';
-import { EscrowLockMessage } from '../../messages/action/EscrowLockMessage';
+// import { EscrowLockMessage } from '../../messages/action/EscrowLockMessage';
 import { EscrowLockActionService } from '../../services/action/EscrowLockActionService';
 import { ProposalService } from '../../services/model/ProposalService';
 import { BaseBidActionMessageProcessor } from '../BaseBidActionMessageProcessor';
@@ -63,15 +62,11 @@ export class EscrowLockActionMessageProcessor extends BaseBidActionMessageProces
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: EscrowLockMessage = marketplaceMessage.action as EscrowLockMessage;
+        // const actionMessage: EscrowLockMessage = marketplaceMessage.action as EscrowLockMessage;
 
         return await this.escrowLockActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
-                return SmsgMessageStatus.PROCESSED;
-            })
-            .catch(reason => {
-                return SmsgMessageStatus.PROCESSING_FAILED;
-            });
+            .then(() => SmsgMessageStatus.PROCESSED)
+            .catch(() => SmsgMessageStatus.PROCESSING_FAILED);
     }
 
 }

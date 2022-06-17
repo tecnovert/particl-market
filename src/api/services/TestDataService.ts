@@ -17,7 +17,6 @@ import { TestDataCreateRequest } from '../requests/testdata/TestDataCreateReques
 import { ShippingCountries } from '../../core/helpers/ShippingCountries';
 import { ShippingAvailability } from '../enums/ShippingAvailability';
 import { ListingItemObjectType } from '../enums/ListingItemObjectType';
-import { ListingItem } from '../models/ListingItem';
 import { ListingItemService } from './model/ListingItemService';
 import { ListingItemTemplateService } from './model/ListingItemTemplateService';
 import { DefaultItemCategoryService } from './DefaultItemCategoryService';
@@ -139,6 +138,7 @@ export class TestDataService {
     public log: LoggerType;
     public ignoreTables: string[] = ['sqlite_sequence', 'version', 'version_lock', 'knex_migrations', 'knex_migrations_lock'];
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.DefaultItemCategoryService) private defaultItemCategoryService: DefaultItemCategoryService,
         @inject(Types.Service) @named(Targets.Service.DefaultProfileService) private defaultProfileService: DefaultProfileService,
@@ -177,6 +177,7 @@ export class TestDataService {
     ) {
         this.log = new Logger(__filename);
     }
+    /* eslint-enable max-params */
 
     /**
      * clean up the database
@@ -189,7 +190,7 @@ export class TestDataService {
 
         await this.cleanDb()
             .catch( reason => {
-                this.log.debug('failed cleaning the db: ' + reason);
+                this.log.debug(`failed cleaning the db: ${reason}`);
             });
 
         if (seed) {
@@ -202,7 +203,6 @@ export class TestDataService {
         }
 
         this.log.info('cleanup & default seeds done.');
-        return;
     }
 
     /**
@@ -212,97 +212,97 @@ export class TestDataService {
      * @param body
      */
     @validate()
-    public async create<T>( @request(TestDataCreateRequest) body: TestDataCreateRequest): Promise<Bookshelf.Model<any>> {
+    public async create( @request(TestDataCreateRequest) body: TestDataCreateRequest): Promise<Bookshelf.Model<any>> {
         switch (body.model) {
-            case CreatableModel.LISTINGITEMTEMPLATE: {
-                return await this.listingItemTemplateService.create(body.data as ListingItemTemplateCreateRequest);
-            }
-            case CreatableModel.LISTINGITEM: {
-                return await this.listingItemService.create(body.data as ListingItemCreateRequest);
-            }
-            case CreatableModel.PROFILE: {
-                return await this.profileService.create(body.data as ProfileCreateRequest);
-            }
-            case CreatableModel.ITEMCATEGORY: {
-                return await this.itemCategoryService.create(body.data as ItemCategoryCreateRequest);
-            }
-            case CreatableModel.FAVORITEITEM: {
-                return await this.favoriteItemService.create(body.data as FavoriteItemCreateRequest);
-            }
-            case CreatableModel.ITEMINFORMATION: {
-                return await this.itemInformationService.create(body.data as ItemInformationCreateRequest);
-            }
-            case CreatableModel.BID: {
-                return await this.bidService.create(body.data as BidCreateRequest);
-            }
-            case CreatableModel.PAYMENTINFORMATION: {
-                return await this.paymentInformationService.create(body.data as PaymentInformationCreateRequest);
-            }
-            case CreatableModel.IMAGE: {
-                return await this.imageService.create(body.data as ImageCreateRequest);
-            }
-            case CreatableModel.COMMENT: {
-                return await this.commentService.create(body.data as CommentCreateRequest);
-            }
-            default: {
-                throw new MessageException('Not implemented');
-            }
+        case CreatableModel.LISTINGITEMTEMPLATE: {
+            return await this.listingItemTemplateService.create(body.data as ListingItemTemplateCreateRequest);
+        }
+        case CreatableModel.LISTINGITEM: {
+            return await this.listingItemService.create(body.data as ListingItemCreateRequest);
+        }
+        case CreatableModel.PROFILE: {
+            return await this.profileService.create(body.data as ProfileCreateRequest);
+        }
+        case CreatableModel.ITEMCATEGORY: {
+            return await this.itemCategoryService.create(body.data as ItemCategoryCreateRequest);
+        }
+        case CreatableModel.FAVORITEITEM: {
+            return await this.favoriteItemService.create(body.data as FavoriteItemCreateRequest);
+        }
+        case CreatableModel.ITEMINFORMATION: {
+            return await this.itemInformationService.create(body.data as ItemInformationCreateRequest);
+        }
+        case CreatableModel.BID: {
+            return await this.bidService.create(body.data as BidCreateRequest);
+        }
+        case CreatableModel.PAYMENTINFORMATION: {
+            return await this.paymentInformationService.create(body.data as PaymentInformationCreateRequest);
+        }
+        case CreatableModel.IMAGE: {
+            return await this.imageService.create(body.data as ImageCreateRequest);
+        }
+        case CreatableModel.COMMENT: {
+            return await this.commentService.create(body.data as CommentCreateRequest);
+        }
+        default: {
+            throw new MessageException('Not implemented');
+        }
         }
     }
 
     /**
      * generates testdata
      *
-     *  model - listingitemtemplate, listingitem or profile
-     *  amount - amount of models to create
-     *  withRelated - return full related model data or just id's, defaults to true
-     *  generateParams - boolean array from GenerateListingItemTemplateParams
+     * model - listingitemtemplate, listingitem or profile
+     * amount - amount of models to create
+     * withRelated - return full related model data or just id's, defaults to true
+     * generateParams - boolean array from GenerateListingItemTemplateParams
      *
      * @param body
      * @returns {Promise<any>}
      */
     @validate()
-    public async generate<T>( @request(TestDataGenerateRequest) body: TestDataGenerateRequest ): Promise<any> {
+    public async generate( @request(TestDataGenerateRequest) body: TestDataGenerateRequest ): Promise<any> {
         switch (body.model) {
-            case CreatableModel.LISTINGITEMTEMPLATE: {
-                const generateParams = new GenerateListingItemTemplateParams(body.generateParams);
-                return await this.generateListingItemTemplates(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.LISTINGITEM: {
-                const generateParams = new GenerateListingItemParams(body.generateParams);
-                return await this.generateListingItems(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.PROFILE: {
-                const generateParams = new GenerateProfileParams(body.generateParams);
-                return await this.generateProfiles(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.BID: {
-                const generateParams = new GenerateBidParams(body.generateParams);
-                return await this.generateBids(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.ORDER: {
-                const generateParams = new GenerateOrderParams(body.generateParams);
-                return await this.generateOrders(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.PROPOSAL: {
-                const generateParams = new GenerateProposalParams(body.generateParams);
-                return await this.generateProposals(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.COMMENT: {
-                const generateParams = new GenerateCommentParams(body.generateParams);
-                return await this.generateComments(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.SMSGMESSAGE: {
-                const generateParams = new GenerateSmsgMessageParams(body.generateParams);
-                return await this.generateSmsgMessages(body.amount, body.withRelated, generateParams);
-            }
-            case CreatableModel.BLACKLIST: {
-                const generateParams = new GenerateBlacklistParams(body.generateParams);
-                return await this.generateBlacklists(body.amount, body.withRelated, generateParams);
-            }
-            default: {
-                throw new MessageException('Not implemented');
-            }
+        case CreatableModel.LISTINGITEMTEMPLATE: {
+            const generateParams = new GenerateListingItemTemplateParams(body.generateParams);
+            return await this.generateListingItemTemplates(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.LISTINGITEM: {
+            const generateParams = new GenerateListingItemParams(body.generateParams);
+            return await this.generateListingItems(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.PROFILE: {
+            const generateParams = new GenerateProfileParams(body.generateParams);
+            return await this.generateProfiles(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.BID: {
+            const generateParams = new GenerateBidParams(body.generateParams);
+            return await this.generateBids(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.ORDER: {
+            const generateParams = new GenerateOrderParams(body.generateParams);
+            return await this.generateOrders(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.PROPOSAL: {
+            const generateParams = new GenerateProposalParams(body.generateParams);
+            return await this.generateProposals(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.COMMENT: {
+            const generateParams = new GenerateCommentParams(body.generateParams);
+            return await this.generateComments(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.SMSGMESSAGE: {
+            const generateParams = new GenerateSmsgMessageParams(body.generateParams);
+            return await this.generateSmsgMessages(body.amount, body.withRelated, generateParams);
+        }
+        case CreatableModel.BLACKLIST: {
+            const generateParams = new GenerateBlacklistParams(body.generateParams);
+            return await this.generateBlacklists(body.amount, body.withRelated, generateParams);
+        }
+        default: {
+            throw new MessageException('Not implemented');
+        }
         }
     }
 
@@ -363,8 +363,11 @@ export class TestDataService {
     /**
      * Generates a new ListingItemTemplate without ListingItem
      */
-    public async generateListingItemTemplate(sellerProfile: resources.Profile, bidderMarket: resources.Market,
-                                             generateImages: boolean = false): Promise<resources.ListingItemTemplate> {
+    public async generateListingItemTemplate(
+        sellerProfile: resources.Profile,
+        bidderMarket: resources.Market,
+        generateImages: boolean = false
+    ): Promise<resources.ListingItemTemplate> {
         const generateParams = new GenerateListingItemTemplateParams([
             true,                   // generateItemInformation
             true,                   // generateItemLocation
@@ -395,8 +398,11 @@ export class TestDataService {
     /**
      * Generates a new ListingItem with ListingItemTemplate
      */
-    public async generateListingItemWithTemplate(sellerProfile: resources.Profile, bidderMarket: resources.Market,
-                                                 generateImages: boolean = false): Promise<resources.ListingItem> {
+    public async generateListingItemWithTemplate(
+        sellerProfile: resources.Profile,
+        bidderMarket: resources.Market,
+        generateImages: boolean = false
+    ): Promise<resources.ListingItem> {
 
         const randomCategory: resources.ItemCategory = await this.getRandomCategory();
 
@@ -431,8 +437,13 @@ export class TestDataService {
     /**
      * Generates a new Bid
      */
-    public async generateBid(type: ActionMessageTypes, listingItemId: number, bidderMarket: resources.Market, sellerMarket: resources.Market,
-                             parentBidId?: number): Promise<resources.Bid[]> {
+    public async generateBid(
+        type: ActionMessageTypes,
+        listingItemId: number,
+        bidderMarket: resources.Market,
+        sellerMarket: resources.Market,
+        parentBidId?: number
+    ): Promise<resources.Bid[]> {
         const bidParams = new GenerateBidParams([
             false,                              // generateListingItemTemplate
             false,                              // generateListingItem
@@ -480,9 +491,13 @@ export class TestDataService {
     /**
      * Generates a new Proposal
      */
-    public async generateProposal(listingItemId: number, bidderMarket: resources.Market,
-                                  generateOptions: boolean, generateResults: boolean,
-                                  voteCount: number = 0): Promise<resources.Proposal> {
+    public async generateProposal(
+        listingItemId: number,
+        bidderMarket: resources.Market,
+        generateOptions: boolean,
+        generateResults: boolean,
+        voteCount: number = 0
+    ): Promise<resources.Proposal> {
         const generateProposalParams = new GenerateProposalParams([
             listingItemId,                              // listingItemId,
             false,                                      // generatePastProposal,
@@ -535,6 +550,7 @@ export class TestDataService {
 
     /**
      * Generates an random colored image with specified width, height and quality
+     *
      * @param width width of the image
      * @param height height of the image
      * @param quality quality of the image
@@ -619,14 +635,12 @@ export class TestDataService {
             'profiles'
         ];
 
-        this.log.debug('cleaning ' + tablesToClean.length + ' tables...');
+        this.log.debug(`cleaning ${tablesToClean.length} tables...`);
 
         for (const table of tablesToClean) {
             await Database.knex.select().from(table).del();
             this.log.debug(' ...cleaned:' + table);
         }
-
-        return;
     }
 
     private async getTableNames(knex: any): Promise<any> {
@@ -643,8 +657,11 @@ export class TestDataService {
     // -------------------
     // listingitemtemplates
 
-    private async generateListingItemTemplates(amount: number, withRelated: boolean = true,
-                                               generateParams: GenerateListingItemTemplateParams): Promise<resources.ListingItemTemplate[]> {
+    private async generateListingItemTemplates(
+        amount: number,
+        withRelated: boolean = true,
+        generateParams: GenerateListingItemTemplateParams
+    ): Promise<resources.ListingItemTemplate[]> {
 
         // this.log.debug('generateListingItemTemplates(), generateParams: ', JSON.stringify(generateParams, null, 2));
 
@@ -684,9 +701,7 @@ export class TestDataService {
                 const sellersMarketIdentity: resources.Identity = await this.profileService.findOne(generateParams.profileId)
                     .then(value => {
                         const sellerProfile: resources.Profile = value.toJSON();
-                        const foundMarket = _.find(sellerProfile.Markets, sellersMarket => {
-                            return sellersMarket.receiveAddress === soldOnMarket.receiveAddress;
-                        });
+                        const foundMarket = _.find(sellerProfile.Markets, sellersMarket => sellersMarket.receiveAddress === soldOnMarket.receiveAddress);
 
                         if (foundMarket) {
                             return foundMarket.Identity;
@@ -705,7 +720,7 @@ export class TestDataService {
                     paymentInformation: listingItemTemplateCreateRequest.paymentInformation,
                     messagingInformation: listingItemTemplateCreateRequest.messagingInformation,
                     listingItemObjects: listingItemTemplateCreateRequest.listingItemObjects,
-                    msgid: '' + Date.now(),
+                    msgid: `${Date.now()}`,
                     expiryTime: 10,
                     postedAt: Date.now(),
                     expiredAt: Date.now() + 60 * 1000 * 60 * 24 * 10,
@@ -739,15 +754,18 @@ export class TestDataService {
             }
             items.push(listingItemTemplate);
         }
-        this.log.debug('generated ' + items.length + ' listingItemTemplates');
+        this.log.debug(`generated ${items.length} listingItemTemplates`);
         return await this.generateResponse(items, withRelated);
     }
 
     // -------------------
     // listingitems
 
-    private async generateListingItems(amount: number, withRelated: boolean = true,
-                                       generateParams: GenerateListingItemParams): Promise<resources.ListingItem[]> {
+    private async generateListingItems(
+        amount: number,
+        withRelated: boolean = true,
+        generateParams: GenerateListingItemParams
+    ): Promise<resources.ListingItem[]> {
 
         const items: resources.ListingItem[] = [];
         for (let i = amount; i > 0; i--) {
@@ -779,11 +797,7 @@ export class TestDataService {
 
         const sellerIdentity: resources.Identity = await this.identityService.findOneByAddress(listingItem.seller)
             .then(value => value.toJSON())
-            .catch(reason => {
-                return {
-                    address: Faker.finance.bitcoinAddress()
-                } as resources.Identity;
-            });
+            .catch(() => ({ address: Faker.finance.bitcoinAddress() } as resources.Identity));
 
         const listingItemAddMessage: ListingItemAddMessage = await this.listingItemAddMessageFactory.get({
             sendParams: {
@@ -836,8 +850,8 @@ export class TestDataService {
     // -------------------
     // bids
     private async generateBids(
-        amount: number, withRelated: boolean = true, generateParams: GenerateBidParams):
-    Promise<resources.Bid[]> {
+        amount: number, withRelated: boolean = true, generateParams: GenerateBidParams
+    ): Promise<resources.Bid[]> {
 
         const listingItemTemplateGenerateParams = new GenerateListingItemTemplateParams();
         const listingItemGenerateParams = new GenerateListingItemParams();
@@ -853,6 +867,9 @@ export class TestDataService {
             listingItemTemplate = listingItemTemplates[0];
 
             this.log.debug('templates generated:', listingItemTemplates.length);
+            if (!listingItemTemplate) {
+                return [];
+            }
             this.log.debug('listingItemTemplates[0].id:', listingItemTemplates[0].id);
             this.log.debug('listingItemTemplates[0].hash:', listingItemTemplates[0].hash);
 
@@ -905,10 +922,10 @@ export class TestDataService {
 
         const bidderIdentity: resources.Identity = await this.identityService.findOneByAddress(generateParams.bidder)
             .then(value => value.toJSON())
-            .catch(reason => undefined);
+            .catch(() => undefined);
         const sellerIdentity: resources.Identity = await this.identityService.findOneByAddress(generateParams.seller)
             .then(value => value.toJSON())
-            .catch(reason => undefined);
+            .catch(() => undefined);
 
         const identity: resources.Identity = _.isNil(bidderIdentity) ? sellerIdentity : bidderIdentity;
 
@@ -1033,9 +1050,9 @@ export class TestDataService {
                 this.log.debug('created FlaggedItem');
             }
 
-            this.log.debug('generating ' + generateParams.voteCount + ' votes...');
+            this.log.debug(`generating ${generateParams.voteCount} votes...`);
             if (generateParams.voteCount > 0) {
-                const votes = await this.generateVotesForProposal(generateParams, proposal);
+                await this.generateVotesForProposal(generateParams, proposal);
             }
 
             if (generateParams.generateResults) {
@@ -1087,8 +1104,7 @@ export class TestDataService {
             } as VoteCreateRequest;
 
             const vote: resources.Vote = await this.voteService.create(voteCreateRequest).then(value => value.toJSON());
-            this.log.debug('proposal.id : ' + proposal.id + ' : created vote: ' + vote.voter + ' : '
-                + vote.ProposalOption.optionId + ' : ' + vote.ProposalOption.description);
+            this.log.debug(`proposal.id : ${proposal.id} : created vote: ${vote.voter} : ${vote.ProposalOption.optionId} : ${vote.ProposalOption.description}`);
             items.push(vote);
         }
         return items;
@@ -1163,7 +1179,7 @@ export class TestDataService {
         // hash the proposal
         let hashableOptions = '';
         for (const option of proposalCreateRequest.options) {
-            hashableOptions = hashableOptions + option.optionId + ':' + option.description + ':';
+            hashableOptions = `${hashableOptions}${option.optionId}:${option.description}:`;
         }
         proposalCreateRequest.hash = ConfigurableHasher.hash(proposalCreateRequest, new HashableProposalCreateRequestConfig([{
             value: hashableOptions,
@@ -1172,7 +1188,7 @@ export class TestDataService {
 
         // add hashes for the options too
         for (const option of proposalCreateRequest.options) {
-            hashableOptions = hashableOptions + option.optionId + ':' + option.description + ':';
+            hashableOptions = `${hashableOptions}${option.optionId}:${option.description}:`;
 
             option.hash = ConfigurableHasher.hash(option, new HashableProposalOptionMessageConfig([{
                 value: proposalCreateRequest.hash,
@@ -1300,7 +1316,7 @@ export class TestDataService {
 
     private async generateProfileData(generateParams: GenerateProfileParams, i: number): Promise<ProfileCreateRequest> {
         // added the i in order to reduce the number of wallets created for testing...
-        const name = 'TEST-' + i;
+        const name = `TEST-${i}`;
 
         const shippingAddresses = generateParams.generateShippingAddresses
             ? await this.generateAddressesData(_.random(1, 2))
@@ -1341,7 +1357,7 @@ export class TestDataService {
         }
         return addresses;
     }
-/*
+    /*
     private async generateCryptocurrencyAddressesData(amount: number): Promise<CryptocurrencyAddressCreateRequest[]> {
         const cryptoAddresses: CryptocurrencyAddressCreateRequest[] = [];
         for (let i = amount; i > 0; i--) {
@@ -1352,12 +1368,12 @@ export class TestDataService {
         }
         return cryptoAddresses;
     }
-*/
+    */
     private async generateSettings(amount: number): Promise<SettingCreateRequest[]> {
         const settings: SettingCreateRequest[] = [];
         for (let i = amount; i > 0; i--) {
             settings.push({
-                key: 'TEST-PROFILE-SETTING-' + i,
+                key: `TEST-PROFILE-SETTING-${i}`,
                 value: Faker.random.word()
             } as SettingCreateRequest);
         }
@@ -1412,7 +1428,7 @@ export class TestDataService {
             messagingInformation,
             listingItemObjects,
             market: market.receiveAddress,
-            msgid: '' + Date.now(),
+            msgid: `${Date.now()}`,
             expiryTime: 4,
             postedAt: Date.now(),
             expiredAt: Date.now() + 100000000,
@@ -1459,15 +1475,15 @@ export class TestDataService {
             country: Faker.random.arrayElement(Object.getOwnPropertyNames(ShippingCountries.countryCodeList)),
             address: Faker.address.streetAddress(),
             description: Faker.lorem.paragraph()
-/*
-    TODO: this should be configurable
+        /*
+        TODO: this should be configurable
             locationMarker: {
                 lat: _.random(-50, 50),
                 lng: _.random(-50, 50),
                 title: Faker.lorem.word(),
                 description: Faker.lorem.sentence()
             } as LocationMarkerCreateRequest
-*/
+        */
         } as ItemLocationCreateRequest;
     }
 
@@ -1501,8 +1517,9 @@ export class TestDataService {
         return createRequests;
     }
 
-    private async generateItemInformationData(generateParams: GenerateListingItemParams | GenerateListingItemTemplateParams):
-        Promise<ItemInformationCreateRequest> {
+    private async generateItemInformationData(
+        generateParams: GenerateListingItemParams | GenerateListingItemTemplateParams
+    ): Promise<ItemInformationCreateRequest> {
 
         const shippingDestinations = generateParams.generateShippingDestinations
             ? this.generateShippingDestinationsData(_.random(1, 5))
@@ -1535,13 +1552,14 @@ export class TestDataService {
         return itemInformationCreateRequest;
     }
 
-    private async generatePaymentInformationData(generateParams: GenerateListingItemParams | GenerateListingItemTemplateParams):
-        Promise<PaymentInformationCreateRequest> {
+    private async generatePaymentInformationData(
+        generateParams: GenerateListingItemParams | GenerateListingItemTemplateParams
+    ): Promise<PaymentInformationCreateRequest> {
 
         // this.log.debug('generateParams: ', JSON.stringify(generateParams, null, 2));
 
         const address = Faker.finance.bitcoinAddress();
-/*
+        /*
         // todo: fix bid send test data generation
         if (generateParams.soldOnMarketId) {
             address = await this.marketService.findOne(generateParams.soldOnMarketId).then(async value => {
@@ -1551,7 +1569,7 @@ export class TestDataService {
         } else {
             address = Faker.finance.bitcoinAddress();
         }
-*/
+        */
         const escrow = generateParams.generateEscrow
             ? {
                 type: EscrowType.MAD_CT, // Faker.random.arrayElement(Object.getOwnPropertyNames(EscrowType)),
@@ -1662,8 +1680,11 @@ export class TestDataService {
 
     // -------------------
     // SmsgMessages
-    private async generateSmsgMessages(amount: number, withRelated: boolean = true,
-                                       generateParams: GenerateSmsgMessageParams): Promise<resources.SmsgMessage[]> {
+    private async generateSmsgMessages(
+        amount: number,
+        withRelated: boolean = true,
+        generateParams: GenerateSmsgMessageParams
+    ): Promise<resources.SmsgMessage[]> {
 
         this.log.debug('generateSmsgMessages, generateParams: ', JSON.stringify(generateParams, null, 2));
 
@@ -1695,26 +1716,26 @@ export class TestDataService {
             text = generateParams.text;
         } else {
             switch (generateParams.type) {
-                case MPAction.MPA_LISTING_ADD: {
-                    const marketplaceMessage = await this.listingItemAddMessageFactory.get(generateParams.messageParams);
-                    action = marketplaceMessage.action;
-                    break;
-                }
-                case MPAction.MPA_BID: {
-                    throw new MessageException('Not implemented');
-                }
-                case GovernanceAction.MPA_PROPOSAL_ADD: {
-                    throw new MessageException('Not implemented');
-                }
-                case GovernanceAction.MPA_VOTE: {
-                    throw new MessageException('Not implemented');
-                }
-                case CommentAction.MPA_COMMENT_ADD: {
-                    throw new MessageException('Not implemented');
-                }
-                default: {
-                    throw new MessageException('Not implemented');
-                }
+            case MPAction.MPA_LISTING_ADD: {
+                const marketplaceMessage = await this.listingItemAddMessageFactory.get(generateParams.messageParams);
+                action = marketplaceMessage.action;
+                break;
+            }
+            case MPAction.MPA_BID: {
+                throw new MessageException('Not implemented');
+            }
+            case GovernanceAction.MPA_PROPOSAL_ADD: {
+                throw new MessageException('Not implemented');
+            }
+            case GovernanceAction.MPA_VOTE: {
+                throw new MessageException('Not implemented');
+            }
+            case CommentAction.MPA_COMMENT_ADD: {
+                throw new MessageException('Not implemented');
+            }
+            default: {
+                throw new MessageException('Not implemented');
+            }
             }
 
             text = JSON.stringify({

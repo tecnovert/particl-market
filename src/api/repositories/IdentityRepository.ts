@@ -22,8 +22,8 @@ export class IdentityRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Identity>> {
-        const list = await this.IdentityModel.fetchAll();
-        return list as Bookshelf.Collection<Identity>;
+        const list = await this.IdentityModel.fetchAll<Identity>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Identity> {

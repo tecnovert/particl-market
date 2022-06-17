@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -35,12 +34,13 @@ import { MarketNotification } from '../../messages/notification/MarketNotificati
 import { MarketAddValidator } from '../../messagevalidators/MarketAddValidator';
 import { ImageService } from '../model/ImageService';
 import { MarketType } from '../../enums/MarketType';
-import { PublicKey, PrivateKey, Networks } from 'particl-bitcore-lib';
+import { PrivateKey } from 'particl-bitcore-lib';
 import { BlacklistService } from '../model/BlacklistService';
 
 
 export class MarketAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
@@ -70,6 +70,7 @@ export class MarketAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -105,8 +106,12 @@ export class MarketAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: MarketAddRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: MarketAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
@@ -117,10 +122,12 @@ export class MarketAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: MarketAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: MarketAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         this.log.debug('processMessage(), actionDirection: ', actionDirection);
 
@@ -129,7 +136,7 @@ export class MarketAddActionService extends BaseActionService {
             // we're creating the market only when it arrives
             const marketAddMessage: MarketAddMessage = marketplaceMessage.action as MarketAddMessage;
 
-            const createRequest: MarketCreateRequest = await this.marketFactory.get({
+            const createRequest: Partial<MarketCreateRequest> = await this.marketFactory.get({
                 actionMessage: marketAddMessage,
                 smsgMessage,
                 skipJoin: false
@@ -138,8 +145,8 @@ export class MarketAddActionService extends BaseActionService {
             // this.log.debug('processMessage(), createRequest: ', JSON.stringify(createRequest, null, 2));
 
             // Image for the Market might have already been received
-            const existingImages: resources.Image[] = await this.imageService.findAllByTarget(createRequest.hash).then(value => value.toJSON());
-            this.log.debug('processMessage(), existingImages: ' + existingImages.length + ', for market.hash: ' + createRequest.hash);
+            const existingImages: resources.Image[] = await this.imageService.findAllByTarget(createRequest.hash as string).then(value => value.toJSON());
+            this.log.debug(`processMessage(), existingImages: ${existingImages.length}, for market.hash: ${createRequest.hash as string}`);
 
             for (const existingImage of existingImages) {
                 // then remove existing Image from the MarketCreateRequest if theres a match
@@ -151,10 +158,10 @@ export class MarketAddActionService extends BaseActionService {
 
             // this.log.debug('processMessage(), createRequest: ', JSON.stringify(createRequest, null, 2));
 
-            const market: resources.Market = await this.marketService.create(createRequest).then(value => value.toJSON());
+            const market: resources.Market = await this.marketService.create(createRequest as MarketCreateRequest).then(value => value.toJSON());
             for (const existingImage of existingImages) {
-                await this.marketService.setImage(market.id, existingImage.id).then(value => {
-                    this.log.debug('updated, image: ' + existingImage.id + ', for market: ' + market.id + '.');
+                await this.marketService.setImage(market.id, existingImage.id).then(() => {
+                    this.log.debug(`updated, image: ${existingImage.id}, for market: ${market.id}.`);
                 });
             }
             // this.log.debug('processMessage(), market: ', JSON.stringify(market, null, 2));
@@ -165,16 +172,18 @@ export class MarketAddActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {
 
             const market: resources.Market = await this.marketService.findOneByMsgId(smsgMessage.msgid)
                 .then(value => value.toJSON())
-                .catch(err => undefined);
+                .catch(() => undefined);
 
             if (market) {
                 const notification: MarketplaceNotification = {
@@ -206,7 +215,7 @@ export class MarketAddActionService extends BaseActionService {
                 this.log.debug('createFlaggedItemIfNeeded(), found proposal: ', proposal.id);
                 return await this.createFlaggedItemForMarket(market, proposal);
             })
-            .catch(reason => {
+            .catch(() => {
                 this.log.debug('Market is not flagged.');
                 return null;
             });

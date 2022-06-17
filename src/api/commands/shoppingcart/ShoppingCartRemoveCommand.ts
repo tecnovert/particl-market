@@ -30,7 +30,7 @@ export class ShoppingCartRemoveCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: cart, resources.ShoppingCart
+     * [0]: cart, resources.ShoppingCart
      *
      * @param data
      * @returns {Promise<void>}
@@ -43,7 +43,7 @@ export class ShoppingCartRemoveCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: cartId
+     * [0]: cartId
      *
      * @param data
      * @returns {Promise<void>}
@@ -63,7 +63,7 @@ export class ShoppingCartRemoveCommand extends BaseCommand implements RpcCommand
         // make sure ShoppingCart with the id exists
         data.params[0] = await this.shoppingCartService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ShoppingCart');
             });
 

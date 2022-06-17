@@ -12,7 +12,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ProfileService } from '../../services/model/ProfileService';
 import { IdentityService } from '../../services/model/IdentityService';
 import {
@@ -53,12 +52,12 @@ export class IdentityFundCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: identity: resources.Identity
-     *  [1]: walletFrom: string
-     *  [2]: amount: number
-     *  [3]: outputCount: number, optional, default: 10
-     *  [4]: fromType: OutputType, optional, default: OutputType.PART
-     *  [5]: estimateFee: boolean, optional, default: false
+     * [0]: identity: resources.Identity
+     * [1]: walletFrom: string
+     * [2]: amount: number
+     * [3]: outputCount: number, optional, default: 10
+     * [4]: fromType: OutputType, optional, default: OutputType.PART
+     * [5]: estimateFee: boolean, optional, default: false
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -75,7 +74,7 @@ export class IdentityFundCommand extends BaseCommand implements RpcCommandInterf
     }
 
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<FundResponse> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<FundResponse> {
         const identity: resources.Identity = data.params[0];
         const walletFrom: string = data.params[1];
         const amount: number = data.params[2];

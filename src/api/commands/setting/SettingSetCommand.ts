@@ -13,7 +13,6 @@ import { Setting } from '../../models/Setting';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { SettingService } from '../../services/model/SettingService';
 import { ProfileService } from '../../services/model/ProfileService';
 import { MissingParamException } from '../../exceptions/MissingParamException';
@@ -37,17 +36,17 @@ export class SettingSetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: key
-     *  [1]: value
-     *  [2]: profile: resources.Profile
-     *  [3]: market: resources.Market, optional
+     * [0]: key
+     * [1]: value
+     * [2]: profile: resources.Profile
+     * [3]: market: resources.Market, optional
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<Setting>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Setting> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Setting> {
         const key = data.params[0];
         const value = data.params[1];
         const profile: resources.Profile = data.params[2];
@@ -55,7 +54,7 @@ export class SettingSetCommand extends BaseCommand implements RpcCommandInterfac
 
         return await this.settingService.createOrUpdateProfileSetting(key, value, profile.id, !_.isNil(market) ? market.id : undefined);
 
-/*
+        /*
         const settingRequest = {
             key,
             value,
@@ -106,15 +105,15 @@ export class SettingSetCommand extends BaseCommand implements RpcCommandInterfac
 
                 });
         }
-*/
+        */
     }
 
     /**
      * data.params[]:
-     *  [0]: key
-     *  [1]: value
-     *  [2]: profileId
-     *  [3]: marketId, optional
+     * [0]: key
+     * [1]: value
+     * [2]: profileId
+     * [3]: marketId, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -144,7 +143,7 @@ export class SettingSetCommand extends BaseCommand implements RpcCommandInterfac
         // make sure Profile with the id exists
         data.params[2] = await this.profileService.findOne(data.params[2])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
 
@@ -152,7 +151,7 @@ export class SettingSetCommand extends BaseCommand implements RpcCommandInterfac
         if (data.params[3] !== undefined) {
             data.params[3] = await this.marketService.findOne(data.params[3])
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Market');
                 });
         }

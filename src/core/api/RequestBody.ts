@@ -42,7 +42,6 @@ export class RequestBody {
         if (errors && errors.length > 0) {
             throw new ValidationException('Request body is not valid', errors);
         }
-        return;
     }
 
 }

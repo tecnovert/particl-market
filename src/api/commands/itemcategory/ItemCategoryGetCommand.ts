@@ -26,7 +26,7 @@ export class ItemCategoryGetCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * params[]:
-     *  [0]: itemCategory: resources.ItemCategory, optional
+     * [0]: itemCategory: resources.ItemCategory, optional
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {

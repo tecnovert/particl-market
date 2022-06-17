@@ -10,7 +10,7 @@ import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { MarketplaceMessageEvent } from '../../messages/MarketplaceMessageEvent';
 import { SmsgMessageService } from '../../services/model/SmsgMessageService';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
-import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
+// import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
 import { ProposalService } from '../../services/model/ProposalService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BaseActionMessageProcessor } from '../BaseActionMessageProcessor';
@@ -66,15 +66,15 @@ export class ListingItemImageAddActionMessageProcessor extends BaseActionMessage
         }
 
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
+        // const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
 
         return await this.actionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
+            .then(() => {
                 this.log.debug('PROCESSED: ' + smsgMessage.msgid);
                 return SmsgMessageStatus.PROCESSED;
 
             })
-            .catch(reason => {
+            .catch(() => {
                 this.log.error('PROCESSING FAILED: ', smsgMessage.msgid);
                 return SmsgMessageStatus.PROCESSING_FAILED;
             });

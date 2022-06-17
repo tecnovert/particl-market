@@ -3,14 +3,11 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as Bookshelf from 'bookshelf';
-import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { request, validate } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { ListingItemTemplate } from '../../models/ListingItemTemplate';
 import { MarketSearchOrderField, SearchOrderField } from '../../enums/SearchOrderField';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
@@ -55,13 +52,13 @@ export class MarketSearchCommand extends BaseSearchCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: searchString, string, optional, * for all
-     *  [5]: type, MarketType, optional
-     *  [6]: region, MarketRegion, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: searchString, string, optional, * for all
+     * [5]: type, MarketType, optional
+     * [6]: region, MarketRegion, optional
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -92,13 +89,13 @@ export class MarketSearchCommand extends BaseSearchCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: searchString, string, optional, * for all
-     *  [5]: type, MarketType, optional
-     *  [6]: region, MarketRegion, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: searchString, string, optional, * for all
+     * [5]: type, MarketType, optional
+     * [6]: region, MarketRegion, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}

@@ -22,8 +22,8 @@ export class ProposalOptionRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ProposalOption>> {
-        const list = await this.ProposalOptionModel.fetchAll();
-        return list as Bookshelf.Collection<ProposalOption>;
+        const list = await this.ProposalOptionModel.fetchAll<ProposalOption>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ProposalOption> {
@@ -35,7 +35,7 @@ export class ProposalOptionRepository {
     }
 
     public async findOneByProposalAndOptionId(proposalId: number, optionId: number, withRelated: boolean = true): Promise<ProposalOption> {
-        return this.ProposalOptionModel.fetchByProposalAndOptionId(proposalId, optionId);
+        return this.ProposalOptionModel.fetchByProposalAndOptionId(proposalId, optionId, withRelated);
     }
 
     public async create(data: any): Promise<ProposalOption> {
@@ -43,8 +43,8 @@ export class ProposalOptionRepository {
         try {
             const proposalOptionCreated = await proposalOption.save();
             return this.ProposalOptionModel.fetchById(proposalOptionCreated.id);
-        } catch (error) {
-            throw new DatabaseException('Could not create the proposalOption!' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not create the proposalOption! ${error}`, error);
         }
     }
 

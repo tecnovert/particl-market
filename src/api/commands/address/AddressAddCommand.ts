@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
@@ -17,7 +16,6 @@ import { ShippingCountries } from '../../../core/helpers/ShippingCountries';
 import { ShippingZips } from '../../../core/helpers/ShippingZips';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ZipCodeNotFoundException } from '../../exceptions/ZipCodeNotFoundException';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -36,24 +34,24 @@ export class AddressAddCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: title
-     *  [2]: firstName
-     *  [3]: lastName
-     *  [4]: addressLine1
-     *  [5]: addressLine2
-     *  [6]: city
-     *  [7]: state
-     *  [8]: country/countryCode
-     *  [9]: zipCode
-     *  [10]: type, optional, default: AddressType.SHIPPING_OWN
+     * [0]: profileId
+     * [1]: title
+     * [2]: firstName
+     * [3]: lastName
+     * [4]: addressLine1
+     * [5]: addressLine2
+     * [6]: city
+     * [7]: state
+     * [8]: country/countryCode
+     * [9]: zipCode
+     * [10]: type, optional, default: AddressType.SHIPPING_OWN
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<Address>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Address> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Address> {
         const newAddress = {
             profile_id: data.params[0],
             title: data.params[1],
@@ -123,7 +121,7 @@ export class AddressAddCommand extends BaseCommand implements RpcCommandInterfac
 
         // TODO: why is zip given after country?
         // Validate ZIP code
-        if (!ShippingZips.validate(data.params[8], data.params[9])) {
+        if (!ShippingZips.validate(/* data.params[8], data.params[9] */)) {
             throw new ZipCodeNotFoundException(data.params[9]);
         }
 

@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as path from 'path';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
@@ -37,8 +36,8 @@ export class ProfileAddCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * params[]:
-     *  [0]: name
-     *  [1]: force, optional, force creation even if wallet exists
+     * [0]: name
+     * [1]: force, optional, force creation even if wallet exists
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -67,12 +66,8 @@ export class ProfileAddCommand extends BaseCommand implements RpcCommandInterfac
 
         // check if profile already exists for the given name
         let exists = await this.profileService.findOneByName(data.params[0])
-            .then(async value => {
-                return true;
-            })
-            .catch(async reason => {
-                return false;
-            });
+            .then(() => true)
+            .catch(() => false);
 
         if (exists) {
             throw new MessageException('Profile with the same name already exists.');

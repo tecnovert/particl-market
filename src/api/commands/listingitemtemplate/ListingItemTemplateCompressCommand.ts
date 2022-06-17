@@ -31,11 +31,11 @@ export class ListingItemTemplateCompressCommand extends BaseCommand implements R
 
     /**
      * params[]:
-     *  [0]: listingItemTemplateId: number
-     *  [1]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [2]: scalingFraction, default: 0.9
-     *  [3]: qualityFraction, default: 0.9
-     *  [4]: maxIterations, default: 10
+     * [0]: listingItemTemplateId: number
+     * [1]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [2]: scalingFraction, default: 0.9
+     * [3]: qualityFraction, default: 0.9
+     * [4]: maxIterations, default: 10
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -52,11 +52,11 @@ export class ListingItemTemplateCompressCommand extends BaseCommand implements R
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [2]: scalingFraction, default: 0.9
-     *  [3]: qualityFraction, default: 0.9
-     *  [4]: maxIterations, default: 10
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [2]: scalingFraction, default: 0.9
+     * [3]: qualityFraction, default: 0.9
+     * [4]: maxIterations, default: 10
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}

@@ -68,13 +68,13 @@ export class AbstractMakeCommand {
         await writeTemplate(this.template, filePath, this.context);
     }
 
-    public buildFilePath = (targetPath: string, fileName: string, isTest = false, extension = '.ts') => {
+    public buildFilePath = (targetPath: string, fileName: string, isTest = false, extension = '.ts'): string => {
         if (isTest) {
             return path.join(__dirname, `/../../../test${targetPath}`, `${fileName}${extension}`);
         } else {
             return path.join(__dirname, `/../../${targetPath}`, `${fileName}${extension}`);
         }
-    }
+    };
 
     public parseName(suffix: string = '', prefix: string = ''): (name: string) => string {
         return (name: string) => {

@@ -23,8 +23,8 @@ export class ShippingDestinationRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ShippingDestination>> {
-        const list = await this.ShippingDestinationModel.fetchAll();
-        return list as Bookshelf.Collection<ShippingDestination>;
+        const list = await this.ShippingDestinationModel.fetchAll<ShippingDestination>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ShippingDestination> {
@@ -33,9 +33,9 @@ export class ShippingDestinationRepository {
 
     /**
      * options:
-     *  item_information_id: options.item_information_id
-     *  country: options.options
-     *  shipping_availability: options.shipping_availability
+     * item_information_id: options.item_information_id
+     * country: options.options
+     * shipping_availability: options.shipping_availability
      *
      * @param options
      * @returns {Promise<ShippingDestination>}

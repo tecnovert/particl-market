@@ -69,6 +69,7 @@ export class ListingItemImageAddMessageFactory extends BaseMessageFactory {
         return await this.getMarketplaceMessage(message);
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * ContentReference (an image)
      *   - hash: string, the image hash
@@ -88,6 +89,7 @@ export class ListingItemImageAddMessageFactory extends BaseMessageFactory {
      * @param imageDatas
      * @param withData
      */
+    /* eslint-enable jsdoc/check-indentation */
     public async getDSNs(imageDatas: resources.ImageData[], withData: boolean = true): Promise<DSN[]> {
         const dsns: DSN[] = [];
         const imageData: resources.ImageData = await this.getPostableImageData(imageDatas);
@@ -118,18 +120,15 @@ export class ListingItemImageAddMessageFactory extends BaseMessageFactory {
 
     /**
      * return the resized data, or if that doesnt exist, the original one
+     *
      * @param imageDatas
      */
     private async getPostableImageData(imageDatas: resources.ImageData[]): Promise<resources.ImageData> {
-        let imageData = _.find(imageDatas, (value) => {
-            return value.imageVersion === ImageVersions.RESIZED.propName;
-        });
+        let imageData = _.find(imageDatas, (value) => value.imageVersion === ImageVersions.RESIZED.propName);
 
         if (!imageData) {
             // if theres no resized version, then ORIGINAL can be used
-            imageData = _.find(imageDatas, (value) => {
-                return value.imageVersion === ImageVersions.ORIGINAL.propName;
-            });
+            imageData = _.find(imageDatas, (value) => value.imageVersion === ImageVersions.ORIGINAL.propName);
 
             if (!imageData) {
                 // there's something wrong with the Image if original image doesnt have data

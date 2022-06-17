@@ -16,8 +16,8 @@
 ```
 
 
-## Getting Started 
-### Step 1:  Set up the Development Environment 
+## Getting Started
+### Step 1:  Set up the Development Environment
 You need to set up your development environment before you can do anything.
 
 Install [Node.js and NPM](https://nodejs.org/en/download/)
@@ -26,9 +26,9 @@ Install [Node.js and NPM](https://nodejs.org/en/download/)
 * on Linux (Ubuntu) use `curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -`<br/>
 `sudo apt-get install -y nodejs`
 
-Then install yarn globally 
+Then install yarn globally
 ```
-npm install yarn -g 
+npm install yarn -g
 ```
 
 And finally install Docker and docker-compose
@@ -36,7 +36,7 @@ And finally install Docker and docker-compose
 
 
 ### Step 2: Set up the Project
-Fork this project. 
+Fork this project.
 ```
 git clone git@github.com:xludx/particl-market.git
 ```
@@ -96,7 +96,7 @@ npm run setup
 
 ### Step 2b: Set up the Project to run using docker
 
-Create the needed `.env` files. 
+Create the needed `.env` files.
 ```
 cp .env.example .env
 cp .env.docker-compose .env.docker-compose.app1
@@ -115,7 +115,7 @@ cd ..
 git clone git@github.com:xludx/particl-market-data.git
 ```
 
-Find the `particl.conf` files and set printtoconsole=0. 
+Find the `particl.conf` files and set printtoconsole=0.
 
 ### Step 3: Serve your App
 Go to the project dir and start your app with this npm script.
@@ -138,7 +138,7 @@ docker-compose build
 docker-compose up
 ```
 
-Building and running everything and downloading the blockchain for the first time might take some time. 
+Building and running everything and downloading the blockchain for the first time might take some time.
 
 > This starts two marketplace applications and two particl daemons for you.
 > app1 rpc: http://localhost:3100/api/rpc, cli: http://localhost:3100/cli, connecting to particl1 on port 52935
@@ -247,7 +247,6 @@ The route prefix is `/api` by default, but you can change this in the .env file.
 | Route       | Description |
 | ----------- | ----------- |
 | **/api/info** | Shows us the name, description and the version of the package.json |
-| **/status**   | Shows a small monitor page for the server |
 | **/cli**      | Web based CLI to use the RPC commands |
 | **/api/rpc**  | RPC Server endpoint |
 

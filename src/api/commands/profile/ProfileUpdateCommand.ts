@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
@@ -32,8 +31,8 @@ export class ProfileUpdateCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: newProfileName
+     * [0]: profile: resources.Profile
+     * [1]: newProfileName
      *
      * @param data
      * @returns {Promise<Profile>}
@@ -48,8 +47,8 @@ export class ProfileUpdateCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: newProfileName
+     * [0]: profileId
+     * [1]: newProfileName
      *
      * @param data
      * @returns {Promise<Profile>}
@@ -73,7 +72,7 @@ export class ProfileUpdateCommand extends BaseCommand implements RpcCommandInter
         // make sure Profile with the id exists
         data.params[0] = await this.profileService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
 

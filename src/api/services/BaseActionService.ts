@@ -48,13 +48,13 @@ export abstract class BaseActionService implements ActionServiceInterface {
     public blacklistService: BlacklistService;
 
     constructor(@unmanaged() eventType: ActionMessageTypes,
-                @unmanaged() smsgService: SmsgService,
-                @unmanaged() smsgMessageService: SmsgMessageService,
-                @unmanaged() notificationService: NotifyService,
-                @unmanaged() blacklistService: BlacklistService,
-                @unmanaged() smsgMessageFactory: SmsgMessageFactory,
-                @unmanaged() validator: ActionMessageValidatorInterface,
-                @unmanaged() Logger: typeof LoggerType
+        @unmanaged() smsgService: SmsgService,
+        @unmanaged() smsgMessageService: SmsgMessageService,
+        @unmanaged() notificationService: NotifyService,
+        @unmanaged() blacklistService: BlacklistService,
+        @unmanaged() smsgMessageFactory: SmsgMessageFactory,
+        @unmanaged() validator: ActionMessageValidatorInterface,
+        @unmanaged() Logger: typeof LoggerType
     ) {
         this.log = new Logger(eventType);
         this.smsgService = smsgService;
@@ -97,7 +97,7 @@ export abstract class BaseActionService implements ActionServiceInterface {
      *
      * @param actionRequest
      */
-    public abstract async createMarketplaceMessage(actionRequest: ActionRequestInterface): Promise<MarketplaceMessage>;
+    public abstract createMarketplaceMessage(actionRequest: ActionRequestInterface): Promise<MarketplaceMessage>;
 
     /**
      * - create the marketplaceMessage, extending class should implement
@@ -223,10 +223,11 @@ export abstract class BaseActionService implements ActionServiceInterface {
      * called before post is executed (and )message is sent)
      *
      * if you need to add something to MarketplaceMessage, this is the place to do it.
+     *
      * @param actionRequest
      * @param message
      */
-    public abstract async beforePost(actionRequest: ActionRequestInterface, message: MarketplaceMessage): Promise<MarketplaceMessage>;
+    public abstract beforePost(actionRequest: ActionRequestInterface, message: MarketplaceMessage): Promise<MarketplaceMessage>;
 
     /**
      * called after post is executed (message is sent)
@@ -236,10 +237,12 @@ export abstract class BaseActionService implements ActionServiceInterface {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public abstract async afterPost(actionRequest: ActionRequestInterface,
-                                    marketplaceMessage: MarketplaceMessage,
-                                    smsgMessage: resources.SmsgMessage,
-                                    smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse>;
+    public abstract afterPost(
+        actionRequest: ActionRequestInterface,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse>;
 
     /**
      * called after posting a message and after receiving it
@@ -252,10 +255,12 @@ export abstract class BaseActionService implements ActionServiceInterface {
      * @param smsgMessage
      * @param actionRequest
      */
-    public abstract async processMessage(marketplaceMessage: MarketplaceMessage, // TODO: change to ActionMessageInterface, but first move _rawtx
-                                         actionDirection: ActionDirection,
-                                         smsgMessage: resources.SmsgMessage,
-                                         actionRequest?: ActionRequestInterface): Promise<resources.SmsgMessage>;
+    public abstract processMessage(
+        marketplaceMessage: MarketplaceMessage, // TODO: change to ActionMessageInterface, but first move _rawtx
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage,
+        actionRequest?: ActionRequestInterface
+    ): Promise<resources.SmsgMessage>;
 
 
     /**
@@ -267,9 +272,11 @@ export abstract class BaseActionService implements ActionServiceInterface {
      * @param actionDirection
      * @param smsgMessage
      */
-    public abstract async createNotification(marketplaceMessage: MarketplaceMessage,
-                                             actionDirection: ActionDirection,
-                                             smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined>;
+    public abstract createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined>;
 
 
     /**
@@ -292,14 +299,14 @@ export abstract class BaseActionService implements ActionServiceInterface {
             });
             await WebRequest.post(webhookUrl, options, postData)
                 .catch(reason => {
-                    this.log.warn('reason: ' + reason);
+                    this.log.warn(`reason: ${reason}`);
                 });
         }
-        return;
     }
 
     /**
      * check whether the targets are blacklisted
+     *
      * @param targets
      */
     public async isBlacklisted(targets: string[]): Promise<boolean> {
@@ -327,17 +334,13 @@ export abstract class BaseActionService implements ActionServiceInterface {
      */
     private async saveOutgoingMessage(msgid: string): Promise<resources.SmsgMessage> {
         return await this.smsgService.smsg(msgid, false, false)
-            .then(async coreMessage => {
-                return await this.smsgMessageFactory.get({
-                    direction: ActionDirection.OUTGOING,
-                    message: coreMessage,
-                    status: SmsgMessageStatus.SENT
-                    // todo: add also target here if its known
-                } as SmsgMessageCreateParams)
-                    .then(async createRequest => {
-                        return await this.smsgMessageService.create(createRequest).then(value => value.toJSON());
-                    });
-            });
+            .then(async coreMessage => await this.smsgMessageFactory.get({
+                direction: ActionDirection.OUTGOING,
+                message: coreMessage,
+                status: SmsgMessageStatus.SENT
+                // todo: add also target here if its known
+            } as SmsgMessageCreateParams).then(async createRequest => await this.smsgMessageService.create(createRequest).then(value => value.toJSON()))
+            );
     }
 
     private getOptions(): RequestOptions {

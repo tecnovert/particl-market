@@ -48,10 +48,8 @@ export class CoreRpcService extends CtRpc {
 
     public async isConnected(): Promise<boolean> {
         return await this.getNetworkInfo()
-            .then(response => true)
-            .catch(error => {
-                return false;
-            });
+            .then(() => true)
+            .catch(() => false);
     }
 
     /**
@@ -79,9 +77,7 @@ export class CoreRpcService extends CtRpc {
      */
     public async walletLoaded(name: string): Promise<boolean> {
         return await this.listLoadedWallets()
-            .then(wallets => {
-                return _.includes(wallets, name);
-            });
+            .then(wallets => _.includes(wallets, name));
     }
 
     /**
@@ -92,9 +88,10 @@ export class CoreRpcService extends CtRpc {
     public async walletExists(name: string): Promise<boolean> {
         return await this.listWalletDir()
             .then(result => {
-                const found = _.find(result.wallets, wallet => {
-                    return wallet.name === name;
-                });
+                const found = _.find(
+                    result.wallets,
+                    wallet => wallet.name === name
+                );
                 const exists = found ? true : false;
                 // this.log.debug('walletExists: ', exists);
                 return exists;
@@ -114,6 +111,7 @@ export class CoreRpcService extends CtRpc {
 
     /**
      * create will also automatically load the wallet
+     *
      * @param name
      * @param disablePrivateKeys
      * @param blank
@@ -145,7 +143,7 @@ export class CoreRpcService extends CtRpc {
         for (const walletName of walletNames) {
             const loadedWallet = await this.loadWallet(walletName)
                 .catch(reason => {
-                    this.log.error('Error loading wallet: ' + walletName + ', reason: ' + reason);
+                    this.log.error(`Error loading wallet: ${walletName}, reason: ${reason as string}`);
                     return false;
                 });
             if (loadedWallet) { // false if already loaded
@@ -157,6 +155,7 @@ export class CoreRpcService extends CtRpc {
 
     /**
      * Returns an object containing various wallet state info.
+     *
      * @param wallet
      */
     public async getWalletInfo(wallet: string): Promise<RpcWalletInfo> {
@@ -165,13 +164,16 @@ export class CoreRpcService extends CtRpc {
 
     /**
      * Returns an object with all balances in PART.
+     *
      * @param wallet
      */
     public async getBalances(wallet: string): Promise<RpcBalances> {
         return await this.call('getbalances', [], wallet);
     }
 
+    /* eslint-disable */
     /**
+     *
      * mnemonic new|decode|addchecksum|dumpwords|listlanguages
      *          new ( "password" language nBytesEntropy bip44 )
      *              Generate a new extended key and mnemonic
@@ -185,6 +187,7 @@ export class CoreRpcService extends CtRpc {
      *              Print list of supported languages
      * @param params
      */
+    /* eslint-enable */
     public async mnemonic(params: any[] = []): Promise<RpcMnemonic> {
         return await this.call('mnemonic', params);
     }
@@ -332,9 +335,7 @@ export class CoreRpcService extends CtRpc {
      */
     public async getVersion(): Promise<number> {
         return await this.getNetworkInfo()
-            .then(response => {
-                return response.version;
-            });
+            .then(response => response.version);
     }
 
     /**
@@ -353,6 +354,7 @@ export class CoreRpcService extends CtRpc {
         return await this.call('getblockchaininfo', []);
     }
 
+    /* eslint-disable */
     /**
      * Returns the balance for an address(es) (requires addressindex to be enabled).
      *
@@ -371,6 +373,7 @@ export class CoreRpcService extends CtRpc {
      * }
      * @param address
      */
+    /* eslint-enable */
     // public async getAddressBalance(addresses: string[]): Promise<RpcAddressBalance> {
     public async getAddressBalance(address: string): Promise<RpcAddressBalance> {
         return await this.call('getaddressbalance', [address]);
@@ -379,6 +382,7 @@ export class CoreRpcService extends CtRpc {
         // }]);
     }
 
+    /* eslint-disable */
     /**
      * List balances by receiving address.
      *
@@ -402,8 +406,14 @@ export class CoreRpcService extends CtRpc {
      * @param includeWatchOnly
      * @param addressFilter
      */
-    public async listReceivedByAddress(wallet: string, minconf: number = 3, includeEmpty: boolean = false, includeWatchOnly: boolean = false,
-                                       addressFilter?: string): Promise<any> {
+    /* eslint-enable */
+    public async listReceivedByAddress(
+        wallet: string,
+        minconf: number = 3,
+        includeEmpty: boolean = false,
+        includeWatchOnly: boolean = false,
+        addressFilter?: string
+    ): Promise<any> {
         if (addressFilter) {
             return await this.call('listreceivedbyaddress', [minconf, includeEmpty, includeWatchOnly, addressFilter], wallet);
         } else {
@@ -411,6 +421,7 @@ export class CoreRpcService extends CtRpc {
         }
     }
 
+    /* eslint-disable */
     /**
      * ﻿Returns a new Particl address for receiving payments, key is saved in wallet.
      *
@@ -432,11 +443,13 @@ export class CoreRpcService extends CtRpc {
      * @param {any[]} params
      * @returns {Promise<string>}
      */
+    /* eslint-enable */
     public async getNewAddress(wallet: string, params: any[] = []): Promise<string> {
         // use smsgService.getNewAddress to add keys to smsg db
         return await this.call('getnewaddress', params, wallet);
     }
 
+    /* eslint-disable */
     /**
      * ﻿Returns a new Particl stealth address for receiving payments.
      *
@@ -464,6 +477,7 @@ export class CoreRpcService extends CtRpc {
      * @param {any[]} params
      * @returns {Promise<string>}
      */
+    /* eslint-enable */
     public async getNewStealthAddress(wallet: string, params: any[] = []): Promise<CryptoAddress> {
         const sx = await this.call('getnewstealthaddress', params, wallet);
         return {
@@ -472,14 +486,14 @@ export class CoreRpcService extends CtRpc {
         } as CryptoAddress;
     }
 
-/*
+    /*
     public async getBlindPrevouts(type: string, satoshis: number, blind?: string): Promise<BlindPrevout[]> {
         this.log.debug('getBlindPrevouts(), type: ' + type + ', satoshis: ' + satoshis + ', blind: ' + blind);
         return [await this.createBlindPrevoutFrom(type, satoshis, blind)];
     }
-*/
+    */
     public async getPrevouts(wallet: string, typeIn: OutputType, typeOut: OutputType, satoshis: number, blind?: string): Promise<BlindPrevout[]> {
-        this.log.debug('getPrevouts(), typeIn: ' + typeIn + ', typeOut: ' + typeOut + ', satoshis: ' + satoshis + ', blind: ' + blind);
+        this.log.debug(`getPrevouts(), typeIn: ${typeIn}, typeOut: ${typeOut}, satoshis: ${satoshis}, blind: ${blind || ''}`);
         const prevOuts: BlindPrevout[] = [];
 
         // use current identity address as the address for the transaction
@@ -524,6 +538,7 @@ export class CoreRpcService extends CtRpc {
         return (await this.call('verifycommitment', [commitment, blind, fromSatoshis(satoshis)], wallet)).result;
     }
 
+    /* eslint-disable */
     /**
      * ﻿﻿Return information about the given particl address. Some information requires the address to be in the wallet.
      *
@@ -546,6 +561,7 @@ export class CoreRpcService extends CtRpc {
      * @param {string} address
      * @returns {Promise<any>}
      */
+    /* eslint-enable */
     public async getAddressInfo(wallet: string, address: string): Promise<RpcAddressInfo> {
         return await this.call('getaddressinfo', [address], wallet);
     }
@@ -560,6 +576,7 @@ export class CoreRpcService extends CtRpc {
         return (checkAddress && checkAddress.ismine);
     }
 
+    /* eslint-disable */
     /**
      * ﻿Add a nrequired-to-sign multisignature address to the wallet. Requires a new wallet backup.
      *
@@ -589,6 +606,7 @@ export class CoreRpcService extends CtRpc {
      * @param {string} account
      * @returns {Promise<any>}
      */
+    /* eslint-enable */
     public async addMultiSigAddress(wallet: string, nrequired: number, keys: string[], account?: string): Promise<any> {
         const params: any[] = [];
         params.push(nrequired);
@@ -683,9 +701,13 @@ export class CoreRpcService extends CtRpc {
      * @param outputs       (json array, required) A json array of json objects
      * @param estimateFee
      */
-    public async sendTypeTo(wallet: string, typeIn: OutputType, typeOut: OutputType,
-                            outputs: RpcBlindSendToOutput[],
-                            estimateFee: boolean = false): Promise<string | any> {
+    public async sendTypeTo(
+        wallet: string,
+        typeIn: OutputType,
+        typeOut: OutputType,
+        outputs: RpcBlindSendToOutput[],
+        estimateFee: boolean = false
+    ): Promise<string | any> {
 
         let params: any[] = [
             typeIn.toString().toLowerCase(),
@@ -757,7 +779,7 @@ export class CoreRpcService extends CtRpc {
      * @param allowHighFees
      * @returns {Promise<any>}
      */
-    public async sendRawTransaction(hex: string/*, allowHighFees: boolean = false*/): Promise<string> {
+    public async sendRawTransaction(hex: string /* , allowHighFees: boolean = false */ ): Promise<string> {
         const params: any[] = [];
         params.push(hex);
         // api change on 0.19.x
@@ -833,6 +855,7 @@ export class CoreRpcService extends CtRpc {
 
     /**
      * Verify inputs for raw transaction (serialized, hex-encoded).
+     *
      * @param params
      */
     public async verifyRawTransaction(params: any[] = []): Promise<any> {
@@ -851,19 +874,19 @@ export class CoreRpcService extends CtRpc {
      * @returns {Promise<any>}
      */
     public async listUnspent(wallet: string, type: OutputType, minconf: number = 1, maxconf: number = 9999999
-                             /*, addresses: string[] = [], includeUnsafe: boolean = true,
-                             queryOptions: any = {}*/): Promise<RpcUnspentOutput[]> {
+    /* , addresses: string[] = [], includeUnsafe: boolean = true,
+    queryOptions: any = {}*/): Promise<RpcUnspentOutput[]> {
         const params: any[] = [minconf, maxconf]; // , addresses, includeUnsafe];
 
         switch (type) {
-            case OutputType.ANON:
-                return await this.call('listunspentanon', params, wallet);
-            case OutputType.BLIND:
-                return await this.call('listunspentblind', params, wallet);
-            case OutputType.PART:
-                return await this.call('listunspent', params, wallet);
-            default:
-                throw Error('Invalid Output type.');
+        case OutputType.ANON:
+            return await this.call('listunspentanon', params, wallet);
+        case OutputType.BLIND:
+            return await this.call('listunspentblind', params, wallet);
+        case OutputType.PART:
+            return await this.call('listunspent', params, wallet);
+        default:
+            throw Error('Invalid Output type.');
         }
 
         // if (!_.isEmpty(queryOptions)) {
@@ -1054,7 +1077,7 @@ export class CoreRpcService extends CtRpc {
                 )
             );
 
-        const url = 'http://' + host + ':' + port;
+        const url = `http://${host}:${port}`;
         if (wallet === undefined) {
             return url;
         } else {

@@ -86,14 +86,14 @@ export class ProfileService {
 
     @validate()
     public async create( @request(ProfileCreateRequest) data: ProfileCreateRequest): Promise<Profile> {
-        const body: ProfileCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ProfileCreateRequest> = JSON.parse(JSON.stringify(data));
         // this.log.debug('body: ', JSON.stringify(body, null, 2));
 
         // extract and remove related models from request
         const shippingAddresses = body.shippingAddresses || [];
         const cryptocurrencyAddresses = body.cryptocurrencyAddresses || [];
         const settings = body.settings || [];
-        const identity = body.identity;
+        const identity = body.identity || undefined;
         delete body.shippingAddresses;
         delete body.cryptocurrencyAddresses;
         delete body.settings;
@@ -118,7 +118,7 @@ export class ProfileService {
             await this.settingService.create(setting);
         }
 
-        if (!_.isEmpty(identity)) {
+        if (identity && !_.isEmpty(identity)) {
             identity.profile_id = profile.id;
             await this.identityService.create(identity);
         }

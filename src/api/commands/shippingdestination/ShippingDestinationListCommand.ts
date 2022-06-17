@@ -11,7 +11,6 @@ import { Types, Core, Targets } from '../../../constants';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { ShippingDestination } from '../../models/ShippingDestination';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
@@ -34,8 +33,8 @@ export class ShippingDestinationListCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: 'template' or 'item'
-     *  [1]: resources.listingItemTemplate or resources.ListingItem
+     * [0]: 'template' or 'item'
+     * [1]: resources.listingItemTemplate or resources.ListingItem
      *
      * @param data
      * @returns {Promise<resources.ShippingDestination[]>}
@@ -50,8 +49,8 @@ export class ShippingDestinationListCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: 'template' or 'item'
-     *  [1]: listingItemTemplateId or listingItemId
+     * [0]: 'template' or 'item'
+     * [1]: listingItemTemplateId or listingItemId
      *
      * @param data
      */
@@ -76,14 +75,14 @@ export class ShippingDestinationListCommand extends BaseCommand implements RpcCo
                 // make sure ListingItemTemplate with the id exists
                 data.params[1] = await this.listingItemTemplateService.findOne(data.params[1])
                     .then(value => value.toJSON())
-                    .catch(reason => {
+                    .catch(() => {
                         throw new ModelNotFoundException('ListingItemTemplate');
                     });
             } else if (data.params[0] === 'item') {
                 // make sure ListingItem with the id exists
                 data.params[1] = await this.listingItemService.findOne(data.params[1])
                     .then(value => value.toJSON())
-                    .catch(reason => {
+                    .catch(() => {
                         throw new ModelNotFoundException('ListingItem');
                     });
             }

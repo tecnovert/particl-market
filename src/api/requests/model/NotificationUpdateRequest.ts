@@ -2,12 +2,12 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { IsNotEmpty } from 'class-validator';
+
 import { RequestBody } from '../../../core/api/RequestBody';
 import { ModelRequestInterface } from './ModelRequestInterface';
 import { ActionMessageTypes } from '../../enums/ActionMessageTypes';
 
-// tslint:disable:variable-name
+
 export class NotificationUpdateRequest extends RequestBody implements ModelRequestInterface {
 
     public type: ActionMessageTypes;
@@ -23,4 +23,3 @@ export class NotificationUpdateRequest extends RequestBody implements ModelReque
     public read: boolean;
 
 }
-// tslint:enable:variable-name

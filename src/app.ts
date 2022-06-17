@@ -57,7 +57,7 @@ const terminationHandler = (cleanup: (cb: (exitCode?: number) => void) => void, 
         process.exit(code);
     };
 
-    return (code: number, reason: string) => (err: Error | undefined, promise: Promise<any>) => {
+    return (code: number, reason: string) => (err: Error | undefined) => {
 
         if (err && err instanceof Error) {
             newApp.Logger('').error(err.message, err.stack);
@@ -67,7 +67,6 @@ const terminationHandler = (cleanup: (cb: (exitCode?: number) => void) => void, 
 
         if (cleanup instanceof Function) {
             cleanup(exitCB);
-            // @ts-ignore
             setTimeout(exitCB, options.timeout).unref();
         } else {
             exitCB(code);
@@ -75,7 +74,7 @@ const terminationHandler = (cleanup: (cb: (exitCode?: number) => void) => void, 
     };
 };
 
-const terminator = terminationHandler((exitCallback) => {
+const terminator = terminationHandler(() => {
     if (newApp.Server) {
         newApp.Server.httpServer.close();
     }
@@ -96,14 +95,14 @@ process.on('SIGINT', terminator(0, 'exit requested - sigint'));
 process.on('message', (msg: any) => {
     if (typeof msg === 'string') {
         switch (msg) {
-            case 'START':
-                start();
-                break;
-            case 'STOP':
-                terminator(0, 'PROCESS STOP REQUESTED')(undefined, new Promise<any>((resolve) => resolve));
-                break;
-            default:
-                break;
+        case 'START':
+            start();
+            break;
+        case 'STOP':
+            terminator(0, 'PROCESS STOP REQUESTED')(undefined);
+            break;
+        default:
+            break;
         }
     }
 });

@@ -57,10 +57,10 @@ export class ListingItemFlagCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: listingItem: resources.ListingItem
-     *  [1]: identity: resources.Identity
-     *  [2]: reason
-     *  [3]: expiryTime (set in validate)
+     * [0]: listingItem: resources.ListingItem
+     * [1]: identity: resources.Identity
+     * [2]: reason
+     * [3]: expiryTime (set in validate)
      *
      * @param data
      * @returns {Promise<SmsgSendResponse>}
@@ -99,9 +99,10 @@ export class ListingItemFlagCommand extends BaseCommand implements RpcCommandInt
         const smsgSendResponse: SmsgSendResponse = await this.proposalAddActionService.post(postRequest);
 
         const proposal: resources.Proposal = await this.proposalService.findOneByMsgId(smsgSendResponse.msgid!).then(value => value.toJSON());
-        const proposalOption: resources.ProposalOption | undefined = _.find(proposal.ProposalOptions, (o: resources.ProposalOption) => {
-            return o.description === ItemVote.REMOVE;
-        });
+        const proposalOption: resources.ProposalOption | undefined = _.find(
+            proposal.ProposalOptions,
+            (o: resources.ProposalOption) => o.description === ItemVote.REMOVE
+        );
 
         // prepare the VoteRequest for sending votes
         const voteRequest = {
@@ -122,9 +123,9 @@ export class ListingItemFlagCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: listingItemId, number
-     *  [1]: identityId, number
-     *  [2]: reason, string, optional
+     * [0]: listingItemId, number
+     * [1]: identityId, number
+     * [2]: reason, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -143,9 +144,7 @@ export class ListingItemFlagCommand extends BaseCommand implements RpcCommandInt
         }
 
         // check whether the identity is used on the ListingItems Market
-        const foundMarket = _.find(identity.Markets, market => {
-            return market.receiveAddress === listingItem.market;
-        });
+        const foundMarket = _.find(identity.Markets, market => market.receiveAddress === listingItem.market);
 
         if (!foundMarket) {
             throw new MessageException('Given Identity is not used on the Market which the ListingItem was posted to.');

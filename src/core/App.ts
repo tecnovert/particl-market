@@ -106,7 +106,7 @@ export class App {
 
         // Perform database migrations
         if (Environment.isTruthy(process.env.MIGRATE)) {
-            const result = await databaseMigrate.migrate()
+            await databaseMigrate.migrate()
                 .catch(reason => {
                     this.log.error('migration error: ', JSON.stringify(reason, null, 2));
                     throw new MessageException(reason);
@@ -119,8 +119,6 @@ export class App {
         }
 
         if (Environment.isTruthy(process.env.EXPRESS_ENABLED)) {
-            // Add express monitor app
-            this.bootstrapApp.setupMonitor(this.express);
             // Configure the app config for all the middlewares
             const appConfig = new AppConfig();
             appConfig.configure(this);
@@ -154,7 +152,7 @@ export class App {
 
         this.log.info('App is ready!');
 
-        if (Environment.isTest()/*|| Environment.isBlackBoxTest()*/) {
+        if (Environment.isTest()/* || Environment.isBlackBoxTest()*/) {
             // todo: add env var for clean start
             // clean up db
             const testDataService: TestDataService = app.IoC.getNamed<TestDataService>(Types.Service, Targets.Service.TestDataService);

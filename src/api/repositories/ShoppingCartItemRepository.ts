@@ -22,8 +22,8 @@ export class ShoppingCartItemRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ShoppingCartItem>> {
-        const list = await this.ShoppingCartItemModel.fetchAll();
-        return list as Bookshelf.Collection<ShoppingCartItem>;
+        const list = await this.ShoppingCartItemModel.fetchAll<ShoppingCartItem>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ShoppingCartItem> {

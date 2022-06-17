@@ -61,8 +61,9 @@ export interface CombinedVote {
 }
 
 export class VoteActionService extends BaseActionService {
-
+    /* eslint-disable max-params */
     constructor(
+
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
@@ -81,7 +82,9 @@ export class VoteActionService extends BaseActionService {
         @inject(Types.MessageValidator) @named(Targets.MessageValidator.VoteValidator) public validator: VoteValidator,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-    ) {
+    )
+    /* eslint-enable max-params */
+    {
         super(GovernanceAction.MPA_VOTE,
             smsgService,
             smsgMessageService,
@@ -121,10 +124,12 @@ export class VoteActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: VoteRequest,
-                           marketplaceMessage: MarketplaceMessage,
-                           smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: VoteRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
@@ -155,7 +160,7 @@ export class VoteActionService extends BaseActionService {
                 voteRequest.sendParams.fromAddress = addressInfo.address;
                 voteRequest.addressInfo = addressInfo;
 
-                await this.post(voteRequest).then(async smsgSendResponse => {
+                await this.post(voteRequest).then(smsgSendResponse => {
                     // const vote: resources.Vote = await this.voteService.findOneByMsgId(smsgSendResponse.msgid!).then(value => value.toJSON());
                     smsgSendResponses.push(smsgSendResponse);
                 });
@@ -169,6 +174,7 @@ export class VoteActionService extends BaseActionService {
         return smsgSendResponses;
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * processMessage "processes" the Vote, creating or updating the Vote.
      * called from send() and onEvent(), meaning before the VoteMessage is sent
@@ -189,10 +195,13 @@ export class VoteActionService extends BaseActionService {
      * @param actionRequest
      * @param smsgMessage
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: VoteRequest): Promise<resources.SmsgMessage> {
+    /* eslint-enable jsdoc/check-indentation */
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: VoteRequest
+    ): Promise<resources.SmsgMessage> {
 
         this.log.debug('processMessage(), actionDirection: ', actionDirection);
 
@@ -218,23 +227,23 @@ export class VoteActionService extends BaseActionService {
             .then(async value => {
                 const foundVote: resources.Vote = value.toJSON();
                 const voteUpdateRequest: VoteUpdateRequest = await this.voteFactory.get({
-                        actionMessage: voteMessage,
-                        smsgMessage,
-                        msgid: smsgMessage.msgid,
-                        proposalOption: votedProposalOption,
-                        weight: votingAddressBalance
-                    } as VoteCreateParams);
+                    actionMessage: voteMessage,
+                    smsgMessage,
+                    msgid: smsgMessage.msgid,
+                    proposalOption: votedProposalOption,
+                    weight: votingAddressBalance
+                } as VoteCreateParams);
                 return await this.voteService.update(foundVote.id, voteUpdateRequest).then(value2 => value2.toJSON());
             })
             .catch(async () => {
                 this.log.debug('did not find Vote, creating...');
                 const voteCreateRequest: VoteCreateRequest = await this.voteFactory.get({
-                        actionMessage: voteMessage,
-                        smsgMessage,
-                        msgid: smsgMessage ? smsgMessage.msgid : undefined,
-                        proposalOption: votedProposalOption,
-                        weight: votingAddressBalance
-                    } as VoteCreateParams);
+                    actionMessage: voteMessage,
+                    smsgMessage,
+                    msgid: smsgMessage ? smsgMessage.msgid : undefined,
+                    proposalOption: votedProposalOption,
+                    weight: votingAddressBalance
+                } as VoteCreateParams);
                 return await this.voteService.create(voteCreateRequest).then(value => value.toJSON());
             });
 
@@ -250,9 +259,14 @@ export class VoteActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+    {
         // undefined -> don't send notifications
         return undefined;
     }
@@ -270,9 +284,7 @@ export class VoteActionService extends BaseActionService {
         const addressInfos: AddressInfo[] = await this.getPublicWalletAddressInfos(identity.wallet);
         this.log.debug('getCombinedVote(), addressInfos:', JSON.stringify(addressInfos, null, 2));
 
-        const addresses = addressInfos.map(addressInfo => {
-            return addressInfo.address;
-        });
+        const addresses = addressInfos.map(addressInfo => addressInfo.address);
         this.log.debug('getCombinedVote(), addresses:', JSON.stringify(addresses, null, 2));
 
         const votes: resources.Vote[] = await this.voteService.findAllByVotersAndProposalHash(addresses, proposal.hash)
@@ -313,20 +325,20 @@ export class VoteActionService extends BaseActionService {
 
         for (const flaggedItem of voteRequest.proposal.FlaggedItems) {
             switch (voteRequest.proposal.category) {
-                case ProposalCategory.ITEM_VOTE:
-                    if (_.isNil(flaggedItem.ListingItem)) {
-                        return; // should not happen
-                    }
-                    await this.listingItemService.setRemovedFlag(flaggedItem.ListingItem.id, remove);
-                    break;
-                case ProposalCategory.MARKET_VOTE:
-                    if (_.isNil(flaggedItem.Market)) {
-                        return; // should not happen
-                    }
-                    await this.marketService.setRemovedFlag(flaggedItem.Market.id, remove);
-                    break;
-                default:
-                    break;
+            case ProposalCategory.ITEM_VOTE:
+                if (_.isNil(flaggedItem.ListingItem)) {
+                    return; // should not happen
+                }
+                await this.listingItemService.setRemovedFlag(flaggedItem.ListingItem.id, remove);
+                break;
+            case ProposalCategory.MARKET_VOTE:
+                if (_.isNil(flaggedItem.Market)) {
+                    return; // should not happen
+                }
+                await this.marketService.setRemovedFlag(flaggedItem.Market.id, remove);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -349,9 +361,7 @@ export class VoteActionService extends BaseActionService {
         for (const output of outputs) {
             if (output.spendable && output.solvable && output.safe && output.amount > 0) {
                 // we could have multiple outputs from one address and we only want to send one Vote per address.
-                const exists = _.find(addressList, addressInfo => {
-                    return addressInfo.address === output.address;
-                });
+                const exists = _.find(addressList, addressInfo => addressInfo.address === output.address);
 
                 if (!exists) {
                     addressList.push({

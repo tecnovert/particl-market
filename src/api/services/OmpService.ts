@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../core/Logger';
 import { Types, Core, Targets } from '../../constants';
@@ -84,8 +83,12 @@ export class OmpService {
      * @param bidMessage
      * @param bidAcceptMessage
      */
-    public async lock(wallet: string, listingItemAddMessage: ListingItemAddMessage, bidMessage: BidMessage,
-                      bidAcceptMessage: BidAcceptMessage): Promise<MarketplaceMessage> {
+    public async lock(
+        wallet: string,
+        listingItemAddMessage: ListingItemAddMessage,
+        bidMessage: BidMessage,
+        bidAcceptMessage: BidAcceptMessage
+    ): Promise<MarketplaceMessage> {
         return await this.omp.lock(
             wallet,
             OmpService.getMPM(listingItemAddMessage),
@@ -102,8 +105,13 @@ export class OmpService {
      * @param bidAcceptMessage
      * @param escrowLockMessage
      */
-    public async complete(wallet: string, listingItemAddMessage: ListingItemAddMessage, bidMessage: BidMessage,
-                          bidAcceptMessage: BidAcceptMessage, escrowLockMessage: EscrowLockMessage): Promise<string> {
+    public async complete(
+        wallet: string,
+        listingItemAddMessage: ListingItemAddMessage,
+        bidMessage: BidMessage,
+        bidAcceptMessage: BidAcceptMessage,
+        escrowLockMessage: EscrowLockMessage
+    ): Promise<string> {
         return await this.omp.complete(
             wallet,
             OmpService.getMPM(listingItemAddMessage),
@@ -120,8 +128,12 @@ export class OmpService {
      * @param bidMessage
      * @param bidAcceptMessage
      */
-    public async release(wallet: string, listingItemAddMessage: ListingItemAddMessage, bidMessage: BidMessage,
-                         bidAcceptMessage: BidAcceptMessage): Promise<string> {
+    public async release(
+        wallet: string,
+        listingItemAddMessage: ListingItemAddMessage,
+        bidMessage: BidMessage,
+        bidAcceptMessage: BidAcceptMessage
+    ): Promise<string> {
         return await this.omp.release(
             wallet,
             OmpService.getMPM(listingItemAddMessage),
@@ -138,8 +150,13 @@ export class OmpService {
      * @param bidAcceptMessage
      * @param escrowLockMessage
      */
-    public async refund(wallet: string, listingItemAddMessage: ListingItemAddMessage, bidMessage: BidMessage,
-                        bidAcceptMessage: BidAcceptMessage, escrowLockMessage: EscrowLockMessage): Promise<string> {
+    public async refund(
+        wallet: string,
+        listingItemAddMessage: ListingItemAddMessage,
+        bidMessage: BidMessage,
+        bidAcceptMessage: BidAcceptMessage,
+        escrowLockMessage: EscrowLockMessage
+    ): Promise<string> {
         return await this.omp.complete(
             wallet,
             OmpService.getMPM(listingItemAddMessage),

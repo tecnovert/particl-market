@@ -187,7 +187,7 @@ export class ProposalService {
                 proposal_result_id: proposalResult.id
             } as ProposalOptionResultCreateRequest;
             // this.log.debug('createEmptyProposalResult(), proposalOptionResultCreateRequest:', JSON.stringify(proposalOptionResultCreateRequest, null, 2));
-            const proposalOptionResult: resources.ProposalOptionResult = await this.proposalOptionResultService.create(proposalOptionResultCreateRequest)
+            await this.proposalOptionResultService.create(proposalOptionResultCreateRequest)
                 .then(value => value.toJSON());
             // this.log.debug('createEmptyProposalResult(), proposalOptionResult:', JSON.stringify(proposalOptionResult, null, 2));
         }
@@ -201,14 +201,14 @@ export class ProposalService {
 
     /**
      * - recalculateProposalResult(proposal):
-     *   - create new ProposalResult
-     *   - create new ProposalOptionResultCreateRequests for all options
-     *   - get all existing votes for Proposal
-     *   - for (vote: votes)
-     *     - check vote.address balance, update Vote if it has changed
-     *     - add vote to new ProposalOptionResult
-     *     - add vote.weight to proposalOptionResult.weight + voters
-     *   - save ProposalOptionResultCreateRequests
+     * - create new ProposalResult
+     * - create new ProposalOptionResultCreateRequests for all options
+     * - get all existing votes for Proposal
+     * - for (vote: votes)
+     * -    - check vote.address balance, update Vote if it has changed
+     * -    - add vote to new ProposalOptionResult
+     * -    - add vote.weight to proposalOptionResult.weight + voters
+     * - save ProposalOptionResultCreateRequests
      *
      * @param proposal
      * @param test, skips getaddressbalance rpc call for test data generation
@@ -279,7 +279,7 @@ export class ProposalService {
         // this.log.debug('recalculateProposalResult(), proposalResult: ', JSON.stringify(proposalResult, null, 2));
         // this.log.debug('recalculateProposalResult(), proposal: ' + proposalResult.id);
         for (const proposalOptionResult of proposalResult.ProposalOptionResults) {
-            this.log.debug('recalculateProposalResult(), proposal: ' + proposalOptionResult.ProposalOption.description + ': ' + proposalOptionResult.weight);
+            this.log.debug(`recalculateProposalResult(), proposal: ${proposalOptionResult.ProposalOption.description}: ${proposalOptionResult.weight}`);
         }
         return proposalResult;
     }

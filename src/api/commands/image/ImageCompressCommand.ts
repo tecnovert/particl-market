@@ -56,11 +56,11 @@ export class ImageCompressCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: image: resources.Image
-     *  [1]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [2]: scalingFraction, default: 0.9
-     *  [3]: qualityFraction, default: 0.9
-     *  [4]: maxIterations, default: 10
+     * [0]: image: resources.Image
+     * [1]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [2]: scalingFraction, default: 0.9
+     * [3]: qualityFraction, default: 0.9
+     * [4]: maxIterations, default: 10
      *
      * @param data
      * @returns {Promise<Image>}
@@ -78,11 +78,11 @@ export class ImageCompressCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: imageId
-     *  [1]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [2]: scalingFraction, default: 0.9
-     *  [3]: qualityFraction, default: 0.9
-     *  [4]: maxIterations, default: 10
+     * [0]: imageId
+     * [1]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [2]: scalingFraction, default: 0.9
+     * [3]: qualityFraction, default: 0.9
+     * [4]: maxIterations, default: 10
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -92,9 +92,10 @@ export class ImageCompressCommand extends BaseCommand implements RpcCommandInter
 
         const image: resources.Image = data.params[0];
 
-        const imageDataOriginal: resources.ImageData | undefined = _.find(image.ImageDatas, (imageData) => {
-            return imageData.imageVersion === ImageVersions.ORIGINAL.propName;
-        });
+        const imageDataOriginal: resources.ImageData | undefined = _.find(
+            image.ImageDatas,
+            (imageData) => imageData.imageVersion === ImageVersions.ORIGINAL.propName
+        );
 
         if (_.isNil(imageDataOriginal)) {
             throw new ModelNotFoundException('ImageData');

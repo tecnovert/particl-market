@@ -27,7 +27,7 @@ export class DataCleanCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: bootstrap, boolean
+     * [0]: bootstrap, boolean
      *
      * @param {RpcRequest} data
      * @returns {Promise<void>}
@@ -41,7 +41,7 @@ export class DataCleanCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: bootstrap, boolean, optional, default true, bootstraps the default data
+     * [0]: bootstrap, boolean, optional, default true, bootstraps the default data
      *
      * @param {RpcRequest} data
      * @returns {Promise<void>}

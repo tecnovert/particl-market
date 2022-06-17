@@ -15,11 +15,11 @@ import { EnvConfig } from '../../config/env/EnvConfig';
  *
  * Manages the data directories for particl-market.
  *
- *  Linux:
- *  OSX:
- *  Windows:
+ * - Linux:
+ * - OSX:
+ * - Windows:
  *
- *  In test and development environments
+ * In test and development environments
  */
 export class DataDir {
 
@@ -33,29 +33,29 @@ export class DataDir {
 
     public static getDefaultDataDirPath(): string {
 
-        const homeDir: string = os.homedir ? os.homedir() : process.env['HOME'];
+        const homeDir: string = os.homedir ? os.homedir() : process.env['HOME'] as string;
 
         let dir = '';
         const appName = 'particl-market';
         const checkpoint = '03';
 
         switch (process.platform) {
-            case 'linux':
-                dir = path.join(homeDir, '.' + appName);
-                break;
-            case 'darwin':
-                dir = path.join(homeDir, 'Library', 'Application Support', appName);
-                break;
-            case 'win32':
-                dir = path.join(process.env['APPDATA'], appName);
-                break;
-            default:
-                throw new Error('process.platform not supported: ' + process.platform);
+        case 'linux':
+            dir = path.join(homeDir, '.' + appName);
+            break;
+        case 'darwin':
+            dir = path.join(homeDir, 'Library', 'Application Support', appName);
+            break;
+        case 'win32':
+            dir = path.join(process.env['APPDATA'] as string, appName);
+            break;
+        default:
+            throw new Error('process.platform not supported: ' + process.platform);
         }
 
         // return path to datadir (mainnet vs testnet)
         // and set the main datadir variable.
-        const dataDir = path.join(dir, (Environment.isRegtest() ? 'regtest' : ( Environment.isTestnet() ? 'testnet' : '') ), checkpoint);
+        const dataDir = path.join(dir, Environment.isRegtest() ? 'regtest' : Environment.isTestnet() ? 'testnet' : '', checkpoint);
         return dataDir;
     }
 
@@ -206,14 +206,14 @@ export class DataDir {
             console.log('copying and potentially overwritting .env file');
             const defaultDotEnvPath = path.join(this.getDataDirPath(), '.env');
             fs.createReadStream(dotenv).pipe(fs.createWriteStream(defaultDotEnvPath))
-            .on('close', (ex) => {
-                if (ex) {
-                    reject(ex);
-                } else {
-                    // should have worked, now let's verify.
-                    resolve(this.checkIfExists(defaultDotEnvPath));
-                }
-            });
+                .on('close', (ex) => {
+                    if (ex) {
+                        reject(ex);
+                    } else {
+                        // should have worked, now let's verify.
+                        resolve(this.checkIfExists(defaultDotEnvPath));
+                    }
+                });
         });
     }
 

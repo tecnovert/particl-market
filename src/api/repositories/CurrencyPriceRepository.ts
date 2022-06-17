@@ -23,8 +23,8 @@ export class CurrencyPriceRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<CurrencyPrice>> {
-        const list = await this.CurrencyPriceModel.fetchAll();
-        return list as Bookshelf.Collection<CurrencyPrice>;
+        const list = await this.CurrencyPriceModel.fetchAll<CurrencyPrice>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<CurrencyPrice> {
@@ -45,8 +45,8 @@ export class CurrencyPriceRepository {
         try {
             const currencyPriceCreated = await currencyPrice.save();
             return this.CurrencyPriceModel.fetchById(currencyPriceCreated.id);
-        } catch (error) {
-            throw new DatabaseException('Could not create the currencyPrice!' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not create the currencyPrice! ${error}`, error);
         }
     }
 
@@ -55,8 +55,8 @@ export class CurrencyPriceRepository {
         try {
             const currencyPriceUpdated = await currencyPrice.save(data, { patch: true });
             return this.CurrencyPriceModel.fetchById(currencyPriceUpdated.id);
-        } catch (error) {
-            throw new DatabaseException('Could not update the currencyPrice! ' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not update the currencyPrice! ${error}`, error);
         }
     }
 
@@ -71,8 +71,8 @@ export class CurrencyPriceRepository {
         try {
             await currencyPrice.destroy();
             return;
-        } catch (error) {
-            throw new DatabaseException('Could not delete the currencyPrice!' + error, error);
+        } catch (error: any) {
+            throw new DatabaseException(`Could not delete the currencyPrice! ${error}`, error);
         }
     }
 

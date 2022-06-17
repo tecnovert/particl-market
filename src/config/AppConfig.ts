@@ -13,7 +13,7 @@
 import * as path from 'path';
 import * as cors from 'cors';
 import * as morgan from 'morgan';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import * as express from 'express';
 import * as favicon from 'serve-favicon';
 import * as bodyParser from 'body-parser';
@@ -28,14 +28,13 @@ export class AppConfig implements Configurable {
 
         app.Express
             // Enabling the cors headers
-            .options('*', cors())
+            // .options('*', cors())
             .use(cors())
 
             // Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-            .use(helmet())
-            .use(helmet.hsts({
-                maxAge: 31536000,
-                includeSubdomains: true
+            .use(helmet({
+                hsts: { maxAge: 31536000, includeSubDomains: true },
+                crossOriginResourcePolicy: { policy: 'cross-origin' }
             }))
 
             // Compress response bodies for all request that traverse through the middleware
@@ -45,6 +44,7 @@ export class AppConfig implements Configurable {
             // TODO: decide on some limit
             .use(bodyParser.json({ limit: '5mb' }))
             .use(bodyParser.urlencoded({
+                limit: '5mb',
                 extended: true
             }))
 

@@ -69,25 +69,25 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
+     * [0]: profile: resources.Profile
      *
-     *  itemInformation
-     *  [1]: title
-     *  [2]: shortDescription
-     *  [3]: longDescription
-     *  [4]: categoryId
+     * itemInformation
+     * [1]: title
+     * [2]: shortDescription
+     * [3]: longDescription
+     * [4]: categoryId
      *
-     *  paymentInformation
-     *  [5]: saleType
-     *  [6]: currency
-     *  [7]: basePrice
-     *  [8]: domesticShippingPrice
-     *  [9]: internationalShippingPrice
-     *  [10]: escrowType
-     *  [11]: buyerRatio
-     *  [12]: sellerRatio
-     *  [13]: escrowReleaseType, default EscrowReleaseType.ANON
-     *  [14]: productCode, (optional)
+     * paymentInformation
+     * [5]: saleType
+     * [6]: currency
+     * [7]: basePrice
+     * [8]: domesticShippingPrice
+     * [9]: internationalShippingPrice
+     * [10]: escrowType
+     * [11]: buyerRatio
+     * [12]: sellerRatio
+     * [13]: escrowReleaseType, default EscrowReleaseType.ANON
+     * [14]: productCode, (optional)
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -96,29 +96,29 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
     public async execute( @request(RpcRequest) data: RpcRequest): Promise<ListingItemTemplate> {
 
         const profile: resources.Profile = data.params[0];
-/*
-    TODO: omp-lib will generate cryptoAddress for now as this will require unlocked wallet
+        /*
+            TODO: omp-lib will generate cryptoAddress for now as this will require unlocked wallet
 
-        // depending on escrowType, create the address for the payment
-        const escrowType: EscrowType = data.params[10];
-        let cryptoAddress: CryptoAddress;
-        switch (escrowType) {
-            case EscrowType.MULTISIG:
-                const address = await this.coreRpcService.getNewAddress();
-                cryptoAddress = {
-                    address,
-                    type: CryptoAddressType.NORMAL
-                };
-                break;
-            case EscrowType.MAD_CT:
-                cryptoAddress = await this.coreRpcService.getNewStealthAddress();
-                break;
-            case EscrowType.MAD:
-            case EscrowType.FE:
-            default:
-                throw new NotImplementedException();
-        }
-*/
+                // depending on escrowType, create the address for the payment
+                const escrowType: EscrowType = data.params[10];
+                let cryptoAddress: CryptoAddress;
+                switch (escrowType) {
+                    case EscrowType.MULTISIG:
+                        const address = await this.coreRpcService.getNewAddress();
+                        cryptoAddress = {
+                            address,
+                            type: CryptoAddressType.NORMAL
+                        };
+                        break;
+                    case EscrowType.MAD_CT:
+                        cryptoAddress = await this.coreRpcService.getNewStealthAddress();
+                        break;
+                    case EscrowType.MAD:
+                    case EscrowType.FE:
+                    default:
+                        throw new NotImplementedException();
+                }
+        */
         const createRequest: ListingItemTemplateCreateRequest = await this.listingItemTemplateFactory.get({
             profileId: profile.id,
             productCode: data.params[14],
@@ -144,25 +144,25 @@ export class ListingItemTemplateAddCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: profile_id -> profile: resources.Profile
+     * [0]: profile_id -> profile: resources.Profile
      *
-     *  itemInformation
-     *  [1]: title
-     *  [2]: shortDescription
-     *  [3]: longDescription
-     *  [4]: categoryId, (optional)
+     * itemInformation
+     * [1]: title
+     * [2]: shortDescription
+     * [3]: longDescription
+     * [4]: categoryId, (optional)
      *
-     *  paymentInformation
-     *  [5]: saleType, (optional) default SaleType.SALE
-     *  [6]: currency, (optional) default Cryptocurrency.PART
-     *  [7]: basePrice, (optional) default 0
-     *  [8]: domesticShippingPrice, (optional) default 0
-     *  [9]: internationalShippingPrice, (optional) default 0
-     *  [10]: escrowType, (optional) default EscrowType.MAD_CT
-     *  [11]: buyerRatio, (optional) default 100
-     *  [12]: sellerRatio, (optional) default 100
-     *  [13]: escrowReleaseType, (optional) default EscrowReleaseType.ANON
-     *  [14]: productCode, (optional)
+     * paymentInformation
+     * [5]: saleType, (optional) default SaleType.SALE
+     * [6]: currency, (optional) default Cryptocurrency.PART
+     * [7]: basePrice, (optional) default 0
+     * [8]: domesticShippingPrice, (optional) default 0
+     * [9]: internationalShippingPrice, (optional) default 0
+     * [10]: escrowType, (optional) default EscrowType.MAD_CT
+     * [11]: buyerRatio, (optional) default 100
+     * [12]: sellerRatio, (optional) default 100
+     * [13]: escrowReleaseType, (optional) default EscrowReleaseType.ANON
+     * [14]: productCode, (optional)
      *
      * @param data
      * @returns {Promise<RpcRequest>}

@@ -4,7 +4,6 @@
 
 // tslint:disable:max-line-length
 import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
@@ -17,7 +16,7 @@ import { ImageDataService } from '../../services/model/ImageDataService';
 import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
 import { ItemInfo, Location, LocationMarker } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ShippingDestinationCreateRequest } from '../../requests/model/ShippingDestinationCreateRequest';
-import { ContentReference, DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
+import { ContentReference } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ImageCreateParams, ListingItemCreateParams } from '../ModelCreateParams';
 import { ImageFactory } from './ImageFactory';
@@ -96,7 +95,7 @@ export class ItemInformationFactory implements ModelFactoryInterface {
     private async getModelLocationMarker(params: ListingItemCreateParams): Promise<LocationMarkerCreateRequest | undefined> {
 
         const listingItemAddMessage = params.actionMessage as ListingItemAddMessage;
-        const smsgMessage = params.smsgMessage;
+        // const smsgMessage = params.smsgMessage;
 
         const location: Location | undefined = listingItemAddMessage.item.information.location;
 
@@ -115,7 +114,7 @@ export class ItemInformationFactory implements ModelFactoryInterface {
     private async getModelShippingDestinations(params: ListingItemCreateParams): Promise<ShippingDestinationCreateRequest[]> {
 
         const listingItemAddMessage = params.actionMessage as ListingItemAddMessage;
-        const smsgMessage = params.smsgMessage;
+        // const smsgMessage = params.smsgMessage;
 
         const shippingDestinations: string[] = listingItemAddMessage.item.information.shippingDestinations || [];
 

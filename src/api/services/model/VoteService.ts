@@ -13,8 +13,7 @@ import { Vote } from '../../models/Vote';
 import { VoteCreateRequest } from '../../requests/model/VoteCreateRequest';
 import { VoteUpdateRequest } from '../../requests/model/VoteUpdateRequest';
 import { CoreRpcService } from '../CoreRpcService';
-import {SmsgMessage} from '../../models/SmsgMessage';
-import {Proposal} from '../../models/Proposal';
+
 
 export class VoteService {
 
@@ -71,7 +70,7 @@ export class VoteService {
         const vote = await this.voteRepo.findOneByVoterAndProposalId(voter, proposalId, withRelated);
         if (!vote) {
             this.log.warn(`Vote with the voter=${voter} and proposalId=${proposalId} was not found!`);
-            throw new NotFoundException(voter + ' and ' + proposalId);
+            throw new NotFoundException(`${voter} and ${proposalId}`);
         }
         return vote;
     }

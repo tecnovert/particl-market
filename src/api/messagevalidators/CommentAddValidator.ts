@@ -11,7 +11,7 @@ import { ValidationException } from '../exceptions/ValidationException';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
 import { MessageException } from '../exceptions/MessageException';
 import { CommentAction } from '../enums/CommentAction';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 import { CommentAddMessage } from '../messages/action/CommentAddMessage';
 import { CommentTicket } from '../factories/message/CommentAddMessageFactory';
 
@@ -26,7 +26,7 @@ export class CommentAddValidator implements ActionMessageValidatorInterface {
         this.log = new Logger(__filename);
     }
 
-    public async validateMessage(marketplaceMessage: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(marketplaceMessage: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (!marketplaceMessage.version) {
             throw new MessageException('version: missing');
         }
@@ -56,7 +56,7 @@ export class CommentAddValidator implements ActionMessageValidatorInterface {
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(/* message: MarketplaceMessage, direction: ActionDirection */): Promise<boolean> {
         return true;
     }
 

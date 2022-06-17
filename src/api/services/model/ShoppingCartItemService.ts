@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import * as Bookshelf from 'bookshelf';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -13,7 +12,7 @@ import { NotFoundException } from '../../exceptions/NotFoundException';
 import { ShoppingCartItemRepository } from '../../repositories/ShoppingCartItemRepository';
 import { ShoppingCartItem } from '../../models/ShoppingCartItem';
 import { ShoppingCartItemCreateRequest } from '../../requests/model/ShoppingCartItemCreateRequest';
-import { ShoppingCartItemUpdateRequest } from '../../requests/model/ShoppingCartItemUpdateRequest';
+
 
 export class ShoppingCartItemService {
 
@@ -43,7 +42,7 @@ export class ShoppingCartItemService {
         const shoppingCartItem = await this.shoppingCartItemRepo.findOneByCartIdAndListingItemId(cartId, listingItemId);
         if (shoppingCartItem === null) {
             this.log.warn(`ShoppingCartItem in the cart=${cartId} with the id=${listingItemId} was not found!`);
-            throw new NotFoundException(cartId + '/' + listingItemId);
+            throw new NotFoundException(`${cartId}/${listingItemId}`);
         }
         return shoppingCartItem;
     }
@@ -63,7 +62,7 @@ export class ShoppingCartItemService {
     }
 
     @validate()
-    public async update(id: number, @request(ShoppingCartItemUpdateRequest) body: any): Promise<ShoppingCartItem> {
+    public async update(id: number): Promise<ShoppingCartItem> {
         const shoppingCartItem = await this.findOne(id, false);
         return await this.shoppingCartItemRepo.update(id, shoppingCartItem.toJSON());
     }

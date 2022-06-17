@@ -23,8 +23,8 @@ export class CommentRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Comment>> {
-        const list = await this.CommentModel.fetchAll();
-        return list as Bookshelf.Collection<Comment>;
+        const list = await this.CommentModel.fetchAll<Comment>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Comment> {

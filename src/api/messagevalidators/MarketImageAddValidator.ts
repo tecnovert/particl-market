@@ -2,13 +2,12 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as _ from 'lodash';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
 import { ValidationException } from '../exceptions/ValidationException';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
 import { inject, named } from 'inversify';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 import { Core, Targets, Types } from '../../constants';
 import { Logger as LoggerType } from '../../core/Logger';
 import { CoreRpcService } from '../services/CoreRpcService';
@@ -39,7 +38,7 @@ export class MarketImageAddValidator implements ActionMessageValidatorInterface 
      * @param message
      * @param direction
      */
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
 
         const actionMessage = message.action as MarketImageAddMessage;
         // this.log.debug('actionMessage:', JSON.stringify(actionMessage, null, 2));
@@ -71,7 +70,7 @@ export class MarketImageAddValidator implements ActionMessageValidatorInterface 
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(/* message: MarketplaceMessage, direction: ActionDirection */): Promise<boolean> {
         return true;
     }
 

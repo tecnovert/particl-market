@@ -7,10 +7,9 @@ import { ItemInformationUpdateRequest } from './ItemInformationUpdateRequest';
 import { PaymentInformationUpdateRequest } from './PaymentInformationUpdateRequest';
 import { MessagingInformationUpdateRequest } from './MessagingInformationUpdateRequest';
 import { ListingItemObjectUpdateRequest } from './ListingItemObjectUpdateRequest';
-import { IsNotEmpty } from 'class-validator';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
-// tslint:disable:variable-name
+
 export class ListingItemTemplateUpdateRequest extends RequestBody implements ModelRequestInterface {
 
     // @IsNotEmpty()
@@ -21,4 +20,3 @@ export class ListingItemTemplateUpdateRequest extends RequestBody implements Mod
     public messagingInformation: MessagingInformationUpdateRequest[];
     public listingItemObjects: ListingItemObjectUpdateRequest[];
 }
-// tslint:enable:variable-name

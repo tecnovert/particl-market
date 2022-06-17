@@ -25,7 +25,7 @@ export class EnumHelper {
         }
     }
 
-    public static getValues<T extends number>(e: any): Array<number | string> {
+    public static getValues(e: any): Array<number | string> {
         if (EnumHelper.isNumeric(e)) {
             return EnumHelper.getObjValues(e).filter(v => typeof v === 'number');
         } else {

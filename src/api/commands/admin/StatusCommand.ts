@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { inject, named } from 'inversify';
-import { validate, request } from '../../../core/api/Validate';
+import { validate } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
@@ -58,7 +58,7 @@ export class StatusCommand extends BaseCommand implements RpcCommandInterface<Se
     }
 
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest): Promise<ServiceStatus> {
+    public async execute(): Promise<ServiceStatus> {
         return {
             coreConnectionStatusService: this.coreConnectionStatusService.status,
             coreCookieService: this.coreCookieService.status,

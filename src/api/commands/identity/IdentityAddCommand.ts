@@ -12,7 +12,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { Identity } from '../../models/Identity';
 import { ProfileService } from '../../services/model/ProfileService';
 import { IdentityService } from '../../services/model/IdentityService';
@@ -37,20 +36,20 @@ export class IdentityAddCommand extends BaseCommand implements RpcCommandInterfa
                 new IdValidationRule('profileId', true, this.profileService),
                 new StringValidationRule('name', true, undefined,
                     async (value, index, allValues) => {
-                    // if set, there should not be a duplicate
-                    if (!_.isNil(value)) {
+                        // if set, there should not be a duplicate
+                        if (!_.isNil(value)) {
 
-                        const profile: resources.Profile = allValues[index - 1];
-                        await this.identityService.findAllByProfileIdAndName(profile.id, value)
-                            .then(result => {
-                                const identities: resources.Identity[] = result.toJSON();
-                                if (identities.length > 0) {
-                                    throw new MessageException('Identity with the name already exists.');
-                                }
-                            });
-                    }
-                    return true;
-                })
+                            const profile: resources.Profile = allValues[index - 1];
+                            await this.identityService.findAllByProfileIdAndName(profile.id, value)
+                                .then(result => {
+                                    const identities: resources.Identity[] = result.toJSON();
+                                    if (identities.length > 0) {
+                                        throw new MessageException('Identity with the name already exists.');
+                                    }
+                                });
+                        }
+                        return true;
+                    })
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
     }
@@ -59,15 +58,15 @@ export class IdentityAddCommand extends BaseCommand implements RpcCommandInterfa
      * command description
      *
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: name
+     * [0]: profile: resources.Profile
+     * [1]: name
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<Identity>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Identity> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Identity> {
         const profile: resources.Profile = data.params[0];
         const name: string = data.params[1];
         return this.identityService.createMarketIdentityForProfile(profile, name);
@@ -75,8 +74,8 @@ export class IdentityAddCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: profileId -> resources.Profile
-     *  [1]: name
+     * [0]: profileId -> resources.Profile
+     * [1]: name
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

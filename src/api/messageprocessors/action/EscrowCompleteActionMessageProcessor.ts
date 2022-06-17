@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -16,7 +15,7 @@ import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterf
 import { BidFactory } from '../../factories/model/BidFactory';
 import { BidService } from '../../services/model/BidService';
 import { MPActionExtended } from '../../enums/MPActionExtended';
-import { EscrowCompleteMessage } from '../../messages/action/EscrowCompleteMessage';
+// import { EscrowCompleteMessage } from '../../messages/action/EscrowCompleteMessage';
 import { EscrowCompleteActionService } from '../../services/action/EscrowCompleteActionService';
 import { ProposalService } from '../../services/model/ProposalService';
 import { BaseBidActionMessageProcessor } from '../BaseBidActionMessageProcessor';
@@ -62,14 +61,10 @@ export class EscrowCompleteActionMessageProcessor extends BaseBidActionMessagePr
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: EscrowCompleteMessage = marketplaceMessage.action as EscrowCompleteMessage;
+        // const actionMessage: EscrowCompleteMessage = marketplaceMessage.action as EscrowCompleteMessage;
 
         return await this.escrowCompleteActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
-                return SmsgMessageStatus.PROCESSED;
-            })
-            .catch(reason => {
-                return SmsgMessageStatus.PROCESSING_FAILED;
-            });
+            .then(() => SmsgMessageStatus.PROCESSED)
+            .catch(() => SmsgMessageStatus.PROCESSING_FAILED);
     }
 }

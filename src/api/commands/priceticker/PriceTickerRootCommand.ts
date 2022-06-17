@@ -10,7 +10,6 @@ import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { Commands } from '../CommandEnumType';
 import { PriceTickerService } from '../../services/model/PriceTickerService';
 import { MessageException } from '../../exceptions/MessageException';
@@ -41,7 +40,7 @@ export class PriceTickerRootCommand extends BaseCommand implements RpcCommandInt
      * @returns {Promise<Bookshelf.Collection<PriceTicker>>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Bookshelf.Collection<PriceTicker>> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Bookshelf.Collection<PriceTicker>> {
         if (data.params.length > 0) {
             // convert params to uppercase
             const currencies: string[] = [];

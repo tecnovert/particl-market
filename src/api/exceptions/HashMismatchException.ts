@@ -15,7 +15,7 @@ export class HashMismatchException extends Exception {
     constructor(param: string, expecting?: string, got?: string) {
         super(404, 'Hash mismatch for ' + param + '. ' +
             (expecting !== undefined
-                ? ' Expecting: ' + expecting + ', but got: ' + got + '.'
+                ? ` Expecting: ${expecting}, but got: ${got ? got : ''}.`
                 : ''));
     }
 }

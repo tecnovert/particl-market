@@ -7,8 +7,8 @@
  *
  */
 
-export type SearchOrderField = CommonSearchOrderField | BidSearchOrderField | OrderSearchOrderField | OrderItemSearchOrderField | CommentSearchOrderField
-    | SmsgMessageSearchOrderField | ListingItemTemplateSearchOrderField | ListingItemSearchOrderField;
+export type SearchOrderField = CommonSearchOrderField | BidSearchOrderField | OrderSearchOrderField | OrderItemSearchOrderField | CommentSearchOrderField|
+SmsgMessageSearchOrderField | ListingItemTemplateSearchOrderField | ListingItemSearchOrderField;
 
 // TODO: deprecated, remove
 export enum SearchOrderField_REMOVE_THIS {

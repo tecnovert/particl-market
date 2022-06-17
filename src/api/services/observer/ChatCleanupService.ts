@@ -19,7 +19,7 @@ export class ChatCleanupService extends BaseObserverService {
         @inject(Types.Service) @named(Targets.Service.model.ChatService) private chatService: ChatService,
         @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService
     ) {
-        super(__filename, process.env.MARKETS_EXPIRED_INTERVAL * 60 * 1000, Logger);
+        super(__filename, +(process.env.MARKETS_EXPIRED_INTERVAL || -1) * 60 * 1000, Logger);
     }
 
     /**
@@ -27,7 +27,7 @@ export class ChatCleanupService extends BaseObserverService {
      *
      * @param currentStatus
      */
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         await this.chatService.cleanupParticipants();
         await this.chatService.cleanupChatChannels();

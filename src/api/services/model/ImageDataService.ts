@@ -12,7 +12,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { validate, request } from '../../../core/api/Validate';
 import { NotFoundException } from '../../exceptions/NotFoundException';
-import { ValidationException } from '../../exceptions/ValidationException';
 import { ImageDataRepository } from '../../repositories/ImageDataRepository';
 import { ImageData } from '../../models/ImageData';
 import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequest';
@@ -134,14 +133,14 @@ export class ImageDataService {
      */
     public async saveImageFile(base64String: string, imageHash: string, imageVersion: string): Promise<string> {
         // strip header and write the file
-        const base64Image = base64String.split(';base64,').pop();
+        const base64Image = base64String.split(';base64,').pop()!;
         const filename = path.join(DataDir.getImagesPath(), imageHash + '-' + imageVersion);
         // this.log.debug('saveImageFile(): ', filename);
         try {
             // replaces the file if it already exists
             fs.writeFileSync(filename, base64Image, { encoding: 'base64' });
-        } catch (err) {
-            throw new MessageException('Image write failed: ' + err);
+        } catch (err: any) {
+            throw new MessageException(`Image write failed: ${err}`);
         }
         return filename;
     }
@@ -156,11 +155,13 @@ export class ImageDataService {
         // this.log.debug('removeImageFile(), imageHash: ', imageHash);
         // this.log.debug('removeImageFile(), imageVersion: ', imageVersion);
 
+        /* eslint-disable jsdoc/check-indentation */
         /**
          * NOTE: this is significantly confusing. Validation on whether the file should be removed or not should be handled prior to this
          *  function call. By doing it here it creates a requirement of prior knowledge on the caller:
          *      for example: caller must know that the ImageDatas DB entry cannot be removed prior to this call otherwise this removal fails silently.
          */
+        /* eslint-enable jsdoc/check-indentation */
         let imageDatas: resources.ImageData[] = await this.findAllByImageHashAndVersion(imageHash, imageVersion, false).then(value => value.toJSON());
         imageDatas = imageDatas.filter(d => d.protocol === ProtocolDSN.FILE);
         if (imageDatas.length === 0) {
@@ -177,12 +178,12 @@ export class ImageDataService {
                 if (fs.existsSync(filename)) {
                     fs.unlinkSync(filename);
                 }
-            } catch (err) {
-                this.log.error('removeImageFile(), image file remove failed: ' + err);
-                throw new MessageException('Image remove failed: ' + err);
+            } catch (err: any) {
+                this.log.error(`removeImageFile(), image file remove failed: ${err}`);
+                throw new MessageException(`Image remove failed: ${err}`);
             }
         }  else {
-           this.log.debug('removeImageFile(): multiple images using the same data file, skipping...');
+            this.log.debug('removeImageFile(): multiple images using the same data file, skipping...');
         }
 
     }
@@ -199,8 +200,8 @@ export class ImageDataService {
         // this.log.debug('loadImageFile(): ', filename);
         try {
             return fs.readFileSync(filename, { encoding: 'base64' });
-        } catch (err) {
-            throw new MessageException('Image load failed: ' + err);
+        } catch (err: any) {
+            throw new MessageException(`Image load failed: ${err}`);
         }
     }
 }

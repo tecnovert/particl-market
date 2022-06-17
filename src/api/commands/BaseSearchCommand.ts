@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import { Command } from './Command';
 import { RpcRequest } from '../requests/RpcRequest';
 import { BaseCommand } from './BaseCommand';
@@ -24,8 +23,8 @@ export abstract class BaseSearchCommand extends BaseCommand {
      * Should return the orderFields which are allowed for this particular Command
      *
      * Create a StringEnum where:
-     *   key is the value passed for the Command and
-     *   value being the db field for the Model class
+     * - key is the value passed for the Command and
+     * - value being the db field for the Model class
      * see CommentSearchOrderField
      */
     public abstract getAllowedSearchOrderFields(): string[];

@@ -37,12 +37,12 @@ export class Comment extends Bookshelf.Model<Comment> {
     }
 
     public static async fetchAllByTypeAndTarget(type: string, target: string): Promise<Collection<Comment>> {
-      const commentResultCollection = Comment.forge<Model<Comment>>()
+        const commentResultCollection = Comment.forge<Model<Comment>>()
             .query(qb => {
                 qb.where('comments.type', '=', type);
                 qb.andWhere('comments.target', '=', target);
             });
-      return commentResultCollection.fetchAll();
+        return commentResultCollection.fetchAll();
     }
 
     public static async fetchAllByCommentorsAndCommentHash(addresses: string[], hash: string, withRelated: boolean = true): Promise<Collection<Comment>> {
@@ -58,7 +58,7 @@ export class Comment extends Bookshelf.Model<Comment> {
     }
 
     public static async countBy(options: CommentSearchParams): Promise<number> {
-        return Comment.forge<Model<Comment>>()
+        return +Comment.forge<Model<Comment>>()
             .query( qb => {
                 if (options.type) {
                     qb.where('type', '=', options.type);

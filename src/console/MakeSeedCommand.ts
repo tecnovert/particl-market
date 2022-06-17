@@ -22,9 +22,7 @@ export class MakeSeedCommand extends AbstractMakeCommand {
     public updateTargets = false;
 
     public parseName(suffix: string = '', prefix: string = ''): (name: string) => string {
-        return (name: string) => {
-            return _.snakeCase(name);
-        };
+        return (name: string) => `${prefix}${_.snakeCase(name)}${suffix}`;
     }
 
 }

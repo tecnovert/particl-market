@@ -162,8 +162,7 @@ import { ChatParticipantListCommand } from './../commands/chat/ChatParticipantLi
 import { ChatParticipantUpdateCommand } from './../commands/chat/ChatParticipantUpdateCommand';
 import { ChatRootCommand } from './../commands/chat/ChatRootCommand';
 
-// tslint:disable:array-type
-// tslint:disable:max-line-length
+/* eslint-disable max-len, max-params */
 export class RpcCommandFactory {
 
     public log: LoggerType;
@@ -558,7 +557,7 @@ export class RpcCommandFactory {
 
         this.commands.push(helpCommand);
 
-        this.log.debug(this.commands.length + ' commands initialized.');
+        this.log.debug(`${this.commands.length} commands initialized.`);
 
     }
 
@@ -584,5 +583,4 @@ export class RpcCommandFactory {
         throw new MessageException('Couldn\'t find command <' + commandType.toString() + '>\n');
     }
 }
-// tslint:enable:array-type
-// tslint:enable:max-line-length
+/* eslint-enable max-len, max-params */

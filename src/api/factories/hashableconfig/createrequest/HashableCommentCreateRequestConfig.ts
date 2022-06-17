@@ -26,7 +26,7 @@ export class HashableCommentCreateRequestConfig extends BaseHashableConfig {
     }, {
         from: 'type',
         to: HashableCommentAddField.COMMENT_TYPE
-    }/*, {
+    }/* , {
         from: 'parentCommentHash',
         to: HashableCommentAddField.COMMENT_PARENT_COMMENT_HASH
     }*/] as HashableFieldConfig[];

@@ -22,8 +22,8 @@ export class ItemPriceRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ItemPrice>> {
-        const list = await this.ItemPriceModel.fetchAll();
-        return list as Bookshelf.Collection<ItemPrice>;
+        const list = await this.ItemPriceModel.fetchAll<ItemPrice>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ItemPrice> {
@@ -35,7 +35,7 @@ export class ItemPriceRepository {
         try {
             const itemPriceCreated = await itemPrice.save();
             return this.ItemPriceModel.fetchById(itemPriceCreated.id);
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not create the itemPrice!', error);
         }

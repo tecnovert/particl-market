@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { ActionNotificationInterface } from './ActionNotificationInterface';
-import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 export class ListingItemNotification implements ActionNotificationInterface {
     public objectId: number;

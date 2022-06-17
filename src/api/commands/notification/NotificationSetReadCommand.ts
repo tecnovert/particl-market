@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
@@ -29,7 +28,7 @@ export class NotificationSetReadCommand extends BaseCommand implements RpcComman
 
     /**
      * params[]:
-     *  [0]: notification: resources.Notification
+     * [0]: notification: resources.Notification
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
@@ -43,7 +42,7 @@ export class NotificationSetReadCommand extends BaseCommand implements RpcComman
 
     /**
      * data.params[]:
-     *  [0]: notification: resources.Notification
+     * [0]: notification: resources.Notification
      *
      * @param data
      * @returns {Promise<Notification>}
@@ -58,7 +57,7 @@ export class NotificationSetReadCommand extends BaseCommand implements RpcComman
 
     /**
      * data.params[]:
-     *  [0]: notification: resources.Notification
+     * [0]: notification: resources.Notification
      *
      * @param data
      * @returns {Promise<RpcRequest>}

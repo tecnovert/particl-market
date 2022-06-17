@@ -5,6 +5,7 @@
 import * as _ from 'lodash';
 import * as resources from 'resources';
 import * as fs from 'fs';
+import { Response } from 'express';
 import { inject, named } from 'inversify';
 import { controller, httpGet, httpPost, response, requestBody, requestParam, request } from 'inversify-express-utils';
 import { Types, Core, Targets } from '../../constants';
@@ -16,7 +17,6 @@ import { MessageException } from '../exceptions/MessageException';
 import { ImageDataService } from '../services/model/ImageDataService';
 import { CoreMessageVersion } from '../enums/CoreMessageVersion';
 import { ListingItemTemplateService } from '../services/model/ListingItemTemplateService';
-import { Image } from '../models/Image';
 import { ImageCreateRequest } from '../requests/model/ImageCreateRequest';
 import { DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { BaseImageAddMessage } from '../messages/action/BaseImageAddMessage';
@@ -28,8 +28,10 @@ import { MarketService } from '../services/model/MarketService';
 const restApi = app.IoC.getNamed<interfaces.Middleware>(Types.Middleware, Targets.Middleware.AuthenticateMiddleware);
 const multerMiddleware = app.IoC.getNamed<interfaces.Middleware>(Types.Middleware, Targets.Middleware.MulterMiddleware);
 
+/* eslint-disable @typescript-eslint/unbound-method */
 @controller('/images', multerMiddleware.use, restApi.use)
 export class ImageController {
+/* eslint-enable @typescript-eslint/unbound-method */
 
     public log: LoggerType;
 
@@ -53,22 +55,24 @@ export class ImageController {
      * @param req
      */
     @httpPost('/template/:listingItemTemplateId')
-    public async uploadTemplateImage(@response() res: myExpress.Response,
-                                     @requestParam('listingItemTemplateId') listingItemTemplateId: string,
-                                     @requestBody() body: any,
-                                     @request() req: any): Promise<resources.Image[]> {
+    public async uploadTemplateImage(@response() res: Response,
+        @requestParam('listingItemTemplateId') listingItemTemplateId: string,
+        @requestBody() body: any,
+        @request() req: any
+    ): Promise<resources.Image[]> {
         return await this.upload(res, req, body, listingItemTemplateId);
     }
 
     @httpPost('/market/:marketId')
-    public async uploadMarketImage(@response() res: myExpress.Response,
-                                   @requestParam('marketId') marketId: string,
-                                   @requestBody() body: any,
-                                   @request() req: any): Promise<resources.Image[]> {
+    public async uploadMarketImage(@response() res: Response,
+        @requestParam('marketId') marketId: string,
+        @requestBody() body: any,
+        @request() req: any
+    ): Promise<resources.Image[]> {
         return await this.upload(res, req, body, undefined, marketId);
     }
 
-    public async upload(res: myExpress.Response, req: any, body: any, listingItemTemplateId?: string, marketId?: string): Promise<resources.Image[]> {
+    public async upload(res: Response, req: any, body: any, listingItemTemplateId?: string, marketId?: string): Promise<resources.Image[]> {
 
         if (!req.files || req.files.length === 0) {
             throw new MessageException('Missing images.');
@@ -85,6 +89,7 @@ export class ImageController {
         return await this.createImages(imageUploadRequest);
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * uploadRequest.listingItemTemplateId
      * uploadRequest.marketId
@@ -101,6 +106,7 @@ export class ImageController {
      *
      * @param uploadRequest
      */
+    /* eslint-enable jsdoc/check-indentation */
     public async createImages(uploadRequest: ImageUploadRequest): Promise<resources.Image[]> {
 
         this.log.debug('createImages(), uploadRequest:', JSON.stringify(uploadRequest, null, 2));
@@ -178,13 +184,14 @@ export class ImageController {
      * @param imageVersion
      */
     @httpGet('/:id/:imageVersion')
-    public async publishImage(@response() res: myExpress.Response, @requestParam('id') id: string, @requestParam('imageVersion')
-        imageVersion: string): Promise<any> {
+    public async publishImage(
+        @response() res: Response, @requestParam('id') id: string, @requestParam('imageVersion') imageVersion: string
+    ): Promise<any> {
 
         // todo: check validity of imageVersion and throw if not valid
 
         const image: resources.Image = await this.imageService.findOne(parseInt(id, 10)).then(value => value.toJSON());
-        const imageData: resources.ImageData | undefined = await _.find(image.ImageDatas, data => data['imageVersion'] === imageVersion);
+        const imageData: resources.ImageData | undefined = _.find(image.ImageDatas, data => data['imageVersion'] === imageVersion);
 
         if (!imageData || image.ImageDatas.length === 0) {
             throw new MessageException('Image not found!');

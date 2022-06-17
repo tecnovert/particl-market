@@ -4,7 +4,6 @@
 
 import * as _ from 'lodash';
 import * as resources from 'resources';
-import * as Bookshelf from 'bookshelf';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -12,14 +11,12 @@ import { Types, Core, Targets } from '../../../constants';
 import { AddressService } from '../../services/model/AddressService';
 import { ProfileService } from '../../services/model/ProfileService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { Address } from '../../models/Address';
 import { AddressType } from '../../enums/AddressType';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 
 export class AddressListCommand extends BaseCommand implements RpcCommandInterface<resources.Address[]> {
@@ -37,29 +34,29 @@ export class AddressListCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: type: AddressType
+     * [0]: profile: resources.Profile
+     * [1]: type: AddressType
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<Bookshelf.Collection<Address>>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<resources.Address[]> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.Address[]> {
         const profile: resources.Profile = data.params[0];
         const type: AddressType = data.params[1];
         this.log.debug('type: ', JSON.stringify(type, null, 2));
 
         return _.filter(profile.ShippingAddresses, address => {
-            this.log.debug('type: ' + type + ' === ' + address.type + ' : ' + (address.type === type));
+            this.log.debug(`type: ${type} === ${address.type} : ${address.type === type}`);
             return address.type === type;
         });
     }
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: type, optional, default: AddressType.SHIPPING_OWN
+     * [0]: profileId
+     * [1]: type, optional, default: AddressType.SHIPPING_OWN
      *
      * @param data
      */
@@ -83,7 +80,7 @@ export class AddressListCommand extends BaseCommand implements RpcCommandInterfa
         // check that profile exists
         data.params[0] = await this.profileService.findOne(profileId)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
         data.params[1] = type;

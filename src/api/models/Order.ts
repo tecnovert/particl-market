@@ -57,24 +57,17 @@ export class Order extends Bookshelf.Model<Order> {
 
                     if (options.market) {
                         qb.innerJoin('listing_items', 'bid.listing_item_id', 'listing_items.id');
-                        qb.andWhere( qbInner => {
-                            return qbInner.where('bids.listing_items.market', '=', options.market);
-                        });
+                        qb.andWhere('bids.listing_items.market', '=', options.market);
                     }
 
                     if (options.listingItemId) {
-                        qb.andWhere( qbInner => {
-                            return qbInner.where('bids.listing_item_id', '=', options.listingItemId);
-                        });
+                        qb.andWhere('bids.listing_item_id', '=', options.listingItemId);
                     }
                 }
 
                 if (options.status && typeof options.status === 'string') {
-                    qb.andWhere( qbInner => {
-                        return qbInner
-                            .where('order_items.status', '=', options.status)
-                            .orWhere('orders.status', '=', options.status);
-                    });
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    qb.andWhere( qbInner => qbInner.where('order_items.status', '=', options.status).orWhere('orders.status', '=', options.status) );
                 }
 
                 if (options.buyerAddress) {

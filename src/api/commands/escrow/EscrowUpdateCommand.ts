@@ -56,11 +56,11 @@ export class EscrowUpdateCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: escrowType
-     *  [2]: buyerRatio
-     *  [3]: sellerRatio
-     *  [4]: escrowReleaseType
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: escrowType
+     * [2]: buyerRatio
+     * [3]: sellerRatio
+     * [4]: escrowReleaseType
      *
      * @param data
      * @returns {Promise<Escrow>}
@@ -84,11 +84,11 @@ export class EscrowUpdateCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: escrowType
-     *  [2]: buyerRatio
-     *  [3]: sellerRatio
-     *  [4]: escrowReleaseType
+     * [0]: listingItemTemplateId
+     * [1]: escrowType
+     * [2]: buyerRatio
+     * [3]: sellerRatio
+     * [4]: escrowReleaseType
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

@@ -22,8 +22,8 @@ export class FlaggedItemRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<FlaggedItem>> {
-        const list = await this.FlaggedItemModel.fetchAll();
-        return list as Bookshelf.Collection<FlaggedItem>;
+        const list = await this.FlaggedItemModel.fetchAll<FlaggedItem>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<FlaggedItem> {

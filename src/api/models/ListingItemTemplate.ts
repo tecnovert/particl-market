@@ -77,8 +77,12 @@ export class ListingItemTemplate extends Bookshelf.Model<ListingItemTemplate> {
      * @param allVersions
      * @param withRelated
      */
-    public static async fetchByParentTemplateAndMarket(templateId?: number, market?: string,
-                                                       allVersions: boolean = false, withRelated: boolean = true): Promise<Collection<ListingItemTemplate>> {
+    public static async fetchByParentTemplateAndMarket(
+        templateId?: number,
+        market?: string,
+        allVersions: boolean = false,
+        withRelated: boolean = true
+    ): Promise<Collection<ListingItemTemplate>> {
         const collection = ListingItemTemplate.forge<Model<ListingItemTemplate>>()
             .query(qb => {
                 if (market) {
@@ -99,22 +103,22 @@ export class ListingItemTemplate extends Bookshelf.Model<ListingItemTemplate> {
     }
 
 
-/*
-// find latest market template versions for each template
-SELECT lit.*, max(lit.generated_at)
-    FROM listing_item_templates lit
-    WHERE lit.market='market1'
-      AND lit.parent_listing_item_template_id=32
-GROUP BY lit.parent_listing_item_template_id, lit.market
-ORDER BY lit.generated_at DESC;
+    /*
+    // find latest market template versions for each template
+    SELECT lit.*, max(lit.generated_at)
+        FROM listing_item_templates lit
+        WHERE lit.market='market1'
+        AND lit.parent_listing_item_template_id=32
+    GROUP BY lit.parent_listing_item_template_id, lit.market
+    ORDER BY lit.generated_at DESC;
 
-// find all versions of a market template
-SELECT lit.*
-    FROM listing_item_templates lit
-    WHERE lit.market='market1'
-      AND lit.parent_listing_item_template_id=32
-ORDER BY lit.generated_at DESC;
-*/
+    // find all versions of a market template
+    SELECT lit.*
+        FROM listing_item_templates lit
+        WHERE lit.market='market1'
+        AND lit.parent_listing_item_template_id=32
+    ORDER BY lit.generated_at DESC;
+    */
 
     public static async searchBy(options: ListingItemTemplateSearchParams, withRelated: boolean = true): Promise<Collection<ListingItemTemplate>> {
 

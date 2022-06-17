@@ -2,8 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
-import * as resources from 'resources';
+
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -28,7 +27,7 @@ export class CoreConnectionStatusService extends BaseObserverService {
         super(__filename, 1000, Logger);
     }
 
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
         this.previousStatus = this.connectionStatus;
 
         this.connectionStatus = await this.checkConnection();
@@ -64,7 +63,7 @@ export class CoreConnectionStatusService extends BaseObserverService {
             }
 
             if (process.env.NODE_ENV !== 'test') {
-                this.log.error('failed to connect to particld, retrying in ' + this.INTERVAL + 'ms.');
+                this.log.error(`failed to connect to particld, retrying in ${this.INTERVAL}ms.`);
             }
             return CoreConnectionStatusServiceStatus.DISCONNECTED;
         }

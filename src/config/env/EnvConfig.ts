@@ -41,8 +41,6 @@ export class EnvConfig {
         API_INFO_ROUTE: '/info',
         CLI_ENABLED: true,
         CLI_ROUTE: '/cli',
-        MONITOR_ENABLED: true,
-        MONITOR_ROUTE: '/status',
         DB_CLIENT: 'sqlite3',
         DB_POOL_MIN: 2,
         DB_POOL_MAX: 10,

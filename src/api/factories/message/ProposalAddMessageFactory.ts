@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Types } from '../../../constants';
@@ -14,7 +13,6 @@ import { HashableProposalOptionMessageConfig } from '../hashableconfig/message/H
 import { HashableProposalAddField, HashableProposalOptionField } from '../hashableconfig/HashableField';
 import { GovernanceAction } from '../../enums/GovernanceAction';
 import { HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
-import { MissingParamException } from '../../exceptions/MissingParamException';
 import { ProposalAddRequest } from '../../requests/action/ProposalAddRequest';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { BaseMessageFactory } from '../BaseMessageFactory';
@@ -50,19 +48,19 @@ export class ProposalAddMessageFactory extends BaseMessageFactory {
         // hash the proposal
         let hashableOptions = '';
         for (const option of optionsList) {
-            hashableOptions = hashableOptions + option.optionId + ':' + option.description + ':';
+            hashableOptions = `${hashableOptions}${option.optionId}:${option.description}:`;
         }
 
         // this.log.debug('message: ', JSON.stringify(message, null, 2));
 
         // todo:
         message.hash = ConfigurableHasher.hash(message, new HashableProposalAddMessageConfig([{
-                value: hashableOptions,
-                to: HashableProposalAddField.PROPOSAL_OPTIONS
-            }, {
-                value: actionRequest.market.receiveAddress,
-                to: HashableProposalAddField.PROPOSAL_MARKET
-            }] as HashableFieldValueConfig[]));
+            value: hashableOptions,
+            to: HashableProposalAddField.PROPOSAL_OPTIONS
+        }, {
+            value: actionRequest.market.receiveAddress,
+            to: HashableProposalAddField.PROPOSAL_MARKET
+        }] as HashableFieldValueConfig[]));
 
         // add hashes for the options too
         for (const option of optionsList) {

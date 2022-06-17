@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as Bookshelf from 'bookshelf';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
@@ -40,7 +39,7 @@ export class MarketListCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
+     * [0]: profile: resources.Profile
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<Market>>}
@@ -53,7 +52,7 @@ export class MarketListCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: profileId, optional
+     * [0]: profileId, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

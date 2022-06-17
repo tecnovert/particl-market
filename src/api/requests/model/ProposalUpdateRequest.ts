@@ -8,7 +8,7 @@ import { ProposalCategory } from '../../enums/ProposalCategory';
 import { ProposalOptionCreateRequest } from './ProposalOptionCreateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
-// tslint:disable:variable-name
+
 export class ProposalUpdateRequest extends RequestBody implements ModelRequestInterface {
 
     @IsNotEmpty()
@@ -40,4 +40,3 @@ export class ProposalUpdateRequest extends RequestBody implements ModelRequestIn
 
 
 }
-// tslint:enable:variable-name

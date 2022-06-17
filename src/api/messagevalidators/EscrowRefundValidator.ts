@@ -14,16 +14,17 @@ import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';
 import { EscrowRefundMessage } from '../messages/action/EscrowRefundMessage';
 import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 
 export class EscrowRefundValidator implements ActionMessageValidatorInterface {
 
     constructor(
         @inject(Types.Service) @named(Targets.Service.model.BidService) public bidService: BidService
     ) {
+        // empty constructor
     }
 
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (!message.version) {
             throw new MessageException('version: missing');
         }
@@ -42,16 +43,14 @@ export class EscrowRefundValidator implements ActionMessageValidatorInterface {
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // MPA_LOCK should exists
         // -> (msg.action as MPA_REFUND).bid is the hash of MPA_BID and should be found
         // -> Bid of the type MPA_BID should have ChildBid of type MPA_LOCK
         return await this.bidService.findOneByHash((message.action as EscrowRefundMessage).bid, true)
             .then( (value) => {
                 const mpaBid: resources.Bid = value.toJSON();
-                const childBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => {
-                    return child.type === MPAction.MPA_LOCK;
-                });
+                const childBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => child.type === MPAction.MPA_LOCK);
                 return !!childBid;
             })
             .catch( () => false);

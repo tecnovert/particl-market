@@ -116,18 +116,18 @@ export class ProposalResultService {
         }
 
         const removalPercentage = ProposalCategory.ITEM_VOTE === proposalResult.Proposal.category
-            ? parseFloat(process.env.LISTING_ITEM_REMOVE_PERCENTAGE)
+            ? parseFloat(process.env.LISTING_ITEM_REMOVE_PERCENTAGE as string)
             : ProposalCategory.MARKET_VOTE === proposalResult.Proposal.category
-                ? parseFloat(process.env.MARKET_REMOVE_PERCENTAGE)
+                ? parseFloat(process.env.MARKET_REMOVE_PERCENTAGE as string)
                 : 0.1;    // default
 
-        const removeOptionResult = _.find(proposalResult.ProposalOptionResults, (proposalOptionResult: resources.ProposalOptionResult) => {
-            return proposalOptionResult.ProposalOption.description === ItemVote.REMOVE.toString();
-        });
+        const removeOptionResult = _.find(proposalResult.ProposalOptionResults, (proposalOptionResult: resources.ProposalOptionResult) =>
+            proposalOptionResult.ProposalOption.description === ItemVote.REMOVE.toString()
+        );
 
-        const keepOptionResult = _.find(proposalResult.ProposalOptionResults, (proposalOptionResult: resources.ProposalOptionResult) => {
-            return proposalOptionResult.ProposalOption.description === ItemVote.KEEP.toString();
-        });
+        const keepOptionResult = _.find(proposalResult.ProposalOptionResults, (proposalOptionResult: resources.ProposalOptionResult) =>
+            proposalOptionResult.ProposalOption.description === ItemVote.KEEP.toString()
+        );
 
         if (keepOptionResult === undefined || removeOptionResult === undefined) {
             // no results for some reason -> dont remove
@@ -139,16 +139,16 @@ export class ProposalResultService {
         const voteCountNeededForRemoval = (networkSupply / 100) * removalPercentage;
 
         if ((removeOptionResult.weight - keepOptionResult.weight) > voteCountNeededForRemoval) {
-            this.log.debug('Votes for FlaggedItem removal exceed ' + removalPercentage + '% (' + voteCountNeededForRemoval + ')');
+            this.log.debug(`Votes for FlaggedItem removal exceed ${removalPercentage}% (${voteCountNeededForRemoval})`);
             this.log.debug('removeOptionResult.weight: ', removeOptionResult.weight);
             this.log.debug('keepOptionResult.weight: ', keepOptionResult.weight);
-            this.log.debug('count: ' + (removeOptionResult.weight - keepOptionResult.weight) + ' / ' + voteCountNeededForRemoval);
+            this.log.debug(`count: ${(removeOptionResult.weight - keepOptionResult.weight)} / ${voteCountNeededForRemoval}`);
             return true;
         } else {
-            this.log.debug('Votes for FlaggedItem removal do not exceed ' + removalPercentage + '% (' + voteCountNeededForRemoval + ')');
+            this.log.debug(`Votes for FlaggedItem removal do not exceed ${removalPercentage}% (${voteCountNeededForRemoval})`);
             this.log.debug('removeOptionResult.weight: ', removeOptionResult.weight);
             this.log.debug('keepOptionResult.weight: ', keepOptionResult.weight);
-            this.log.debug('count: ' + (removeOptionResult.weight - keepOptionResult.weight) + ' / ' + voteCountNeededForRemoval);
+            this.log.debug(`count: ${(removeOptionResult.weight - keepOptionResult.weight)} / ${voteCountNeededForRemoval}`);
             return false;
         }
     }

@@ -13,9 +13,9 @@ export class Chat extends Bookshelf.Model<Chat> {
      *
      * @param smsgMsgId     The identifier for the chat message, specifically the incoming smsg msgid value.
      * @param channel       The channel (hash value) to which the message is being posted
-     *                          (necessary so as to create the relevant chat channel if it does not previously exist).
+     * (necessary so as to create the relevant chat channel if it does not previously exist).
      * @param channelType   The type of the channel, as defined by ChatChannelType.
-     *                      Necessary in case different types generate the same hash in which case this serves to distinguish the specific channel posting to.
+     * Necessary in case different types generate the same hash in which case this serves to distinguish the specific channel posting to.
      * @param sender        The address being used to post the message from.
      * @param message       The contents of the message.
      * @param identityId    (Optional) providing this subscribes the identity to the chat channel.
@@ -35,9 +35,9 @@ export class Chat extends Bookshelf.Model<Chat> {
 
                 /**
                  * There seems to be an issue with flushing inserts written in raw sql:
-                 *     the transaction returns successfully, but the writes are never actually made.
+                 * the transaction returns successfully, but the writes are never actually made.
                  * Thus, instead of the eloquent `INSERT OR IGNORE INTO ...` type of statements,
-                 *     one is forced to using the shitty syntax below (with the .catch() statements to deal with contraint hits)
+                 * one is forced to using the shitty syntax below (with the .catch() statements to deal with contraint hits)
                  *
                  * Also, its unsupported (doesn't work) to run multiple queries in a raw SQL statement and having knex execute that with knex.raw(...).
                  * Which might be due to the outdated version of knex installed
@@ -56,13 +56,9 @@ export class Chat extends Bookshelf.Model<Chat> {
                 const participantObj = {
                     sender
                 };
-                await trx('chat_channels').insert(channelObj).catch(() => {
-                    return null;
-                });
+                await trx('chat_channels').insert(channelObj).catch(() => null);
 
-                await trx('chat_participants').insert(participantObj).catch(() => {
-                    return null;
-                });
+                await trx('chat_participants').insert(participantObj).catch(() => null);
 
                 const channel_id_sub = trx('chat_channels').select('id').where(channelObj).limit(1);
                 const participant_id_sub = trx('chat_participants').select('id').where(participantObj).limit(1);
@@ -94,7 +90,7 @@ export class Chat extends Bookshelf.Model<Chat> {
 
 
     /**
-     *  Obtain a list of channels that are watched/followed by a particular identity.
+     * Obtain a list of channels that are watched/followed by a particular identity.
      *
      * @param identityId    The identity for which to retrieve followed channels.
      * @param channelType   (Optional) A filter to return only the specific type of channel (if provided) otherwise all followed channels.
@@ -268,7 +264,7 @@ export class Chat extends Bookshelf.Model<Chat> {
      */
     public static async messageExists(msgid: string): Promise<boolean> {
         const hasItems = await Bookshelf.knex('chat_messages').select('msgid').where({msgid})
-            .catch(err => [])
+            .catch(() => [])
             .then(resp => Array.isArray(resp) && (resp.length > 0));
         return hasItems;
     }
@@ -286,21 +282,19 @@ export class Chat extends Bookshelf.Model<Chat> {
                             ON 			listing_item_templates.id = listing_items.listing_item_template_id
                             AND 		listing_items.hash = :channel
                 `;
-                const identities: number[] = await trx.raw(identityListQuery, { channel }).then(results => {
-                    return results.map(r => r.identity_id);
-                }).catch(() => []);
+                const identities: number[] = await trx.raw(identityListQuery, { channel }).then(results => results.map(r => r.identity_id)).catch(() => []);
 
                 const channelID = await trx('chat_channels').select('id').where({
                     hash: channel,
                     hash_type: ChatChannelType.LISTINGITEM
                 })
-                .catch(() => [])
-                .then(channelids => {
-                    if (Array.isArray(channelids)) {
-                        return +channelids.map(c => +c.id).filter(id => +id > 0)[0];
-                    }
-                    return 0;
-                });
+                    .catch(() => [])
+                    .then(channelids => {
+                        if (Array.isArray(channelids)) {
+                            return +channelids.map(c => +c.id).filter(id => +id > 0)[0];
+                        }
+                        return 0;
+                    });
 
                 if (+channelID > 0) {
 
@@ -332,21 +326,19 @@ export class Chat extends Bookshelf.Model<Chat> {
                                     ) order_addresses
                         ON	        identities.address = order_addresses.buyer OR identities.address = order_addresses.seller
                 `;
-                const identities: number[] = await trx.raw(identityListQuery, {channel}).then(results => {
-                    return results.map(r => r.id);
-                }).catch(() => []);
+                const identities: number[] = await trx.raw(identityListQuery, {channel}).then(results => results.map(r => r.id)).catch(() => []);
 
                 const channelID = await trx('chat_channels').select('id').where({
                     hash: channel,
                     hash_type: ChatChannelType.ORDER
                 })
-                .catch(() => [])
-                .then(channelids => {
-                    if (Array.isArray(channelids)) {
-                        return +channelids.map(c => +c.id).filter(id => +id > 0)[0];
-                    }
-                    return 0;
-                });
+                    .catch(() => [])
+                    .then(channelids => {
+                        if (Array.isArray(channelids)) {
+                            return +channelids.map(c => +c.id).filter(id => +id > 0)[0];
+                        }
+                        return 0;
+                    });
 
                 if (+channelID > 0) {
                     for (const identityId of identities) {
@@ -369,8 +361,8 @@ export class Chat extends Bookshelf.Model<Chat> {
      * @param identityId    id of the identity that wishes to follow a specific channel.
      * @param channel       The channel (hash of the item) to be followed.
      * @param channelType   The ChatChannelType of the channel to be followed.
-     * @returns             true | false indicating whether the channel was successfully followed.
-     *                          If the channel was previously followed then true is returned.
+     * @returns             true | false indicating whether the channel was successfully followed. If the channel was previously followed then true is returned.
+     *
      */
     public static async followChatChannel(identityId: number, channel: string, channelType: ChatChannelType): Promise<boolean> {
 
@@ -465,7 +457,7 @@ export class Chat extends Bookshelf.Model<Chat> {
         await Bookshelf.knex('chat_participants')
             .whereRaw('id NOT IN (SELECT chat_participant_id FROM chat_messages GROUP BY chat_participant_id) AND label IS NULL')
             .del()
-            .catch(err => {
+            .catch(() => {
                 // do something here ?
             });
     }

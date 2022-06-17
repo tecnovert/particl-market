@@ -12,7 +12,7 @@ import { decorate, inject, injectable, named } from 'inversify';
 import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';
 import { BidRejectMessage } from '../messages/action/BidRejectMessage';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 
 decorate(injectable(), FV_MPA_REJECT);
 export class BidRejectValidator extends FV_MPA_REJECT implements ActionMessageValidatorInterface {
@@ -23,7 +23,7 @@ export class BidRejectValidator extends FV_MPA_REJECT implements ActionMessageVa
         super();
     }
 
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (message.action.type !== MPAction.MPA_REJECT) {
             throw new ValidationException('Invalid action type.', ['Accepting only ' + MPAction.MPA_REJECT]);
         }
@@ -32,7 +32,7 @@ export class BidRejectValidator extends FV_MPA_REJECT implements ActionMessageVa
         return FV_MPA_REJECT.validate(message as MPM);
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // MPA_BID should exists
         // -> (msg.action as MPA_REJECT).bid is the hash of MPA_BID
         return await this.bidService.findOneByHash((message.action as BidRejectMessage).bid, true)

@@ -2,12 +2,10 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-// tslint:disable:max-line-length
 import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
-import { Types, Core, Targets } from '../../../constants';
+import { Types, Core } from '../../../constants';
 import { PaymentInformationCreateRequest } from '../../requests/model/PaymentInformationCreateRequest';
 import { EscrowCreateRequest } from '../../requests/model/EscrowCreateRequest';
 import { EscrowRatioCreateRequest } from '../../requests/model/EscrowRatioCreateRequest';
@@ -20,7 +18,6 @@ import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { ListingItemCreateParams } from '../ModelCreateParams';
 import { CryptoAddress, Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { MessageException } from '../../exceptions/MessageException';
-// tslint:enable:max-line-length
 
 
 export class PaymentInformationFactory implements ModelFactoryInterface {
@@ -56,14 +53,12 @@ export class PaymentInformationFactory implements ModelFactoryInterface {
     private async getModelItemPrice(params: ListingItemCreateParams): Promise<ItemPriceCreateRequest> {
 
         const listingItemAddMessage = params.actionMessage as ListingItemAddMessage;
-        const smsgMessage = params.smsgMessage;
+        // const smsgMessage = params.smsgMessage;
 
         const paymentOptions: PaymentOption[] = listingItemAddMessage.item.payment.options || [];
 
         // todo: this needs to be refactored
-        const paymentOption: PaymentOption | undefined = _.find(paymentOptions, (option: PaymentOption) => {
-            return option.currency === Cryptocurrency.PART;
-        });
+        const paymentOption: PaymentOption | undefined = _.find(paymentOptions, (option: PaymentOption) => option.currency === Cryptocurrency.PART);
 
         if (!paymentOption) {
             this.log.error('There needs to be a PaymentOption for PART');

@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
@@ -37,7 +36,7 @@ export class ListingItemTemplateRemoveCommand extends BaseCommand implements Rpc
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate, resources.ListingItemTemplate
+     * [0]: listingItemTemplate, resources.ListingItemTemplate
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -51,7 +50,7 @@ export class ListingItemTemplateRemoveCommand extends BaseCommand implements Rpc
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
+     * [0]: listingItemTemplateId
      *
      * @param data
      * @returns {Promise<RpcRequest>}

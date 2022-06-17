@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -85,12 +84,8 @@ export class OrderItemShipActionMessageProcessor extends BaseBidActionMessagePro
             && mpaBid.OrderItem.Order.status === OrderStatus.PROCESSING) {
 
             return await this.orderItemShipActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-                .then(value => {
-                    return SmsgMessageStatus.PROCESSED;
-                })
-                .catch(reason => {
-                    return SmsgMessageStatus.PROCESSING_FAILED;
-                });
+                .then(() => SmsgMessageStatus.PROCESSED)
+                .catch(() => SmsgMessageStatus.PROCESSING_FAILED);
 
         } else if (mpaBid.OrderItem.status === OrderItemStatus.COMPLETE
             && mpaBid.OrderItem.Order.status === OrderStatus.COMPLETE) {

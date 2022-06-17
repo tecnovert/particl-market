@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { Enum, EnumValue } from 'ts-enums';
+import { Enum } from 'ts-enums';
 import { Command } from './Command';
 import { EnvironmentType } from '../../core/helpers/Environment';
 

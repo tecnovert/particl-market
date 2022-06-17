@@ -36,7 +36,7 @@ export class SmsgRemoveCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: msgid
+     * [0]: msgid
      *
      * @param data
      * @returns {Promise<void>}
@@ -49,7 +49,7 @@ export class SmsgRemoveCommand extends BaseCommand implements RpcCommandInterfac
                 const smsgMessage: resources.SmsgMessage = value.toJSON();
                 this.smsgMessageService.destroy(smsgMessage.id);
             })
-            .catch(reason => {
+            .catch(() => {
                 this.log.debug('OUTGOING SMSG with msgid not found');
             });
 
@@ -58,14 +58,14 @@ export class SmsgRemoveCommand extends BaseCommand implements RpcCommandInterfac
                 const smsgMessage: resources.SmsgMessage = value.toJSON();
                 this.smsgMessageService.destroy(smsgMessage.id);
             })
-            .catch(reason => {
+            .catch(() => {
                 this.log.debug('INCOMING SMSG with msgid not found');
             });
     }
 
     /**
      * data.params[]:
-     *  [0]: msgid
+     * [0]: msgid
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -75,7 +75,7 @@ export class SmsgRemoveCommand extends BaseCommand implements RpcCommandInterfac
 
         await this.smsgMessageService.findOneByMsgIdAndDirection(data.params[0], ActionDirection.INCOMING)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('SmsgMessage');
             });
 

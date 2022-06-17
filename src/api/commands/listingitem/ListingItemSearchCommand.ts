@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as Bookshelf from 'bookshelf';
 import * as _ from 'lodash';
 import { inject, named } from 'inversify';
@@ -85,21 +84,21 @@ export class ListingItemSearchCommand extends BaseSearchCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: market, string, the market receiveAddress
-     *  [5]: categories, optional, number[]|string[], if string -> find using key
-     *  [6]: seller, optional, string, address
-     *  [7]: minPrice, optional, number, listingItem basePrice minimum
-     *  [8]: maxPrice, optional, number, listingItem basePrice maximum
-     *  [9]: country, optional, string
-     *  [10]: shippingDestination, optional, string
-     *  [11]: searchString, optional, string
-     *  [12]: flagged, optional, boolean
-     *  [13]: listingItemHash, optional, string
-     *  [14]: msgid, optional, string
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: market, string, the market receiveAddress
+     * [5]: categories, optional, number[]|string[], if string -> find using key
+     * [6]: seller, optional, string, address
+     * [7]: minPrice, optional, number, listingItem basePrice minimum
+     * [8]: maxPrice, optional, number, listingItem basePrice maximum
+     * [9]: country, optional, string
+     * [10]: shippingDestination, optional, string
+     * [11]: searchString, optional, string
+     * [12]: flagged, optional, boolean
+     * [13]: listingItemHash, optional, string
+     * [14]: msgid, optional, string
      *
      * @param data
      * @returns {Promise<ListingItem>}
@@ -130,21 +129,21 @@ export class ListingItemSearchCommand extends BaseSearchCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: market, string, the market receiveAddress
-     *  [5]: categories, optional, number[]|string[], if string -> find using key
-     *  [6]: seller, optional, string, address
-     *  [7]: minPrice, optional, number, listingItem basePrice minimum
-     *  [8]: maxPrice, optional, number, listingItem basePrice maximum
-     *  [9]: country, optional, string
-     *  [10]: shippingDestination, optional, string
-     *  [11]: searchString, optional, string
-     *  [12]: flagged, optional, boolean
-     *  [13]: listingItemHash, optional, string
-     *  [14]: msgid, optional, string
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: market, string, the market receiveAddress
+     * [5]: categories, optional, number[]|string[], if string -> find using key
+     * [6]: seller, optional, string, address
+     * [7]: minPrice, optional, number, listingItem basePrice minimum
+     * [8]: maxPrice, optional, number, listingItem basePrice maximum
+     * [9]: country, optional, string
+     * [10]: shippingDestination, optional, string
+     * [11]: searchString, optional, string
+     * [12]: flagged, optional, boolean
+     * [13]: listingItemHash, optional, string
+     * [14]: msgid, optional, string
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -152,7 +151,7 @@ export class ListingItemSearchCommand extends BaseSearchCommand implements RpcCo
     public async validate(data: RpcRequest): Promise<RpcRequest> {
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
 
-        const market = data.params[4];                  // required
+        // const market = data.params[4];                  // required
         const categories = data.params[5];              // optional
         const seller = data.params[6];                  // optional
         const minPrice = data.params[7];                // optional
@@ -170,9 +169,7 @@ export class ListingItemSearchCommand extends BaseSearchCommand implements RpcCo
                 throw new InvalidParamException('categories', 'number[] | string[]');
             } else {
                 // validate types, since we could have any[]...
-                let foundDifferentTypes = _.find(categories, value => {
-                    return typeof value !== typeof categories[0];
-                });
+                let foundDifferentTypes = _.find(categories, value => typeof value !== typeof categories[0]);
                 foundDifferentTypes = foundDifferentTypes !== undefined;
                 if (foundDifferentTypes) {
                     throw new InvalidParamException('categories', 'number[] | string[]');
@@ -186,8 +183,8 @@ export class ListingItemSearchCommand extends BaseSearchCommand implements RpcCo
         data.params[6] = _.isNil(seller) || seller === '*' ? undefined : seller;
         data.params[7] = _.isNil(minPrice) ? undefined : minPrice;
         data.params[8] = _.isNil(maxPrice) ? undefined : maxPrice;
-        data.params[9] = _.isNil(country) ? undefined : ShippingCountries.convertAndValidate(country + '');
-        data.params[10] = _.isNil(shippingDestination) ? undefined : ShippingCountries.convertAndValidate(shippingDestination + '');
+        data.params[9] = _.isNil(country) ? undefined : ShippingCountries.convertAndValidate(`${country}`);
+        data.params[10] = _.isNil(shippingDestination) ? undefined : ShippingCountries.convertAndValidate(`${shippingDestination}`);
         data.params[11] = _.isNil(searchString) || searchString === '*' ? undefined : searchString;
         data.params[12] = _.isNil(flagged) ? undefined : flagged;
         data.params[13] = _.isNil(listingItemHash) || listingItemHash === '*' ? undefined : listingItemHash;

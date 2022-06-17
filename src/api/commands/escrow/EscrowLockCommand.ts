@@ -9,7 +9,6 @@ import { inject, named } from 'inversify';
 import { request, validate } from '../../../core/api/Validate';
 import { Core, Targets, Types } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { Escrow } from '../../models/Escrow';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { OrderItemService } from '../../services/model/OrderItemService';
 import { Commands } from '../CommandEnumType';
@@ -26,6 +25,7 @@ import { SmsgSendResponse } from '../../responses/SmsgSendResponse';
 import { KVS } from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 import { BidDataValue } from '../../enums/BidDataValue';
 import { IdentityService } from '../../services/model/IdentityService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
 
 
@@ -72,9 +72,7 @@ export class EscrowLockCommand extends BaseCommand implements RpcCommandInterfac
         const identity: resources.Identity = data.params[2];
 
         const bid: resources.Bid = await this.bidService.findOne(orderItem.Bid.id).then(value => value.toJSON());
-        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPAction.MPA_ACCEPT;
-        });
+        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPAction.MPA_ACCEPT);
         if (!childBid) {
             throw new MessageException('No accepted Bid found.');
         }
@@ -86,7 +84,7 @@ export class EscrowLockCommand extends BaseCommand implements RpcCommandInterfac
                 fromAddress: identity.address,
                 toAddress: orderItem.Order.seller,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -140,7 +138,7 @@ export class EscrowLockCommand extends BaseCommand implements RpcCommandInterfac
 
         const identity: resources.Identity = await this.identityService.findOneByAddress(orderItem.Order.buyer)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 

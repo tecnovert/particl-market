@@ -5,18 +5,17 @@
 import * as Knex from 'knex';
 
 
-exports.up = (db: Knex): Promise<any> => {
-    return Promise.all([
+exports.up = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.table('item_informations', (table: Knex.AlterTableBuilder) => {
             table.string('product_code').nullable();
         })
     ]);
-};
 
-exports.down = (db: Knex): Promise<any> => {
-    return Promise.all([
+
+exports.down = (db: Knex): Promise<any> =>
+    Promise.all([
         db.schema.table('item_informations', (table: Knex.AlterTableBuilder) => {
             table.dropColumn('product_code');
         })
     ]);
-};

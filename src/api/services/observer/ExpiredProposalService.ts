@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import { inject, multiInject, named } from 'inversify';
+import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { BaseObserverService } from './BaseObserverService';
@@ -18,7 +18,7 @@ export class ExpiredProposalService extends BaseObserverService {
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Service) @named(Targets.Service.model.ProposalService) private proposalService: ProposalService
     ) {
-        super(__filename, process.env.PROPOSALS_EXPIRED_INTERVAL * 60 * 1000, Logger);
+        super(__filename, +(process.env.PROPOSALS_EXPIRED_INTERVAL || -1) * 60 * 1000, Logger);
     }
 
     /**
@@ -26,7 +26,7 @@ export class ExpiredProposalService extends BaseObserverService {
      *
      * @param currentStatus
      */
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         const proposals: resources.Proposal[] = await this.proposalService.search({
             // return Proposals ending before timeEnd, having FinalProposalResult set

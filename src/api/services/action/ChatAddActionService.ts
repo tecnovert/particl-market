@@ -151,7 +151,7 @@ export class ChatAddActionService {
             fromAddress: actionRequest.senderAddress,
             toAddress: actionRequest.recipient,
             daysRetention: parseInt(
-                isPaid ? process.env.PAID_MESSAGE_RETENTION_DAYS : process.env.FREE_MESSAGE_RETENTION_DAYS,
+                isPaid ? process.env.PAID_MESSAGE_RETENTION_DAYS as string : process.env.FREE_MESSAGE_RETENTION_DAYS as string,
                 10
             ) || 0,
             estimateFee: false,
@@ -196,13 +196,11 @@ export class ChatAddActionService {
         const incomingMarketMsg: any =
             this.isValidType(data, 'object', true) &&
             this.isValidType(data.marketplaceMessage, 'object', true) &&
-            this.isValidType(data.marketplaceMessage.action, 'object', true)
-            ? data.marketplaceMessage.action : {};
+            this.isValidType(data.marketplaceMessage.action, 'object', true) ? data.marketplaceMessage.action : {};
 
         const incomingSmsg: any =
             this.isValidType(data, 'object', true) &&
-            this.isValidType(data.smsgMessage, 'object', true)
-            ? data.smsgMessage : {};
+            this.isValidType(data.smsgMessage, 'object', true) ? data.smsgMessage : {};
 
         const invalidMarketFields = [
             {field: 'channel', valueType: 'string'},
@@ -370,7 +368,7 @@ export class ChatAddActionService {
                         identities: forIdentities
                     }
                 };
-                await this.notifyService.send(notifyMsg).catch(err => null);
+                await this.notifyService.send(notifyMsg).catch(() => null);
             }
         }
 
@@ -386,44 +384,42 @@ export class ChatAddActionService {
 
 
         switch (channelType) {
-            case ChatChannelType.LISTINGITEM:
-                recipientAddress = await this.listingItemService.findAllByHash(channel)
-                    .then(value => value.toJSON())
-                    .then((listings: resources.ListingItem[]) => {
-                        const foundListing = listings.find(l => identity.Markets.findIndex(m => m.receiveAddress === l.market) > -1 );
-                        if (foundListing) {
-                            return foundListing.market;
+        case ChatChannelType.LISTINGITEM:
+            recipientAddress = await this.listingItemService.findAllByHash(channel)
+                .then(value => value.toJSON())
+                .then((listings: resources.ListingItem[]) => {
+                    const foundListing = listings.find(l => identity.Markets.findIndex(m => m.receiveAddress === l.market) > -1 );
+                    if (foundListing) {
+                        return foundListing.market;
+                    }
+                    return undefined;
+                }).catch(() => undefined);
+            break;
+
+        case ChatChannelType.ORDER:
+            recipientAddress = await this.orderService.findOneByHash(channel)
+                .then(value => value.toJSON())
+                .then((order: resources.Order) => {
+                    channelType = ChatChannelType.ORDER;
+
+                    if (order) {
+                        const sellerAddress = (typeof order.seller === 'string') && (order.seller.length > 0) ? order.seller : '';
+                        const buyerAddress = (typeof order.buyer === 'string') && (order.buyer.length > 0) ? order.buyer : '';
+
+                        if (sellerAddress.length > 0 && buyerAddress.length > 0) {
+                            return sellerAddress === identity.address ?
+                                buyerAddress :
+                                (buyerAddress === identity.address ? sellerAddress : undefined);
                         }
-                        return undefined;
-                    }).catch(() => {
-                        return undefined;
-                    });
-                break;
+                    }
 
-            case ChatChannelType.ORDER:
-                recipientAddress = await this.orderService.findOneByHash(channel)
-                    .then(value => value.toJSON())
-                    .then((order: resources.Order) => {
-                        channelType = ChatChannelType.ORDER;
+                    return undefined;
+                })
+                .catch(() => undefined);
+            break;
 
-                        if (order) {
-                            const sellerAddress = (typeof order.seller === 'string') && (order.seller.length > 0) ? order.seller : '';
-                            const buyerAddress = (typeof order.buyer === 'string') && (order.buyer.length > 0) ? order.buyer : '';
-
-                            if (sellerAddress.length > 0 && buyerAddress.length > 0) {
-                                return sellerAddress === identity.address ?
-                                    buyerAddress :
-                                    (buyerAddress === identity.address ? sellerAddress : undefined);
-                            }
-                        }
-
-                        return undefined;
-                    })
-                    .catch(() => undefined);
-                break;
-
-            default:
-                recipientAddress = undefined;
+        default:
+            recipientAddress = undefined;
         }
 
         return recipientAddress || '';
@@ -453,14 +449,14 @@ export class ChatAddActionService {
             return tm;
         }
         switch (type) {
-            case 'string':
-                return (value as string).length > 0;
-            case 'object':
-                return (Object.prototype.toString.call(value) === '[object Object]') && !!value;
-            case 'number':
-                return !Number.isNaN(+(value as number)) && Number.isFinite(value);
-            default:
-                return true;
+        case 'string':
+            return (value as string).length > 0;
+        case 'object':
+            return (Object.prototype.toString.call(value) === '[object Object]') && !!value;
+        case 'number':
+            return !Number.isNaN(+(value as number)) && Number.isFinite(value);
+        default:
+            return true;
         }
     }
 }

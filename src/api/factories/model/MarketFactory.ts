@@ -92,33 +92,33 @@ export class MarketFactory implements ModelFactoryInterface {
 
         // we have receiveKey and receiveAddress, next get/create the publishKey and publishAddress
         switch (marketAddMessage.marketType) {
-            case MarketType.MARKETPLACE:
-                // receive + publish keys are the same
-                marketAddMessage.publishKey = marketAddMessage.receiveKey;
-                publishAddress = PrivateKey.fromWIF(marketAddMessage.publishKey).toPublicKey().toAddress(network).toString();
-                break;
+        case MarketType.MARKETPLACE:
+            // receive + publish keys are the same
+            marketAddMessage.publishKey = marketAddMessage.receiveKey;
+            publishAddress = PrivateKey.fromWIF(marketAddMessage.publishKey).toPublicKey().toAddress(network).toString();
+            break;
 
-            case MarketType.STOREFRONT:
-                // both keys should have been given
-                // publish key is public key (DER hex encoded string)
-                publishAddress = PublicKey.fromString(marketAddMessage.publishKey).toAddress(network).toString();
-                break;
+        case MarketType.STOREFRONT:
+            // both keys should have been given
+            // publish key is public key (DER hex encoded string)
+            publishAddress = PublicKey.fromString(marketAddMessage.publishKey).toAddress(network).toString();
+            break;
 
-            case MarketType.STOREFRONT_ADMIN:
-                // receive + publish keys are different, both private keys
-                // if publishKey is given and is different, use that, else create a new one
-                marketAddMessage.publishKey = (!_.isNil(marketAddMessage.publishKey) && marketAddMessage.publishKey !== marketAddMessage.receiveKey)
-                    ? marketAddMessage.publishKey
-                    : PrivateKey.fromRandom(network).toWIF();
-                publishAddress = PrivateKey.fromWIF(marketAddMessage.publishKey).toPublicKey().toAddress(network).toString();
+        case MarketType.STOREFRONT_ADMIN:
+            // receive + publish keys are different, both private keys
+            // if publishKey is given and is different, use that, else create a new one
+            marketAddMessage.publishKey = (!_.isNil(marketAddMessage.publishKey) && marketAddMessage.publishKey !== marketAddMessage.receiveKey)
+                ? marketAddMessage.publishKey
+                : PrivateKey.fromRandom(network).toWIF();
+            publishAddress = PrivateKey.fromWIF(marketAddMessage.publishKey).toPublicKey().toAddress(network).toString();
 
-                if (marketAddMessage.receiveKey === marketAddMessage.publishKey) {
-                    throw new MessageException('Adding a STOREFRONT_ADMIN requires different receive and publish keys.');
-                }
-                break;
+            if (marketAddMessage.receiveKey === marketAddMessage.publishKey) {
+                throw new MessageException('Adding a STOREFRONT_ADMIN requires different receive and publish keys.');
+            }
+            break;
 
-            default:
-                throw new NotImplementedException();
+        default:
+            throw new NotImplementedException();
         }
 
         this.log.debug('get(), publishKey: ', marketAddMessage.publishKey);

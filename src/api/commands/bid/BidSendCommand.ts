@@ -30,6 +30,7 @@ import { IdentityService } from '../../services/model/IdentityService';
 import { MarketService } from '../../services/model/MarketService';
 import { MessagingProtocol } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { SmsgService } from '../../services/SmsgService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import {
     AddressOrAddressIdValidationRule,
     CommandParamValidationRules,
@@ -120,7 +121,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
                 fromAddress: identity.address,
                 toAddress: listingItem.seller,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -136,6 +137,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
 
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * data.params[]:
      * [0]: listingItemId: number -> listingItem: resources.ListingItem
@@ -157,9 +159,10 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
      */
+    /* eslint-disable jsdoc/check-indentation */
     public async validate(data: RpcRequest): Promise<RpcRequest> {
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
-/*
+        /*
         // make sure the params are of correct type
         if (typeof data.params[2] === 'boolean' && data.params[2] === false) {
             // make sure that required keys are there
@@ -171,7 +174,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
         } else if (typeof data.params[2] !== 'number') {
             throw new InvalidParamException('addressId', 'number');
         }
-*/
+        */
         // make sure required data exists and fetch it
         const listingItem: resources.ListingItem = data.params.shift();
         const identity: resources.Identity = data.params.shift();
@@ -180,7 +183,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
         // now the rest of data.params are either address values or biddatas
         const profile: resources.Profile = await this.profileService.findOne(identity.Profile.id)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
 
@@ -188,7 +191,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
         // so we need to also send the market info to the seller
         const market: resources.Market = await this.marketService.findOneByProfileIdAndReceiveAddress(profile.id, listingItem.market)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Market');
             });
 
@@ -241,9 +244,7 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
     private getAddress(profile: resources.Profile, addressId: number | boolean, data: RpcRequest): AddressCreateRequest {
 
         if (typeof addressId === 'number') {
-            const address = _.find(profile.ShippingAddresses, (addr: resources.Address) => {
-                return addr.id === addressId;
-            });
+            const address: Partial<resources.Address> | undefined = _.find(profile.ShippingAddresses, (addr: resources.Address) => addr.id === addressId);
 
             // if address was found
             if (address) {
@@ -282,32 +283,32 @@ export class BidSendCommand extends BaseCommand implements RpcCommandInterface<S
                 if (_.includes(this.PARAMS_ADDRESS_KEYS, paramKey)) {
                     // key is an address key
                     switch (paramKey) {
-                        case BidDataValue.SHIPPING_ADDRESS_FIRST_NAME:
-                            address.firstName = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_LAST_NAME:
-                            address.lastName = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_ADDRESS_LINE1:
-                            address.addressLine1 = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_ADDRESS_LINE2:
-                            address.addressLine2 = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_CITY:
-                            address.city = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_STATE:
-                            address.state = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_ZIP_CODE:
-                            address.zipCode = paramValue;
-                            break;
-                        case BidDataValue.SHIPPING_ADDRESS_COUNTRY:
-                            address.country = paramValue;
-                            break;
-                        default:
-                            throw new InvalidParamException('addressKey', 'BidDataValue');
+                    case BidDataValue.SHIPPING_ADDRESS_FIRST_NAME:
+                        address.firstName = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_LAST_NAME:
+                        address.lastName = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_ADDRESS_LINE1:
+                        address.addressLine1 = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_ADDRESS_LINE2:
+                        address.addressLine2 = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_CITY:
+                        address.city = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_STATE:
+                        address.state = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_ZIP_CODE:
+                        address.zipCode = paramValue;
+                        break;
+                    case BidDataValue.SHIPPING_ADDRESS_COUNTRY:
+                        address.country = paramValue;
+                        break;
+                    default:
+                        throw new InvalidParamException('addressKey', 'BidDataValue');
                     }
                 }
             }

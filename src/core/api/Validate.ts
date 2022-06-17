@@ -29,7 +29,7 @@ interface RequestParameter {
  *
  * @param request
  */
-export const request = (requestBody: typeof RequestBody) => (target: object, propertyKey: string | symbol, parameterIndex: number): any => {
+export const request = (requestBody: typeof RequestBody): any => (target: object, propertyKey: string | symbol, parameterIndex: number): any => {
     const existingRequestParameters: RequestParameter[] = Reflect.getOwnMetadata(requestMetadataKey, target, propertyKey) || [];
     existingRequestParameters.push({
         request: requestBody,
@@ -43,7 +43,7 @@ export const request = (requestBody: typeof RequestBody) => (target: object, pro
  *
  * @param request
  */
-export const message = (messageBody: typeof MessageBody) => (target: object, propertyKey: string | symbol, parameterIndex: number): any => {
+export const message = (messageBody: typeof MessageBody): any => (target: object, propertyKey: string | symbol, parameterIndex: number): any => {
     const existingRequestParameters: RequestParameter[] = Reflect.getOwnMetadata(requestMetadataKey, target, propertyKey) || [];
     existingRequestParameters.push({
         request: messageBody,
@@ -59,7 +59,7 @@ export const message = (messageBody: typeof MessageBody) => (target: object, pro
  * @param propertyName
  * @param descriptor
  */
-export const validate = () => (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<any>): any => {
+export const validate = (): any => (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<any>): any => {
     const method = descriptor.value;
     descriptor.value = async function(...args: any[]): Promise<any> {
         const requestParameters: RequestParameter[] = Reflect.getOwnMetadata(requestMetadataKey, target, propertyName);

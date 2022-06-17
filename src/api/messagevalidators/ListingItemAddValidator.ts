@@ -76,23 +76,22 @@ export class ListingItemAddValidator extends FV_MPA_LISTING implements ActionMes
             //     - only storefront admins can post items, so we can add and allow any categories
 
             switch (market.type) {
-                case MarketType.MARKETPLACE:
-                    const key: string = hash(actionMessage.item.information.category.toString());
-                    const category: resources.ItemCategory = await this.itemCategoryService.findOneDefaultByKey(key)
-                        .then(value => value.toJSON())
-                        .catch(reason => {
-                            this.log.error('validateMessage(), invalid custom ItemCategory.');
-                            // no matching default category found
-                            throw new MessageException('ItemCategory not found.');
-                        });
-                    return true;
-                case MarketType.STOREFRONT:
-                case MarketType.STOREFRONT_ADMIN:
-                        // anything goes
-                    return true;
-                default:
-                    // we should never get here
-                    throw new NotImplementedException();
+            case MarketType.MARKETPLACE:
+                const key: string = hash(actionMessage.item.information.category.toString());
+                await this.itemCategoryService.findOneDefaultByKey(key)
+                    .catch(() => {
+                        this.log.error('validateMessage(), invalid custom ItemCategory.');
+                        // no matching default category found
+                        throw new MessageException('ItemCategory not found.');
+                    });
+                return true;
+            case MarketType.STOREFRONT:
+            case MarketType.STOREFRONT_ADMIN:
+                // anything goes
+                return true;
+            default:
+                // we should never get here
+                throw new NotImplementedException();
             }
         }
 
@@ -106,8 +105,8 @@ export class ListingItemAddValidator extends FV_MPA_LISTING implements ActionMes
             if (!ompValidated) {
                 this.log.error('FV_MPA_LISTING.validate failed.');
             }
-        } catch (e) {
-            this.log.error('FV_MPA_LISTING.validate failed: ' + e);
+        } catch (e: any) {
+            this.log.error(`FV_MPA_LISTING.validate failed: ${e}`);
         }
 
         this.log.debug('validateMessage(), ompValidated: ', ompValidated);
@@ -116,7 +115,7 @@ export class ListingItemAddValidator extends FV_MPA_LISTING implements ActionMes
 
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection, smsgMessage?: resources.SmsgMessage): Promise<boolean> {
+    public async validateSequence(/* message: MarketplaceMessage, direction: ActionDirection, smsgMessage?: resources.SmsgMessage */): Promise<boolean> {
         return true;
     }
 

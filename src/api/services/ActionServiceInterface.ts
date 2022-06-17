@@ -26,12 +26,14 @@ export interface ActionServiceInterface {
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
+     *
      * @param actionRequest
      */
     createMarketplaceMessage(actionRequest: ActionRequestInterface): Promise<MarketplaceMessage>;
 
     /**
      * called before post is executed and message is sent
+     *
      * @param actionRequest
      * @param message
      */
@@ -42,7 +44,7 @@ export interface ActionServiceInterface {
      * command action.
      *
      * default implementation in BaseActionService, which calls the methods below, which should be implemented.
-     *  default implementation:
+     * default implementation:
      * - first calls createMessage(), which should create the marketplaceMessage based on given params, extending class should implement
      * - then calls validateMessage(), which should validate the marketplaceMessage, extending class should implement
      * - returns estimate, if thats what was requested
@@ -65,10 +67,12 @@ export interface ActionServiceInterface {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    afterPost(actionRequest: ActionRequestInterface,
-              marketplaceMessage: MarketplaceMessage,
-              smsgMessage: resources.SmsgMessage,
-              smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse>;
+    afterPost(
+        actionRequest: ActionRequestInterface,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse>;
 
     /**
      * called after posting a message and after receiving it
@@ -81,10 +85,12 @@ export interface ActionServiceInterface {
      * @param smsgMessage
      * @param actionRequest
      */
-     processMessage(marketplaceMessage: MarketplaceMessage,
-                    actionDirection: ActionDirection,
-                    smsgMessage: resources.SmsgMessage,
-                    actionRequest?: ActionRequestInterface): Promise<resources.SmsgMessage>;
+    processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage,
+        actionRequest?: ActionRequestInterface
+    ): Promise<resources.SmsgMessage>;
 
     /**
      * create MarketplaceNotification to be sent to the gui, return undefined if notification is not needed
@@ -93,12 +99,15 @@ export interface ActionServiceInterface {
      * @param actionDirection
      * @param smsgMessage
      */
-    createNotification(marketplaceMessage: MarketplaceMessage,
-                       actionDirection: ActionDirection,
-                       smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined>;
+    createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined>;
 
     /**
      * check whether the target are blacklisted
+     *
      * @param targets
      */
     isBlacklisted(targets: string[]): Promise<boolean>;

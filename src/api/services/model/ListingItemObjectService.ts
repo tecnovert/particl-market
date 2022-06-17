@@ -57,7 +57,7 @@ export class ListingItemObjectService {
 
     @validate()
     public async create( @request(ListingItemObjectCreateRequest) data: ListingItemObjectCreateRequest): Promise<ListingItemObject> {
-        const body: ListingItemObjectCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ListingItemObjectCreateRequest> = JSON.parse(JSON.stringify(data));
 
         if (body.listing_item_id == null && body.listing_item_template_id == null) {
             throw new ValidationException('Request body is not valid', ['listing_item_id or listing_item_template_id missing']);

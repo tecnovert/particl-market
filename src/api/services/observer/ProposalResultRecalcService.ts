@@ -25,7 +25,7 @@ import { BlacklistSearchParams } from '../../requests/search/BlacklistSearchPara
 export class ProposalResultRecalcService extends BaseObserverService {
 
     // interval to recalculate ProposalResults in milliseconds
-    private recalculationWaitInterval = process.env.PROPOSAL_RESULT_RECALCULATION_WAIT_INTERVAL * 60 * 1000;
+    private recalculationWaitInterval = +(process.env.PROPOSAL_RESULT_RECALCULATION_WAIT_INTERVAL || -1) * 60 * 1000;
 
     constructor(
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
@@ -37,13 +37,13 @@ export class ProposalResultRecalcService extends BaseObserverService {
         @inject(Types.Service) @named(Targets.Service.model.ProposalResultService) public proposalResultService: ProposalResultService
     ) {
         // run every minute
-        super(__filename, process.env.PROPOSAL_RESULT_RECALCULATION_INTERVAL * 60 * 1000, Logger);
+        super(__filename, +(process.env.PROPOSAL_RESULT_RECALCULATION_WAIT_INTERVAL || -1) * 60 * 1000, Logger);
     }
 
     /**
      * Periodically recalculate the active Proposals ProposalResults
      */
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         //  - find all currently active Proposals
         //  - for each active Proposal
@@ -97,8 +97,9 @@ export class ProposalResultRecalcService extends BaseObserverService {
             }
         }
 
-        this.log.debug('process(), activeProposals: ' + activeProposals.length + ', expiredProposals: ' + expiredProposals.length
-            + ', newBlacklists: ' + newBlacklists.length);
+        this.log.debug(
+            `process(), activeProposals: ${activeProposals.length}, expiredProposals: ${expiredProposals.length}, newBlacklists: ${newBlacklists.length}`
+        );
 
         return ObserverStatus.RUNNING;
     }

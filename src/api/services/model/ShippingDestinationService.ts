@@ -40,9 +40,9 @@ export class ShippingDestinationService {
 
     /**
      * options:
-     *  item_information_id: options.item_information_id
-     *  country: options.options
-     *  shipping_availability: options.shipping_availability
+     * - item_information_id: options.item_information_id
+     * - country: options.options
+     * - shipping_availability: options.shipping_availability
      *
      * @param {ShippingDestinationSearchParams} options
      * @returns {Promise<ShippingDestination>}

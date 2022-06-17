@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { RpcRequest } from '../../requests/RpcRequest';
@@ -33,8 +32,8 @@ export class ShoppingCartUpdateCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: cart, resources.ShoppingCart
-     *  [1]: newCartName
+     * [0]: cart, resources.ShoppingCart
+     * [1]: newCartName
      *
      * @param data
      * @returns {Promise<ShoppingCart>}
@@ -50,8 +49,8 @@ export class ShoppingCartUpdateCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: cartId
-     *  [1]: newCartName
+     * [0]: cartId
+     * [1]: newCartName
      *
      * @param data
      * @returns {Promise<ShoppingCart>}
@@ -75,7 +74,7 @@ export class ShoppingCartUpdateCommand extends BaseCommand implements RpcCommand
         // make sure ShoppingCart with the id exists
         data.params[0] = await this.shoppingCartService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ShoppingCart');
             });
 

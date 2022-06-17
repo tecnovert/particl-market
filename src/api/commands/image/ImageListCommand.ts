@@ -11,7 +11,6 @@ import { Types, Core, Targets } from '../../../constants';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { ListingItemTemplate } from '../../models/ListingItemTemplate';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
@@ -46,8 +45,8 @@ export class ImageListCommand extends BaseCommand implements RpcCommandInterface
 
     /**
      * data.params[]:
-     *  [0]: typeSpecifier: string, template | item | market
-     *  [1]: type: resources.ListingItemTemplate | listingItem: resources.ListingItem | market: resources.Market
+     * [0]: typeSpecifier: string, template | item | market
+     * [1]: type: resources.ListingItemTemplate | listingItem: resources.ListingItem | market: resources.Market
      */
     @validate()
     public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.Image[]> {
@@ -56,35 +55,35 @@ export class ImageListCommand extends BaseCommand implements RpcCommandInterface
         const returnImageData: boolean = data.params[2];
 
         switch (typeSpecifier) {
-            case 'template':
-            case 'item':
-                if (returnImageData && !_.isEmpty(type.ItemInformation.Images)) {
-                    for (const img of type.ItemInformation.Images) {
-                        for (const imageData of img.ImageDatas) {
-                            imageData.data = await this.imageDataService.loadImageFile(img.hash, imageData.imageVersion);
-                        }
+        case 'template':
+        case 'item':
+            if (returnImageData && !_.isEmpty(type.ItemInformation.Images)) {
+                for (const img of type.ItemInformation.Images) {
+                    for (const imageData of img.ImageDatas) {
+                        imageData.data = await this.imageDataService.loadImageFile(img.hash, imageData.imageVersion);
                     }
                 }
-                return type.ItemInformation.Images;
+            }
+            return type.ItemInformation.Images;
 
-            case 'market':
-                const image = (type as resources.Market).Image;
-                if (returnImageData && !_.isEmpty(image)) {
-                    for (const imageData of image.ImageDatas) {
-                        imageData.data = await this.imageDataService.loadImageFile(image.hash, imageData.imageVersion);
-                    }
+        case 'market':
+            const image = (type as resources.Market).Image;
+            if (returnImageData && !_.isEmpty(image)) {
+                for (const imageData of image.ImageDatas) {
+                    imageData.data = await this.imageDataService.loadImageFile(image.hash, imageData.imageVersion);
                 }
-                return [image];
+            }
+            return [image];
 
-            default:
-                throw new InvalidParamException('typeSpecifier', 'template|item|market');
+        default:
+            throw new InvalidParamException('typeSpecifier', 'template|item|market');
         }
     }
 
     /**
      * data.params[]:
-     *  [0]: typeSpecifier: string, template | item | market
-     *  [1]: id: number
+     * [0]: typeSpecifier: string, template | item | market
+     * [1]: id: number
      */
     public async validate(data: RpcRequest): Promise<RpcRequest> {
         await super.validate(data);
@@ -93,29 +92,29 @@ export class ImageListCommand extends BaseCommand implements RpcCommandInterface
         const id = data.params[1];
 
         switch (typeSpecifier) {
-            case 'template':
-                data.params[1] = await this.listingItemTemplateService.findOne(id)
-                    .then(value => value.toJSON())
-                    .catch(reason => {
-                        throw new ModelNotFoundException('ListingItemTemplate');
-                    });
-                break;
-            case 'item':
-                data.params[1] = await this.listingItemService.findOne(id)
-                    .then(value => value.toJSON())
-                    .catch(reason => {
-                        throw new ModelNotFoundException('ListingItem');
-                    });
-                break;
-            case 'market':
-                data.params[1] = await this.marketService.findOne(id)
-                    .then(value => value.toJSON())
-                    .catch(reason => {
-                        throw new ModelNotFoundException('Market');
-                    });
-                break;
-            default:
-                throw new InvalidParamException('typeSpecifier', 'template|item|market');
+        case 'template':
+            data.params[1] = await this.listingItemTemplateService.findOne(id)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItemTemplate');
+                });
+            break;
+        case 'item':
+            data.params[1] = await this.listingItemService.findOne(id)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItem');
+                });
+            break;
+        case 'market':
+            data.params[1] = await this.marketService.findOne(id)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('Market');
+                });
+            break;
+        default:
+            throw new InvalidParamException('typeSpecifier', 'template|item|market');
         }
 
         return data;

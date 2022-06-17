@@ -24,8 +24,8 @@ export class MarketRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Market>> {
-        const list = await this.MarketModel.fetchAll();
-        return list as Bookshelf.Collection<Market>;
+        const list = await this.MarketModel.fetchAll<Market>();
+        return list;
     }
 
     public async findAllByProfileId(profileId: number | undefined, withRelated: boolean = true): Promise<Bookshelf.Collection<Market>> {

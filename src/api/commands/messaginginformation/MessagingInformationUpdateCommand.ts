@@ -37,9 +37,9 @@ export class MessagingInformationUpdateCommand extends BaseCommand implements Rp
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate, resources.ListingItemTemplate
-     *  [1]: protocol (MessagingProtocol)
-     *  [2]: publicKey
+     * [0]: listingItemTemplate, resources.ListingItemTemplate
+     * [1]: protocol (MessagingProtocol)
+     * [2]: publicKey
      *
      * @param data
      * @returns {Promise<MessagingInformation>}
@@ -60,9 +60,9 @@ export class MessagingInformationUpdateCommand extends BaseCommand implements Rp
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: protocol (MessagingProtocol)
-     *  [2]: publicKey
+     * [0]: listingItemTemplateId
+     * [1]: protocol (MessagingProtocol)
+     * [2]: publicKey
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -85,10 +85,8 @@ export class MessagingInformationUpdateCommand extends BaseCommand implements Rp
         }
 
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(data.params[0])
-            .then(value => {
-                return value.toJSON();
-            })
-            .catch(reason => {
+            .then(value => value.toJSON())
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItemTemplate');
             });
 
@@ -97,8 +95,7 @@ export class MessagingInformationUpdateCommand extends BaseCommand implements Rp
             throw new ModelNotFoundException('MessagingInformation');
         }
 
-        const validProtocolTypes = [MessagingProtocol.SMSG];
-        if (validProtocolTypes.indexOf(data.params[1]) === -1) {
+        if (data.params[1] !== MessagingProtocol.SMSG) {
             throw new InvalidParamException('protocol');
         }
 

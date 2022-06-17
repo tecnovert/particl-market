@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import PQueue, { DefaultAddOptions, Options } from 'pm-queue';
 import PriorityQueue, { PriorityQueueOptions } from 'pm-queue/dist/priority-queue';
 import { inject, named } from 'inversify';
@@ -46,9 +45,8 @@ export class MarketplaceMessageProcessor implements MessageProcessorInterface {
     public log: LoggerType;
 
     private actionQueue: PQueue;    // Queue processing the MarketplaceMessages, prioritizing by type
-
+    /* eslint-disable max-params, max-len */
     constructor(
-        // tslint:disable:max-line-length
         @inject(Types.Factory) @named(Targets.Factory.model.SmsgMessageFactory) private smsgMessageFactory: SmsgMessageFactory,
         @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService,
         @inject(Types.MessageProcessor) @named(Targets.MessageProcessor.action.ListingItemAddActionMessageProcessor) private listingItemAddActionMessageProcessor: ListingItemAddActionMessageProcessor,
@@ -70,8 +68,9 @@ export class MarketplaceMessageProcessor implements MessageProcessorInterface {
         @inject(Types.MessageProcessor) @named(Targets.MessageProcessor.action.ChatAddActionMessageProcessor) private chatAddActionMessageProcessor: ChatAddActionMessageProcessor,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter
-        // tslint:enable:max-line-length
-    ) {
+    )
+    /* eslint-enable max-params, max-len */
+    {
         this.log = new Logger(__filename);
 
         const options = {
@@ -139,125 +138,123 @@ export class MarketplaceMessageProcessor implements MessageProcessorInterface {
 
         // add the action processing function to the messageprocessing queue
         switch (smsgMessage.type) {
-            case MPAction.MPA_LISTING_ADD:
-                await this.actionQueue.add(
-                    async () => await this.listingItemAddActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPAction.MPA_LISTING_ADD}`, er)),
-                    { priority: MessageQueuePriority.MPA_LISTING_ADD } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_LISTING_ADD}`, er));
-                break;
-            case MPActionExtended.MPA_LISTING_IMAGE_ADD:
-                await this.actionQueue.add(async () => await this.listingItemImageAddActionMessageProcessor.process(marketplaceEvent), {
-                    priority: MessageQueuePriority.MPA_LISTING_IMAGE_ADD
-                } as DefaultAddOptions);
-                break;
-            case MPActionExtended.MPA_MARKET_ADD:
-                await this.actionQueue.add(
-                    async () => await this.marketAddActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_MARKET_ADD}`, er)),
-                    { priority: MessageQueuePriority.MPA_MARKET_ADD } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_MARKET_ADD}`, er));
-                break;
-            case MPActionExtended.MPA_MARKET_IMAGE_ADD:
-                await this.actionQueue.add(async () => await this.marketImageAddActionMessageProcessor.process(marketplaceEvent), {
-                    priority: MessageQueuePriority.MPA_MARKET_IMAGE_ADD
-                } as DefaultAddOptions);
-                break;
-            case MPAction.MPA_BID:
-                await this.actionQueue.add(
-                    async () => await this.bidActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPAction.MPA_BID}`, er)),
-                    { priority: MessageQueuePriority.MPA_BID } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_BID}`, er));
-                break;
-            case MPAction.MPA_ACCEPT:
-                await this.actionQueue.add(
-                    async () => await this.bidAcceptActionMessageProcessor.process(marketplaceEvent),
-                    { priority: MessageQueuePriority.MPA_ACCEPT } as DefaultAddOptions
-                );
-                break;
-            case MPAction.MPA_CANCEL:
-                await this.actionQueue.add(
-                    async () => await this.bidCancelActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPAction.MPA_CANCEL}`, er)),
-                    { priority: MessageQueuePriority.MPA_CANCEL } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_CANCEL}`, er));
-                break;
-            case MPAction.MPA_REJECT:
-                await this.actionQueue.add(
-                    async () => await this.bidRejectActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPAction.MPA_REJECT}`, er)),
-                    { priority: MessageQueuePriority.MPA_REJECT } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_REJECT}`, er));
-                break;
-            case MPAction.MPA_LOCK:
-                await this.actionQueue.add(
-                    async () => await this.escrowLockActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPAction.MPA_LOCK}`, er)),
-                    { priority: MessageQueuePriority.MPA_LOCK } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_LOCK}`, er));
-                break;
-            case MPActionExtended.MPA_COMPLETE:
-                await this.actionQueue.add(
-                    async () => await this.escrowCompleteActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_COMPLETE}`, er)),
-                    { priority: MessageQueuePriority.MPA_COMPLETE } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_COMPLETE}`, er));
-                break;
-            case MPActionExtended.MPA_SHIP:
-                await this.actionQueue.add(
-                    async () => await this.orderItemShipActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_SHIP}`, er)),
-                    { priority: MessageQueuePriority.MPA_SHIP } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_SHIP}`, er));
-                break;
-            case MPActionExtended.MPA_RELEASE:
-                await this.actionQueue.add(
-                    async () => await this.escrowReleaseActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_RELEASE}`, er)),
-                    { priority: MessageQueuePriority.MPA_RELEASE } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_RELEASE}`, er));
-                break;
-            case MPActionExtended.MPA_REFUND:
-                await this.actionQueue.add(
-                    async () => await this.escrowRefundActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_REFUND}`, er)),
-                    { priority: MessageQueuePriority.MPA_REFUND } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_REFUND}`, er));
-                break;
-            case GovernanceAction.MPA_PROPOSAL_ADD:
-                await this.actionQueue.add(async () => await this.proposalAddActionMessageProcessor.process(marketplaceEvent), {
-                    priority: MessageQueuePriority.MPA_PROPOSAL_ADD
-                } as DefaultAddOptions);
-                break;
-            case GovernanceAction.MPA_VOTE:
-                await this.actionQueue.add(async () => await this.voteActionMessageProcessor.process(marketplaceEvent), {
-                    priority: MessageQueuePriority.MPA_VOTE
-                } as DefaultAddOptions);
-                break;
-            case CommentAction.MPA_COMMENT_ADD:
-                await this.actionQueue.add(async () => await this.commentAddActionMessageProcessor.process(marketplaceEvent), {
-                    priority: MessageQueuePriority.MPA_COMMENT_ADD
-                } as DefaultAddOptions);
-                break;
-            case CommentAction.MPA_CHAT_MESSAGE_ADD:
-                await this.actionQueue.add(
-                    async () => await this.chatAddActionMessageProcessor.process(marketplaceEvent)
-                        .catch(er => this.log.error(`Process error for ${CommentAction.MPA_CHAT_MESSAGE_ADD}`, er)),
-                    { priority: MessageQueuePriority.MPA_CHAT_ADD } as DefaultAddOptions
-                ).catch(er => this.log.error(`Queue add failure for ${CommentAction.MPA_CHAT_MESSAGE_ADD}`, er));
-                break;
-            default:
-                // a valid mp message, possibly should be handled by a bot
-                this.log.error('ERROR: Received a message type thats missing a Listener.');
-                throw new NotImplementedException();
+        case MPAction.MPA_LISTING_ADD:
+            await this.actionQueue.add(
+                async () => await this.listingItemAddActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPAction.MPA_LISTING_ADD}`, er)),
+                { priority: MessageQueuePriority.MPA_LISTING_ADD } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_LISTING_ADD}`, er));
+            break;
+        case MPActionExtended.MPA_LISTING_IMAGE_ADD:
+            await this.actionQueue.add(async () => await this.listingItemImageAddActionMessageProcessor.process(marketplaceEvent), {
+                priority: MessageQueuePriority.MPA_LISTING_IMAGE_ADD
+            } as DefaultAddOptions);
+            break;
+        case MPActionExtended.MPA_MARKET_ADD:
+            await this.actionQueue.add(
+                async () => await this.marketAddActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_MARKET_ADD}`, er)),
+                { priority: MessageQueuePriority.MPA_MARKET_ADD } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_MARKET_ADD}`, er));
+            break;
+        case MPActionExtended.MPA_MARKET_IMAGE_ADD:
+            await this.actionQueue.add(async () => await this.marketImageAddActionMessageProcessor.process(marketplaceEvent), {
+                priority: MessageQueuePriority.MPA_MARKET_IMAGE_ADD
+            } as DefaultAddOptions);
+            break;
+        case MPAction.MPA_BID:
+            await this.actionQueue.add(
+                async () => await this.bidActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPAction.MPA_BID}`, er)),
+                { priority: MessageQueuePriority.MPA_BID } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_BID}`, er));
+            break;
+        case MPAction.MPA_ACCEPT:
+            await this.actionQueue.add(
+                async () => await this.bidAcceptActionMessageProcessor.process(marketplaceEvent),
+                { priority: MessageQueuePriority.MPA_ACCEPT } as DefaultAddOptions
+            );
+            break;
+        case MPAction.MPA_CANCEL:
+            await this.actionQueue.add(
+                async () => await this.bidCancelActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPAction.MPA_CANCEL}`, er)),
+                { priority: MessageQueuePriority.MPA_CANCEL } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_CANCEL}`, er));
+            break;
+        case MPAction.MPA_REJECT:
+            await this.actionQueue.add(
+                async () => await this.bidRejectActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPAction.MPA_REJECT}`, er)),
+                { priority: MessageQueuePriority.MPA_REJECT } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_REJECT}`, er));
+            break;
+        case MPAction.MPA_LOCK:
+            await this.actionQueue.add(
+                async () => await this.escrowLockActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPAction.MPA_LOCK}`, er)),
+                { priority: MessageQueuePriority.MPA_LOCK } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPAction.MPA_LOCK}`, er));
+            break;
+        case MPActionExtended.MPA_COMPLETE:
+            await this.actionQueue.add(
+                async () => await this.escrowCompleteActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_COMPLETE}`, er)),
+                { priority: MessageQueuePriority.MPA_COMPLETE } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_COMPLETE}`, er));
+            break;
+        case MPActionExtended.MPA_SHIP:
+            await this.actionQueue.add(
+                async () => await this.orderItemShipActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_SHIP}`, er)),
+                { priority: MessageQueuePriority.MPA_SHIP } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_SHIP}`, er));
+            break;
+        case MPActionExtended.MPA_RELEASE:
+            await this.actionQueue.add(
+                async () => await this.escrowReleaseActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_RELEASE}`, er)),
+                { priority: MessageQueuePriority.MPA_RELEASE } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_RELEASE}`, er));
+            break;
+        case MPActionExtended.MPA_REFUND:
+            await this.actionQueue.add(
+                async () => await this.escrowRefundActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${MPActionExtended.MPA_REFUND}`, er)),
+                { priority: MessageQueuePriority.MPA_REFUND } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${MPActionExtended.MPA_REFUND}`, er));
+            break;
+        case GovernanceAction.MPA_PROPOSAL_ADD:
+            await this.actionQueue.add(async () => await this.proposalAddActionMessageProcessor.process(marketplaceEvent), {
+                priority: MessageQueuePriority.MPA_PROPOSAL_ADD
+            } as DefaultAddOptions);
+            break;
+        case GovernanceAction.MPA_VOTE:
+            await this.actionQueue.add(async () => await this.voteActionMessageProcessor.process(marketplaceEvent), {
+                priority: MessageQueuePriority.MPA_VOTE
+            } as DefaultAddOptions);
+            break;
+        case CommentAction.MPA_COMMENT_ADD:
+            await this.actionQueue.add(async () => await this.commentAddActionMessageProcessor.process(marketplaceEvent), {
+                priority: MessageQueuePriority.MPA_COMMENT_ADD
+            } as DefaultAddOptions);
+            break;
+        case CommentAction.MPA_CHAT_MESSAGE_ADD:
+            await this.actionQueue.add(
+                async () => await this.chatAddActionMessageProcessor.process(marketplaceEvent)
+                    .catch(er => this.log.error(`Process error for ${CommentAction.MPA_CHAT_MESSAGE_ADD}`, er)),
+                { priority: MessageQueuePriority.MPA_CHAT_ADD } as DefaultAddOptions
+            ).catch(er => this.log.error(`Queue add failure for ${CommentAction.MPA_CHAT_MESSAGE_ADD}`, er));
+            break;
+        default:
+            // a valid mp message, possibly should be handled by a bot
+            this.log.error('ERROR: Received a message type thats missing a Listener.');
+            throw new NotImplementedException();
         }
 
         // TODO: push notifications about messages to socket.io / gui
         //       -> refactor this: https://github.com/particl/particl-market/pull/469/files
         // TODO: push bot related messages to zmq
-
-        return;
     }
 
 }

@@ -46,9 +46,7 @@ export class OrderItem extends Bookshelf.Model<OrderItem> {
 
                     if (options.market) {
                         qb.innerJoin('listing_items', 'bid.listing_item_id', 'listing_items.id');
-                        qb.andWhere( qbInner => {
-                            return qbInner.where('listing_items.market', '=', options.market);
-                        });
+                        qb.andWhere('listing_items.market', '=', options.market);
                     }
 
                     if (options.listingItemId) {

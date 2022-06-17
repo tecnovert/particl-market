@@ -78,9 +78,9 @@ export class Environment {
         return this.isTruthy(process.env.REGTEST);
     }
 
-    public static isTruthy(bool: string): boolean {
+    public static isTruthy(bool?: string): boolean {
         try {
-            return bool.toLowerCase() === 'true';
+            return typeof bool === 'string' && bool.toLowerCase() === 'true';
         } catch (e) {
             return false;
         }

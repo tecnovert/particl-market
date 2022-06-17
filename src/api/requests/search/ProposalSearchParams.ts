@@ -2,13 +2,12 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { IsEnum, IsNotEmpty, ValidateIf } from 'class-validator';
+import { IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { SearchOrder } from '../../enums/SearchOrder';
-import * as _ from 'lodash';
 import { ProposalCategory } from '../../enums/ProposalCategory';
 
-// tslint:disable:variable-name
+
 export class ProposalSearchParams extends RequestBody {
 
     @IsEnum(SearchOrder)
@@ -25,4 +24,3 @@ export class ProposalSearchParams extends RequestBody {
 
     public hasFinalResult: boolean;
 }
-// tslint:enable:variable-name

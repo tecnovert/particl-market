@@ -26,12 +26,16 @@
         },
         "rootDirs": [],
         "typeRoots": [
-            "src/types"
+            "src/types",
+            "node_modules/@types"
         ],
-        "types": [],
+        "types": [
+            "node"
+        ],
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
     },
     "include": [
         "src/**/*"

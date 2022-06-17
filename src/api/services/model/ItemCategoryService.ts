@@ -72,13 +72,14 @@ export class ItemCategoryService {
      *
      * @param market
      * @param withRelated, return results with relations
-     * @param parentRelations, true (default): return results with multiple levels of parent relations,
-     *                         false: return with multiple child relations, basicly the full category tree
+     * @param parentRelations
+     * true (default): return results with multiple levels of parent relations,
+     * false: return with multiple child relations, basicly the full category tree
      */
     public async findRoot(market?: string, withRelated: boolean = true, parentRelations: boolean = false): Promise<ItemCategory> {
         const itemCategory = await this.itemCategoryRepo.findRoot(market, withRelated, parentRelations);
         if (itemCategory === null) {
-            this.log.warn(`The ROOT ItemCategory for the market=${market} was not found!`);
+            this.log.warn(`The ROOT ItemCategory for the market=${market ? market : 'undefined'} was not found!`);
             throw new NotFoundException(market);
         }
         return itemCategory;
@@ -87,8 +88,9 @@ export class ItemCategoryService {
     /**
      *
      * @param withRelated, return results with relations
-     * @param parentRelations, true (default): return results with multiple levels of parent relations,
-     *                         false: return with multiple child relations, basicly the full category tree
+     * @param parentRelations
+     * true (default): return results with multiple levels of parent relations,
+     * false: return with multiple child relations, basicly the full category tree
      */
     public async findDefaultRoot(withRelated: boolean = true, parentRelations: boolean = false): Promise<ItemCategory> {
         const itemCategory = await this.itemCategoryRepo.findDefaultRoot(withRelated, parentRelations);
@@ -106,8 +108,9 @@ export class ItemCategoryService {
      * @param withRelated, return results with relations
      */
     @validate()
-    public async search(@request(ItemCategorySearchParams) options: ItemCategorySearchParams,
-                        withRelated: boolean = true): Promise<Bookshelf.Collection<ItemCategory>> {
+    public async search(
+        @request(ItemCategorySearchParams) options: ItemCategorySearchParams, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<ItemCategory>> {
         return await this.itemCategoryRepo.search(options, withRelated);
     }
 
@@ -153,7 +156,7 @@ export class ItemCategoryService {
         // todo: propably fixed already
         await this.findRoot(market)
             .then(value => value.toJSON())
-            .catch(async reason => {
+            .catch(async () => {
                 this.log.debug('rootCategory not found, adding...');
                 return await this.insertRootItemCategoryForMarket(market).then(value => value.toJSON());
             });
@@ -175,7 +178,7 @@ export class ItemCategoryService {
             // if category for the key and market isn't found, create it
             parentCategory = await this.findOneByKeyAndMarket(keyForPath, market)
                 .then(value => value.toJSON())
-                .catch(async reason => {
+                .catch(async () => {
 
                     this.log.debug('adding missing category: ' + keyForPath + ', for market: ' + market);
                     // there was no child category, then create it
@@ -215,10 +218,7 @@ export class ItemCategoryService {
                 // this.log.debug('insertOrUpdate(), found:', category.id);
                 return await this.update(category.id, categoryRequest as ItemCategoryUpdateRequest);
             })
-            .catch(async reason => {
-                // this.log.debug('insertOrUpdate(), not found');
-                return await this.create(categoryRequest as ItemCategoryCreateRequest);
-            });
+            .catch(async () => await this.create(categoryRequest as ItemCategoryCreateRequest));
 
         // this.log.debug('insertOrUpdate(), updated: ', JSON.stringify(updated, null, 2));
         return updated;
@@ -230,8 +230,10 @@ export class ItemCategoryService {
      * @param categoryRequest
      * @param parents
      */
-    public async insertOrUpdateCategory(categoryRequest: ItemCategoryCreateRequest | ItemCategoryUpdateRequest,
-                                        parents?: resources.ItemCategory[]): Promise<resources.ItemCategory> {
+    public async insertOrUpdateCategory(
+        categoryRequest: ItemCategoryCreateRequest | ItemCategoryUpdateRequest,
+        parents?: resources.ItemCategory[]
+    ): Promise<resources.ItemCategory> {
 
         const path: string[] = [];
 

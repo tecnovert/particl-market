@@ -35,7 +35,7 @@ export class ShippingDestinationRemoveCommand extends BaseCommand implements Rpc
 
     /**
      * data.params[]:
-     *  [0]: shippingDestination: resources.ShippingDestination
+     * [0]: shippingDestination: resources.ShippingDestination
      *
      * @param data
      * @returns {Promise<ShippingDestination>}
@@ -48,8 +48,8 @@ export class ShippingDestinationRemoveCommand extends BaseCommand implements Rpc
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: country/countryCode
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: country/countryCode
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -77,7 +77,7 @@ export class ShippingDestinationRemoveCommand extends BaseCommand implements Rpc
         // make sure ListingItemTemplate with the id exists
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(listingItemTemplateId)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItemTemplate');
             });
 
@@ -87,9 +87,7 @@ export class ShippingDestinationRemoveCommand extends BaseCommand implements Rpc
         }
 
         if (!_.isNil(listingItemTemplate.ItemInformation.ShippingDestinations)) {
-            const shippingDestination = _.find(listingItemTemplate.ItemInformation.ShippingDestinations, destination => {
-                return destination.country === countryCode;
-            });
+            const shippingDestination = _.find(listingItemTemplate.ItemInformation.ShippingDestinations, destination => destination.country === countryCode);
 
             if (!shippingDestination) {
                 throw new ModelNotFoundException('ShippingDestination');

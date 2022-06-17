@@ -41,14 +41,14 @@ export class ZmqWorker {
         this.zmq = this.configure();
     }
 
-    public emit(eventType: string, msg: string): void {
+    public emit(/* eventType: string, msg: string */): void {
         // this.clientSocket.emit(eventType, msg);
     }
 
     private configure(): ParticlZmq {
         const host = (process.env.RPCHOSTNAME ? process.env.RPCHOSTNAME : '127.0.0.1');
         const port = (process.env.ZMQ_PORT ? process.env.ZMQ_PORT : 54235);
-        const addr = 'tcp://' + host + ':' + port;
+        const addr = `tcp://${host}:${port}`;
         this.log.debug('ZMQ: addr: ', addr);
 
         const opts = {
@@ -91,7 +91,7 @@ export class ZmqWorker {
 
         particld.on('connect:*', (uri, type) => {
             this.isConnected = true;
-            this.log.debug('ZMQ: connect:* ' + type + ', uri: ' + uri);
+            this.log.debug(`ZMQ: connect:* ${type}, uri: ${uri}`);
             if (this.actionQueue.isPaused) {
                 this.actionQueue.start();
             }
@@ -99,18 +99,18 @@ export class ZmqWorker {
 
         particld.on('close:*', (err, type) => {
             if (this.isConnected) {
-                this.log.debug('ZMQ: close:* ' + type + ', error: ' + err);
+                this.log.debug(`ZMQ: close:* ${type}, error: ${err}`);
             }
             this.isConnected = false;
             this.actionQueue.pause();
         });
 
-        particld.on('retry:*', (type, attempt) => {
+        particld.on('retry:*', (/* type, attempt */) => {
             // this.log.debug('ZMQ: retry:* ' + type + ', attempt: ' + attempt);
         });
 
         particld.on('error:*', (err, type) => {
-            this.log.debug('ZMQ: error:* ' + type + ', error: ' + err);
+            this.log.debug(`ZMQ: error:* ${type}, error: ${err}`);
         });
 
         this.log.info('ZMQ configured!');

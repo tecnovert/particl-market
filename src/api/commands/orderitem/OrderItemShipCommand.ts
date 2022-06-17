@@ -23,6 +23,7 @@ import { BidService } from '../../services/model/BidService';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 import { OrderItemShipActionService } from '../../services/action/OrderItemShipActionService';
 import { IdentityService } from '../../services/model/IdentityService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';
 
 
@@ -50,9 +51,9 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *   [0]: orderItem: resources.OrderItem
-     *   [1]: memo
-     *   [2]: identity, resources.Identity
+     * [0]: orderItem: resources.OrderItem
+     * [1]: memo
+     * [2]: identity, resources.Identity
      *
      * @param data
      * @returns {Promise<SmsgSendResponse>}
@@ -65,9 +66,7 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
         const identity: resources.Identity = data.params[2];
 
         const bid: resources.Bid = await this.bidService.findOne(orderItem.Bid.id).then(value => value.toJSON());
-        const bidAccept: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPActionExtended.MPA_COMPLETE;
-        });
+        const bidAccept: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPActionExtended.MPA_COMPLETE);
         if (!bidAccept) {
             throw new MessageException('No accepted Bid found.');
         }
@@ -78,7 +77,7 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
                 fromAddress: identity.address,
                 toAddress: orderItem.Order.buyer,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -93,6 +92,7 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
      * data.params[]:
      * [0]: orderItemId
      * [1]: memo
+     *
      * @param data
      * @returns {Promise<any>}
      */
@@ -100,7 +100,7 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
 
         const orderItem: resources.OrderItem = data.params[0];
-        const memo: string = data.params[1];
+        // const memo: string = data.params[1];
 
         const validOrderItemStatuses = [
             OrderItemStatus.ESCROW_COMPLETED
@@ -117,7 +117,7 @@ export class OrderItemShipCommand extends BaseCommand implements RpcCommandInter
 
         const identity: resources.Identity = await this.identityService.findOneByAddress(orderItem.Order.seller)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 

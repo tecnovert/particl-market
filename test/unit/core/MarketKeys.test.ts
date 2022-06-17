@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
 import { PublicKey, PrivateKey, Networks } from 'particl-bitcore-lib';
 
 describe('MarketKeys', () => {

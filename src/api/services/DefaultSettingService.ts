@@ -15,6 +15,10 @@ import { SettingValue } from '../enums/SettingValue';
 
 export class DefaultSettingService {
 
+    public static readonly FREE_MESSAGE_RETENTION_DAYS = 7;
+    public static readonly PAID_MESSAGE_RETENTION_DAYS = 10;
+
+
     public log: LoggerType;
 
     constructor(
@@ -30,10 +34,9 @@ export class DefaultSettingService {
      *
      * @param defaultProfile
      */
-    public async saveDefaultSettings(defaultProfile: resources.Profile): Promise<resources.Setting[]> {
+    public async saveDefaultSettings(/* defaultProfile: resources.Profile */): Promise<resources.Setting[]> {
 
-        const settings: resources.Setting[] = [];
-        return settings;
+        return [];
     }
 
     public async upgradeDefaultSettings(): Promise<void> {
@@ -58,13 +61,13 @@ export class DefaultSettingService {
         if (_.isEmpty(defaultProfileIdSetting)) {
             return await this.settingService.create({
                 key: SettingValue.APP_DEFAULT_PROFILE_ID.toString(),
-                value: '' + profileId
+                value: `${profileId}`
             } as SettingCreateRequest).then(value => value.toJSON());
 
         } else {
             return await this.settingService.update(defaultProfileIdSetting.id, {
                 key: SettingValue.APP_DEFAULT_PROFILE_ID.toString(),
-                value: '' + profileId
+                value: `${profileId}`
             } as SettingUpdateRequest).then(value => value.toJSON());
         }
     }

@@ -71,8 +71,7 @@ export class Market extends Bookshelf.Model<Market> {
     public static async fetchAllExpired(): Promise<Collection<Market>> {
         const collection = Market.forge<Model<Market>>()
             .query(qb => {
-                qb.where('expired_at', '<=', Date.now());
-                qb.whereNull('profile_id');
+                qb.whereNull('profile_id').andWhere('expired_at', '<=', Date.now());
             });
         return collection.fetchAll();
     }
@@ -102,15 +101,11 @@ export class Market extends Bookshelf.Model<Market> {
             .query( qb => {
 
                 if (options.type) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('markets.type', '=', options.type);
-                    });
+                    qb.andWhere('markets.type', '=', options.type);
                 }
 
                 if (options.region) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('markets.region', '=', options.region);
-                    });
+                    qb.andWhere('markets.region', '=', options.region);
                 }
 
                 if (options.searchString) {

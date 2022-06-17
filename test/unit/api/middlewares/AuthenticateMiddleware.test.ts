@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
+import 'reflect-metadata';
 import { AuthenticateMiddleware } from '../../../../src/api/middlewares/AuthenticateMiddleware';
 import { LogMock } from '../../lib/LogMock';
 import * as dotenv from 'dotenv';
@@ -19,7 +19,7 @@ describe('AuthenticateMiddleware', () => {
 
     beforeEach(() => {
         request = jest.fn();
-        authenticate = new AuthenticateMiddleware(LogMock, request);
+        authenticate = new AuthenticateMiddleware(LogMock);
         authHeader = 'Basic ' + Buffer.from([process.env.MARKET_RPC_USER, process.env.MARKET_RPC_PASSWORD].join(':')).toString('base64');
         req = {
             headers: {
@@ -57,7 +57,7 @@ describe('AuthenticateMiddleware', () => {
     });
 
     test('Should pass when authorization is disabled', () => {
-        process.env.MARKET_RPC_AUTH_DISABLED = true;
+        process.env.MARKET_RPC_AUTH_DISABLED = 'true';
         expect(process.env.MARKET_RPC_USER).toBe('test');
         expect(process.env.MARKET_RPC_PASSWORD).toBe('test');
         authenticate.use(req, res, next);

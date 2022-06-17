@@ -12,7 +12,6 @@ import { Types, Core, Targets } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
-import { Order } from '../../models/Order';
 import { BaseSearchCommand } from '../BaseSearchCommand';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
 import { OrderItemSearchOrderField } from '../../enums/SearchOrderField';
@@ -56,15 +55,15 @@ export class OrderItemSearchCommand extends BaseSearchCommand implements RpcComm
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: listingItem, resources.ListingItem, optional
-     *  [5]: status, OrderItemStatus, optional
-     *  [6]: buyerAddress, string, optional
-     *  [7]: sellerAddress, string, optional
-     *  [8]: market, string, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: listingItem, resources.ListingItem, optional
+     * [5]: status, OrderItemStatus, optional
+     * [6]: buyerAddress, string, optional
+     * [7]: sellerAddress, string, optional
+     * [8]: market, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<Bookshelf.Collection<Order>>}
@@ -96,15 +95,15 @@ export class OrderItemSearchCommand extends BaseSearchCommand implements RpcComm
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: listingItemId, number, optional
-     *  [5]: status, OrderItemStatus, optional // TODO: use OrderStatus
-     *  [6]: buyerAddress, string, optional
-     *  [7]: sellerAddress, string, optional
-     *  [8]: market, string, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: listingItemId, number, optional
+     * [5]: status, OrderItemStatus, optional // TODO: use OrderStatus
+     * [6]: buyerAddress, string, optional
+     * [7]: sellerAddress, string, optional
+     * [8]: market, string, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -112,13 +111,13 @@ export class OrderItemSearchCommand extends BaseSearchCommand implements RpcComm
     public async validate(data: RpcRequest): Promise<RpcRequest> {
         await super.validate(data); // validates the basic search params, see: BaseSearchCommand.validateSearchParams()
 
-        const listingItem: resources.ListingItem = data.params[4];
+        // const listingItem: resources.ListingItem = data.params[4];
         const status = data.params[5];              // optional
         const buyerAddress = data.params[6];        // optional
         const sellerAddress = data.params[7];       // optional
         const market = data.params[8];              // optional
 
-/*
+        /*
         if (status === '*') {
             status = undefined;
         }
@@ -128,7 +127,7 @@ export class OrderItemSearchCommand extends BaseSearchCommand implements RpcComm
         buyerAddress = buyerAddress !== '*' ? buyerAddress : undefined;
         sellerAddress = sellerAddress !== '*' ? sellerAddress : undefined;
         market = market !== '*' ? market : undefined;
-*/
+        */
 
         if (!_.isNil(market)) {
             await this.marketService.findAllByReceiveAddress(market)

@@ -40,8 +40,8 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class MarketImageAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params, max-len */
     constructor(
-        // tslint:disable:max-line-length
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -58,7 +58,6 @@ export class MarketImageAddActionService extends BaseActionService {
         @inject(Types.MessageValidator) @named(Targets.MessageValidator.MarketImageAddValidator) public validator: MarketImageAddValidator,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-        // tslint:enable:max-line-length
     ) {
         super(MPActionExtended.MPA_MARKET_IMAGE_ADD,
             smsgService,
@@ -70,6 +69,7 @@ export class MarketImageAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params, max-len */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -99,8 +99,12 @@ export class MarketImageAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: ListingItemAddRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: ListingItemAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
@@ -114,10 +118,12 @@ export class MarketImageAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: ListingItemAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: ListingItemAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         const actionMessage: MarketImageAddMessage = marketplaceMessage.action as MarketImageAddMessage;
 
@@ -151,7 +157,7 @@ export class MarketImageAddActionService extends BaseActionService {
                     } as ImageUpdateRequest;
 
                     // update the image with the real data
-                    await this.imageService.update(image.id, updateRequest).then(value => {
+                    await this.imageService.update(image.id, updateRequest).then(() => {
                         // this.log.debug('updated: ', JSON.stringify(value.toJSON(), null, 2));
                     });
                 }
@@ -161,7 +167,7 @@ export class MarketImageAddActionService extends BaseActionService {
                     actionMessage,
                     smsgMessage
                 } as ImageCreateParams);
-                await this.imageService.create(createRequest).then(value => {
+                await this.imageService.create(createRequest).then(() => {
                     // this.log.debug('created: ', JSON.stringify(value.toJSON(), null, 2));
                 });
             }
@@ -169,9 +175,11 @@ export class MarketImageAddActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         const imageAddMessage: MarketImageAddMessage = marketplaceMessage.action as MarketImageAddMessage;
 

@@ -2,12 +2,12 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as myExpress from './my-express';
+import { Request, Response, NextFunction } from 'express';
 
 declare namespace interfaces {
 
     interface Middleware {
-        use(req: myExpress.Request, res: myExpress.Response, next: myExpress.NextFunction): void;
+        use(req: Request, res: Response, next: NextFunction): void;
     }
 
     interface Listener {
@@ -26,9 +26,11 @@ declare namespace interfaces {
         error(message: string, ...args: any[]): void;
     }
 
+    /* eslint-disable @typescript-eslint/prefer-function-type */
     interface LoggerAdapterConstructor {
         new (scope: string): LoggerAdapter;
     }
+    /* eslint-enable @typescript-eslint/prefer-function-type */
 
 }
 

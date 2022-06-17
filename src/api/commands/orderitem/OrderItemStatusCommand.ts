@@ -10,7 +10,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { ListingItem } from '../../models/ListingItem';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
@@ -47,9 +46,9 @@ export class OrderItemStatusCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: itemhash, string
-     *  [1]: buyer, string
-     *  [2]: seller, string
+     * [0]: itemhash, string
+     * [1]: buyer, string
+     * [2]: seller, string
      *
      * @param data
      * @returns {Promise<ListingItem>}
@@ -70,15 +69,11 @@ export class OrderItemStatusCommand extends BaseCommand implements RpcCommandInt
         let mpaBids: resources.Bid[] = await this.bidService.search(searchParams).then(value => value.toJSON());
 
         if (!_.isNil(seller)) {
-            mpaBids = _.filter(mpaBids, bid => {
-                return bid.ListingItem.seller === seller;
-            });
+            mpaBids = _.filter(mpaBids, bid => bid.ListingItem.seller === seller);
         }
 
         if (!_.isNil(itemHash)) {
-            mpaBids = _.filter(mpaBids, bid => {
-                return bid.ListingItem.hash === itemHash;
-            });
+            mpaBids = _.filter(mpaBids, bid => bid.ListingItem.hash === itemHash);
         }
 
         const orderItemStatuses: OrderItemStatusResponse[] = [];
@@ -103,9 +98,9 @@ export class OrderItemStatusCommand extends BaseCommand implements RpcCommandInt
     }
 
     /**
-     *  [0]: itemhash, string, optional
-     *  [1]: buyer, string, optional
-     *  [2]: seller, string, optional
+     * [0]: itemhash, string, optional
+     * [1]: buyer, string, optional
+     * [2]: seller, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

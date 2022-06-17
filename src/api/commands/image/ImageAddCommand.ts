@@ -63,16 +63,16 @@ export class ImageAddCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * data.params[]:
-     *  [0]: typeSpecifier: string, template | market
-     *  [1]: type: resources.ListingItemTemplate | market: resources.Market
-     *  [2]: protocol
-     *  [3]: data|uri
-     *  [4]: featured, optional, default: false
-     *  [5]: skipResize, optional, default: false
-     *  [6]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [7]: scalingFraction, default: 0.9
-     *  [8]: qualityFraction, default: 0.9
-     *  [9]: maxIterations, default: 10
+     * [0]: typeSpecifier: string, template | market
+     * [1]: type: resources.ListingItemTemplate | market: resources.Market
+     * [2]: protocol
+     * [3]: data|uri
+     * [4]: featured, optional, default: false
+     * [5]: skipResize, optional, default: false
+     * [6]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [7]: scalingFraction, default: 0.9
+     * [8]: qualityFraction, default: 0.9
+     * [9]: maxIterations, default: 10
      *
      * @param data
      * @returns {Promise<Image>}
@@ -118,9 +118,8 @@ export class ImageAddCommand extends BaseCommand implements RpcCommandInterface<
 
             let listingItemTemplate: resources.ListingItemTemplate = type as resources.ListingItemTemplate;
             listingItemTemplate = await this.listingItemTemplateService.findOne(listingItemTemplate.id).then(value => value.toJSON());
-            listingItemTemplate = await this.listingItemTemplateService.createResizedTemplateImages(listingItemTemplate, messageVersionToFit,
+            await this.listingItemTemplateService.createResizedTemplateImages(listingItemTemplate, messageVersionToFit,
                 scalingFraction, qualityFraction, maxIterations).then(value => value.toJSON());
-            // this.log.debug('listingItemTemplate: ', JSON.stringify(listingItemTemplate, null, 2));
 
         } else if (!skipResize && typeSpecifier === 'market') {
             image = await this.imageService.createResizedVersion(image.id, messageVersionToFit, scalingFraction, qualityFraction, maxIterations)
@@ -132,16 +131,16 @@ export class ImageAddCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * data.params[]:
-     *  [0]: typeSpecifier: string, template | market
-     *  [1]: id: number
-     *  [2]: protocol
-     *  [3]: data|uri
-     *  [4]: featured, optional, default: false
-     *  [5]: skipResize, optional, default: false
-     *  [6]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [7]: scalingFraction, default: 0.9
-     *  [8]: qualityFraction, default: 0.9
-     *  [9]: maxIterations, default: 10
+     * [0]: typeSpecifier: string, template | market
+     * [1]: id: number
+     * [2]: protocol
+     * [3]: data|uri
+     * [4]: featured, optional, default: false
+     * [5]: skipResize, optional, default: false
+     * [6]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [7]: scalingFraction, default: 0.9
+     * [8]: qualityFraction, default: 0.9
+     * [9]: maxIterations, default: 10
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -157,35 +156,35 @@ export class ImageAddCommand extends BaseCommand implements RpcCommandInterface<
         const skipResize = data.params[5];
 
         switch (typeSpecifier) {
-            case 'template':
-                const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(id)
-                    .then(value => value.toJSON())
-                    .catch(reason => {
-                        throw new ModelNotFoundException('ListingItemTemplate');
-                    });
+        case 'template':
+            const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(id)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItemTemplate');
+                });
 
-                // make sure ItemInformation exists
-                if (_.isEmpty(listingItemTemplate.ItemInformation)) {
-                    throw new ModelNotFoundException('ItemInformation');
-                }
+            // make sure ItemInformation exists
+            if (_.isEmpty(listingItemTemplate.ItemInformation)) {
+                throw new ModelNotFoundException('ItemInformation');
+            }
 
-                const isModifiable = await this.listingItemTemplateService.isModifiable(listingItemTemplate.id);
-                if (!isModifiable) {
-                    throw new ModelNotModifiableException('ListingItemTemplate');
-                }
+            const isModifiable = await this.listingItemTemplateService.isModifiable(listingItemTemplate.id);
+            if (!isModifiable) {
+                throw new ModelNotModifiableException('ListingItemTemplate');
+            }
 
-                data.params[1] = listingItemTemplate;
-                break;
+            data.params[1] = listingItemTemplate;
+            break;
 
-            case 'market':
-                data.params[1] = await this.marketService.findOne(id)
-                    .then(value => value.toJSON())
-                    .catch(reason => {
-                        throw new ModelNotFoundException('Market');
-                    });
-                break;
-            default:
-                throw new InvalidParamException('typeSpecifier', 'template|item|market');
+        case 'market':
+            data.params[1] = await this.marketService.findOne(id)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('Market');
+                });
+            break;
+        default:
+            throw new InvalidParamException('typeSpecifier', 'template|item|market');
         }
 
         data.params[2] = protocol;

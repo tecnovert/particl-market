@@ -2,6 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
+import { Request, Response, NextFunction } from 'express';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../core/Logger';
 import { Types, Core, Targets } from '../../constants';
@@ -19,24 +20,24 @@ export class RpcMiddleware implements interfaces.Middleware {
         this.log = new Logger(__filename);
     }
 
-    public use = (req: myExpress.Request, res: myExpress.Response, next: myExpress.NextFunction): void => {
+    public use = (req: Request, res: Response, next: NextFunction): void => {
 
         // fail if server isn't started and the method is anything else than market or wallet
         // we need to be able to set the default market and possibly create a wallet, while the server
         // is waiting for the default market settings
         if (!this.serverStartedListener.isStarted && (req.body.method !== 'market' && req.body.method !== 'wallet')) {
-            return res.failed(503, 'Server not fully started yet, is particld running?');
+            return this.setFailureResponse(res, 503, 'Server not fully started yet, is particld running?');
         }
 
         // validate rpc request
         if (this.isValidVersionTwoRequest(req)) {
             next();
         } else {
-            return res.failed(400, 'Invalid JSON-RPC 2.0 request');
+            return this.setFailureResponse(res, 400, 'Invalid JSON-RPC 2.0 request');
         }
-    }
+    };
 
-    public isValidVersionTwoRequest(request: myExpress.Request): boolean {
+    public isValidVersionTwoRequest(request: Request): boolean {
         return (
             request
             && request.headers
@@ -58,5 +59,15 @@ export class RpcMiddleware implements interfaces.Middleware {
                 || request.body.id === null
             )
         );
+    }
+
+
+    private setFailureResponse(res: Response, errCode: number, message: string, error?: any): any {
+        res.status(errCode);
+        return res.json({
+            success: false,
+            message,
+            ...{ error }
+        });
     }
 }

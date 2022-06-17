@@ -22,8 +22,8 @@ export class EscrowRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Escrow>> {
-        const list = await this.EscrowModel.fetchAll();
-        return list as Bookshelf.Collection<Escrow>;
+        const list = await this.EscrowModel.fetchAll<Escrow>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Escrow> {

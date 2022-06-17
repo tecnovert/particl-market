@@ -10,6 +10,7 @@ export interface ActionMessageProcessorInterface extends MessageProcessorInterfa
 
     /**
      * handle the event
+     *
      * @param event
      */
     onEvent(event: MarketplaceMessageEvent): Promise<SmsgMessageStatus>;

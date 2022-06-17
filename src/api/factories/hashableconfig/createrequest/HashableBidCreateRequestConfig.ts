@@ -10,10 +10,10 @@ export class HashableBidCreateRequestConfig extends BaseHashableConfig {
     public fields = [{
         from: 'generatedAt',
         to: HashableCommonField.GENERATED
-// set using the HashableFieldValueConfig
-//    }, {
-//        from: 'item',
-//        to: HashableBidField.ITEM_HASH
+    // set using the HashableFieldValueConfig
+    //    }, {
+    //        from: 'item',
+    //        to: HashableBidField.ITEM_HASH
     }, {
         from: 'address.firstName',
         to: HashableBidField.BUYER_SHIPPING_FIRSTNAME
@@ -32,14 +32,14 @@ export class HashableBidCreateRequestConfig extends BaseHashableConfig {
     }, {
         from: 'address.country',
         to: HashableBidField.BUYER_SHIPPING_COUNTRY
-// set using the HashableFieldValueConfig
-//    }, {
-//        from: 'buyer.payment.escrow',
-//        to: HashableBidField.PAYMENT_ESCROW_TYPE
-// set using the HashableFieldValueConfig
-//    }, {
-//        from: 'buyer.payment.cryptocurrency',
-//        to: HashableBidField.PAYMENT_CRYPTO
+    // set using the HashableFieldValueConfig
+    //    }, {
+    //        from: 'buyer.payment.escrow',
+    //        to: HashableBidField.PAYMENT_ESCROW_TYPE
+    // set using the HashableFieldValueConfig
+    //    }, {
+    //        from: 'buyer.payment.cryptocurrency',
+    //        to: HashableBidField.PAYMENT_CRYPTO
     }] as HashableFieldConfig[];
 
     constructor(values: HashableFieldValueConfig[]) {

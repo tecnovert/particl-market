@@ -23,7 +23,6 @@ import { CommentSearchOrderField } from '../../enums/SearchOrderField';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
 import { MarketService} from '../../services/model/MarketService';
 import { IdentityService } from '../../services/model/IdentityService';
-import { MessageException } from '../../exceptions/MessageException';
 import { CommandParamValidationRules, EnumValidationRule, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';
 
 
@@ -42,16 +41,16 @@ export class CommentSearchCommand extends BaseSearchCommand implements RpcComman
 
     /**
      * params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: type, CommentType
-     *  [5]: receiver, string (when type === LISTINGITEM_QUESTION_AND_ANSWERS -> Market.receiveAddress)
-     *  [6]: target, string, optional (when type === LISTINGITEM_QUESTION_AND_ANSWERS -> ListingItem.hash)
-     *  [7]: sender, string
-     *  [8]: parentComment, resources.Comment, optional
-     *  [9]: ignoreSenders, string[]
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: type, CommentType
+     * [5]: receiver, string (when type === LISTINGITEM_QUESTION_AND_ANSWERS -> Market.receiveAddress)
+     * [6]: target, string, optional (when type === LISTINGITEM_QUESTION_AND_ANSWERS -> ListingItem.hash)
+     * [7]: sender, string
+     * [8]: parentComment, resources.Comment, optional
+     * [9]: ignoreSenders, string[]
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -101,7 +100,7 @@ export class CommentSearchCommand extends BaseSearchCommand implements RpcComman
         const type: CommentCategory = data.params[4];
         const receiver: string = data.params[5];
         const target: string = data.params[6];      // optional
-        const sender: string = data.params[7];      // optional
+        // const sender: string = data.params[7];      // optional
         const parentCommentHash = data.params[8];   // optional
 
         // TODO: add support for other CommentTypes

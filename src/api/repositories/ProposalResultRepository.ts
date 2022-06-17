@@ -22,8 +22,8 @@ export class ProposalResultRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ProposalResult>> {
-        const list = await this.ProposalResultModel.fetchAll();
-        return list as Bookshelf.Collection<ProposalResult>;
+        const list = await this.ProposalResultModel.fetchAll<ProposalResult>();
+        return list;
     }
 
     public async findAllByProposalHash(hash: string, withRelated: boolean = true): Promise<Bookshelf.Collection<ProposalResult>> {
@@ -39,8 +39,8 @@ export class ProposalResultRepository {
         try {
             const proposalResultCreated = await proposalResult.save();
             return await this.ProposalResultModel.fetchById(proposalResultCreated.id);
-        } catch (error) {
-            this.log.error('Could not create the proposalResult! ' + error);
+        } catch (error: any) {
+            this.log.error(`Could not create the proposalResult! ${error}`);
             throw new DatabaseException('Could not create the proposalResult!', error);
         }
     }

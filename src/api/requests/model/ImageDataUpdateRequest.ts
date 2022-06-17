@@ -2,12 +2,12 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { IsEnum, IsNotEmpty, ValidateIf } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
-// tslint:disable:variable-name
+
 export class ImageDataUpdateRequest extends RequestBody implements ModelRequestInterface {
 
     // @IsNotEmpty()
@@ -30,4 +30,3 @@ export class ImageDataUpdateRequest extends RequestBody implements ModelRequestI
     public originalName: string;
 
 }
-// tslint:enable:variable-name

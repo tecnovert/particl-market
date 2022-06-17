@@ -73,9 +73,7 @@ export class IdentityService {
 
     public async findProfileIdentity(profileId: number, withRelated: boolean = true): Promise<Identity> {
         const identities: resources.Identity[] = await this.identityRepository.findAllByProfileId(profileId, withRelated).then(value => value.toJSON());
-        const identity: resources.Identity | undefined = _.find(identities, p => {
-            return p.type === IdentityType.PROFILE;
-        });
+        const identity: resources.Identity | undefined = _.find(identities, p => p.type === IdentityType.PROFILE);
         if (!identity) {
             this.log.warn(`Profile with the id=${profileId} has no Identity!`);
             throw new ModelNotFoundException('Identity');
@@ -92,6 +90,7 @@ export class IdentityService {
         return await this.findOne(identity.id);
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * create a new Identity for Market
      *
@@ -113,6 +112,7 @@ export class IdentityService {
      * @param name
      * @param isDefault
      */
+    /* eslint-enable jsdoc/check-indentation */
     public async createMarketIdentityForProfile(profile: resources.Profile, name: string, isDefault: boolean = false): Promise<Identity> {
 
         // first get the Profile Identity
@@ -126,7 +126,9 @@ export class IdentityService {
         // figure out the next keypath: amountOfMarkets, for the default one its 0
         const pathIndex = isDefault ? 0 : profile.Markets.length;
 
+        /* eslint-disable */
         const keyPath = '4444446\'/' + pathIndex + '\'';
+        /* eslint-enable */
         const keyInfo: RpcExtKeyResult = await this.coreRpcService.extKeyInfo(profileIdentity.wallet, masterKey.evkey, keyPath);
         // this.log.debug('createMarketIdentityForProfile(), keyInfo (' + pathIndex + '): ', JSON.stringify(keyInfo, null, 2));
 
@@ -135,7 +137,7 @@ export class IdentityService {
 
         const marketWalletName = path.join('profiles', profile.name, name);
         await this.createOrLoadWalletAndReturnCreated(marketWalletName)
-            .then(async created => {
+            .then(async () => {
                 // listwalletdir
                 // createwallet
                 // loadwallet
@@ -145,7 +147,7 @@ export class IdentityService {
         const extKeyAlt: string = await this.coreRpcService.extKeyAltVersion(keyInfo.key_info.result);
 
         // import the key and set up the market wallet
-        await this.coreRpcService.extKeyImport(marketWalletName, extKeyAlt/*masterKey.evkey*/, 'master key', true, true)
+        await this.coreRpcService.extKeyImport(marketWalletName, extKeyAlt /* masterKey.evkey */, 'master key', true, true)
             .then(async extKeyImported => {
                 // this.log.debug('createMarketIdentityForProfile(), extKeyImported: ', JSON.stringify(extKeyImported, null, 2));
                 // Set a private ext key as current master key, adds key_type: Master & current_master: true
@@ -271,9 +273,9 @@ export class IdentityService {
 
     public async getWalletMasterKey(walletName: string): Promise<RpcExtKey> {
         const extKeys: RpcExtKey[] = await this.coreRpcService.extKeyList(walletName, true);
-        const masterKey: RpcExtKey | undefined = _.find(extKeys, key => {
-            return key.type === 'Loose' && key.key_type === 'Master' && key.label === 'Master Key - bip44 derived.' && key.current_master === 'true';
-        });
+        const masterKey: RpcExtKey | undefined = _.find(extKeys, key =>
+            key.type === 'Loose' && key.key_type === 'Master' && key.label === 'Master Key - bip44 derived.' && key.current_master === 'true'
+        );
         if (!masterKey) {
             throw new MessageException('Could not find Profile wallets Master key.');
         }
@@ -339,7 +341,7 @@ export class IdentityService {
         const selectedChars = [...capsChars, ...lowerChars, ...numChars, ...uniqueChars];
 
         return [...Array(length)]
-            .map(i => selectedChars[Math.random() * selectedChars.length | 0])
+            .map(() => selectedChars[Math.random() * selectedChars.length | 0])
             .join('');
     }
 

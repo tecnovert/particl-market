@@ -22,8 +22,8 @@ export class CryptocurrencyAddressRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<CryptocurrencyAddress>> {
-        const list = await this.CryptocurrencyAddressModel.fetchAll();
-        return list as Bookshelf.Collection<CryptocurrencyAddress>;
+        const list = await this.CryptocurrencyAddressModel.fetchAll<CryptocurrencyAddress>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<CryptocurrencyAddress> {
@@ -35,7 +35,7 @@ export class CryptocurrencyAddressRepository {
         try {
             const cryptocurrencyAddressCreated = await cryptocurrencyAddress.save();
             return this.CryptocurrencyAddressModel.fetchById(cryptocurrencyAddressCreated.id);
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not create the cryptocurrencyAddress!', error);
         }
@@ -62,7 +62,7 @@ export class CryptocurrencyAddressRepository {
         try {
             await cryptocurrencyAddress.destroy();
             return;
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not delete the cryptocurrencyAddress!', error);
         }

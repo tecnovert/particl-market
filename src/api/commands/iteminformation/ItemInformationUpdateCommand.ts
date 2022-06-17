@@ -43,7 +43,7 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
                 new IdValidationRule('listingItemTemplateId', true, this.listingItemTemplateService),
                 new StringValidationRule('title', true),
                 new StringValidationRule('shortDescription', true, undefined,
-                    async (value, index, allValues) => {
+                    async (value) => {
                         if (value.length > 500) {   // todo: check
                             throw new InvalidParamException('shortDescription');
                         }
@@ -58,12 +58,12 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: title
-     *  [2]: shortDescription
-     *  [3]: longDescription
-     *  [4]: productCode
-     *  [5]: itemCategory: resources.ItemCategory, optional
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: title
+     * [2]: shortDescription
+     * [3]: longDescription
+     * [4]: productCode
+     * [5]: itemCategory: resources.ItemCategory, optional
      *
      * @param data
      * @returns {Promise<ItemInformation>}
@@ -91,12 +91,12 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: title
-     *  [2]: shortDescription
-     *  [3]: longDescription
-     *  [4]: productCode
-     *  [5]: itemCategory: resources.ItemCategory, optional
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: title
+     * [2]: shortDescription
+     * [3]: longDescription
+     * [4]: productCode
+     * [5]: itemCategory: resources.ItemCategory, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -105,9 +105,9 @@ export class ItemInformationUpdateCommand extends BaseCommand implements RpcComm
         await super.validate(data);
 
         const listingItemTemplate: resources.ListingItemTemplate = data.params[0];  // required
-        const title = data.params[1];                                               // required
-        const shortDescription = data.params[2];                                    // required
-        const longDescription = data.params[3];                                     // required
+        // const title = data.params[1];                                               // required
+        // const shortDescription = data.params[2];                                    // required
+        // const longDescription = data.params[3];                                     // required
         const itemCategory: resources.ItemCategory = data.params[5];                    // optional
 
         // make sure ItemInformation exists

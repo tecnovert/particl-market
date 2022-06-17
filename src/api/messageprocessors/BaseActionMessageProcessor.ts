@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { ActionMessageProcessorInterface } from './ActionMessageProcessorInterface';
 import { SmsgMessageService } from '../services/model/SmsgMessageService';
@@ -34,13 +33,14 @@ export abstract class BaseActionMessageProcessor implements ActionMessageProcess
     public actionService: ActionServiceInterface;
 
     constructor(@unmanaged() eventType: ActionMessageTypes,
-                @unmanaged() actionService: ActionServiceInterface,
-                @unmanaged() smsgMessageService: SmsgMessageService,
-                @unmanaged() bidService: BidService,
-                @unmanaged() proposalService: ProposalService,
-                @unmanaged() notificationService: NotificationService,
-                @unmanaged() validator: ActionMessageValidatorInterface,
-                @unmanaged() Logger: typeof LoggerType) {
+        @unmanaged() actionService: ActionServiceInterface,
+        @unmanaged() smsgMessageService: SmsgMessageService,
+        @unmanaged() bidService: BidService,
+        @unmanaged() proposalService: ProposalService,
+        @unmanaged() notificationService: NotificationService,
+        @unmanaged() validator: ActionMessageValidatorInterface,
+        @unmanaged() Logger: typeof LoggerType
+    ) {
         this.eventType = eventType;
         this.actionService = actionService;
         this.smsgMessageService = smsgMessageService;
@@ -53,11 +53,13 @@ export abstract class BaseActionMessageProcessor implements ActionMessageProcess
 
     /**
      * handle the event, called from process()
+     *
      * @param event
      */
-    public abstract async onEvent(event: MarketplaceMessageEvent): Promise<SmsgMessageStatus>;
+    public abstract onEvent(event: MarketplaceMessageEvent): Promise<SmsgMessageStatus>;
 
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * - validate the received MarketplaceMessage
      *   - on failure: update the SmsgMessage.status to SmsgMessageStatus.VALIDATION_FAILED
@@ -68,6 +70,7 @@ export abstract class BaseActionMessageProcessor implements ActionMessageProcess
      * @param event
      * @returns {Promise<void>}
      */
+    /* eslint-enable jsdoc/check-indentation */
     public async process(event: MarketplaceMessageEvent): Promise<void> {
 
         const isBlacklisted = await this.actionService.isBlacklisted([event.smsgMessage.to]);
@@ -83,10 +86,10 @@ export abstract class BaseActionMessageProcessor implements ActionMessageProcess
 
         const validContent = await this.validator.validateMessage(event.marketplaceMessage, ActionDirection.INCOMING, event.smsgMessage)
             .then(value => value)
-            .catch(reason => false);
+            .catch(() => false);
         const validSequence = await this.validator.validateSequence(event.marketplaceMessage, ActionDirection.INCOMING, event.smsgMessage)
             .then(value => value)
-            .catch(reason => false);
+            .catch(() => false);
 
         let updatedSmsgMessage: resources.SmsgMessage = {} as resources.SmsgMessage;
 
@@ -157,7 +160,8 @@ export abstract class BaseActionMessageProcessor implements ActionMessageProcess
                     market: notification.payload.market,
                     category: notification.payload.category
                 } as NotificationCreateRequest;
-                const savedNotification: resources.Notification = await this.notificationService.create(createRequest)
+
+                await this.notificationService.create(createRequest)
                     .then(value => value.toJSON())
                     .catch(reason => {
                         this.log.debug('ERROR:', reason);

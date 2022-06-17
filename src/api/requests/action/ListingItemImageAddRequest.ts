@@ -19,8 +19,7 @@ export class ListingItemImageAddRequest extends RequestBody implements ActionReq
     @IsNotEmpty()
     public listingItem: resources.ListingItem | resources.ListingItemTemplate;
 
-    public withData: boolean;   // whether the data is included in the message or not
-                                // (... ProtocolDSN LOCAL or SMSG)
+    public withData: boolean;   // whether the data is included in the message or not (... ProtocolDSN LOCAL or SMSG)
 
     @IsNotEmpty()
     // public seller: resources.Identity;

@@ -42,9 +42,9 @@ export class CommentCountCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: type, CommentType
-     *  [1]: target
-     *  [2]: parentComment: resources.Comment, optional
+     * [0]: type, CommentType
+     * [1]: target
+     * [2]: parentComment: resources.Comment, optional
      *
      * @param data
      * @returns {Promise<Comment>}
@@ -66,9 +66,9 @@ export class CommentCountCommand extends BaseCommand implements RpcCommandInterf
      * TODO: the params here might need some rethinking
      *
      * data.params[]:
-     *  [0]: type, CommentType
-     *  [1]: target
-     *  [2]: parentCommentHash, optional
+     * [0]: type, CommentType
+     * [1]: target
+     * [2]: parentCommentHash, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}

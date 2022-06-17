@@ -21,8 +21,8 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
 
     public static async createAll(datas: SmsgMessageCreateRequest[]): Promise<string[]> {
         await Database.knex
-                .insert(datas, 'id')
-                .into('smsg_messages');
+            .insert(datas, 'id')
+            .into('smsg_messages');
 
         return datas.map(msg => msg.msgid);
     }
@@ -48,21 +48,15 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
             .query(qb => {
 
                 if (!_.isEmpty(options.msgid)) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('smsg_messages.msgid', '=', options.msgid);
-                    });
+                    qb.andWhere('smsg_messages.msgid', '=', options.msgid);
                 }
 
                 if (!_.isEmpty(options.status)) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('smsg_messages.status', '=', options.status.toString());
-                    });
+                    qb.andWhere('smsg_messages.status', '=', options.status.toString());
                 }
 
                 if (!_.isEmpty(options.direction)) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('smsg_messages.direction', '=', options.direction.toString());
-                    });
+                    qb.andWhere('smsg_messages.direction', '=', options.direction.toString());
                 }
 
                 if (!_.isEmpty(options.types)) {
@@ -124,9 +118,11 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
         return SmsgMessage.where<SmsgMessage>({ id: value }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
 
-    public static async fetchByMsgIdAndDirection(value: string,
-                                                 direction: ActionDirection = ActionDirection.INCOMING,
-                                                 withRelated: boolean = true): Promise<SmsgMessage> {
+    public static async fetchByMsgIdAndDirection(
+        value: string,
+        direction: ActionDirection = ActionDirection.INCOMING,
+        withRelated: boolean = true
+    ): Promise<SmsgMessage> {
         return SmsgMessage.where<SmsgMessage>({ msgid: value, direction }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
 

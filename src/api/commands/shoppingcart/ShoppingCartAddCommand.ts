@@ -37,8 +37,8 @@ export class ShoppingCartAddCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: identity: resources.Identity
-     *  [1]: name
+     * [0]: identity: resources.Identity
+     * [1]: name
      *
      * @param data
      * @returns {Promise<ShoppingCart>}
@@ -54,8 +54,8 @@ export class ShoppingCartAddCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: identityId
-     *  [1]: name, optional
+     * [0]: identityId
+     * [1]: name, optional
      *
      * @param data
      * @returns {Promise<ShoppingCart>}
@@ -81,7 +81,7 @@ export class ShoppingCartAddCommand extends BaseCommand implements RpcCommandInt
         // make sure Profile with the id exists
         data.params[0] = await this.identityService.findOne(identityId)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 

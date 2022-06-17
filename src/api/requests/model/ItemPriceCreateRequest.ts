@@ -2,14 +2,14 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import {IsNotEmpty, IsEnum, IsPositive, Min} from 'class-validator';
+import {IsNotEmpty, IsEnum } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { Cryptocurrency } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { ShippingPriceCreateRequest } from './ShippingPriceCreateRequest';
 import { CryptocurrencyAddressCreateRequest } from './CryptocurrencyAddressCreateRequest';
 import { ModelRequestInterface } from './ModelRequestInterface';
 
-// tslint:disable:variable-name
+
 export class ItemPriceCreateRequest extends RequestBody implements ModelRequestInterface {
 
     @IsNotEmpty()
@@ -26,4 +26,3 @@ export class ItemPriceCreateRequest extends RequestBody implements ModelRequestI
 
     public cryptocurrencyAddress: CryptocurrencyAddressCreateRequest;
 }
-// tslint:enable:variable-name

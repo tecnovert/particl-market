@@ -20,7 +20,6 @@ import { ProposalResultService } from './ProposalResultService';
 import { MarketService } from './MarketService';
 import { ItemVote } from '../../enums/ItemVote';
 import { CoreRpcService } from '../CoreRpcService';
-import {MessageException} from '../../exceptions/MessageException';
 
 
 export class FlaggedItemService {
@@ -91,53 +90,53 @@ export class FlaggedItemService {
         const flaggedItems: resources.FlaggedItem[] = [];
 
         switch (proposal.category) {
-            case ProposalCategory.ITEM_VOTE:
-                const listingItems: resources.ListingItem[] = await this.listingItemService.findAllByHashAndMarketReceiveAddress(
-                    proposal.target,
-                    proposal.market
-                ).then(value => value.toJSON());
+        case ProposalCategory.ITEM_VOTE:
+            const listingItems: resources.ListingItem[] = await this.listingItemService.findAllByHashAndMarketReceiveAddress(
+                proposal.target,
+                proposal.market
+            ).then(value => value.toJSON());
 
-                for (const listingItem of listingItems) {
-                    let flaggedItem: resources.FlaggedItem;
-                    if (_.isEmpty(listingItem.FlaggedItem)) {
-                        flaggedItem = await this.create({
-                            proposal_id: proposal.id,
-                            listing_item_id: listingItem.id,
-                            reason: proposal.description
-                        } as FlaggedItemCreateRequest).then(value => value.toJSON());
-                    } else {
-                        flaggedItem = await this.findOne(listingItem.FlaggedItem.id).then(value => value.toJSON());
-                    }
-                    flaggedItems.push(flaggedItem);
+            for (const listingItem of listingItems) {
+                let flaggedItem: resources.FlaggedItem;
+                if (_.isEmpty(listingItem.FlaggedItem)) {
+                    flaggedItem = await this.create({
+                        proposal_id: proposal.id,
+                        listing_item_id: listingItem.id,
+                        reason: proposal.description
+                    } as FlaggedItemCreateRequest).then(value => value.toJSON());
+                } else {
+                    flaggedItem = await this.findOne(listingItem.FlaggedItem.id).then(value => value.toJSON());
                 }
-                break;
+                flaggedItems.push(flaggedItem);
+            }
+            break;
 
-            case ProposalCategory.MARKET_VOTE:
+        case ProposalCategory.MARKET_VOTE:
 
-                const marketsByAddress: resources.Market[] = await this.marketService.findAllByReceiveAddress(proposal.target).then(value => value.toJSON());
-                const marketsByHash: resources.Market[] = await this.marketService.findAllByHash(proposal.target).then(value => value.toJSON());
-                const markets: resources.Market[] = [...marketsByAddress, ...marketsByHash];
+            const marketsByAddress: resources.Market[] = await this.marketService.findAllByReceiveAddress(proposal.target).then(value => value.toJSON());
+            const marketsByHash: resources.Market[] = await this.marketService.findAllByHash(proposal.target).then(value => value.toJSON());
+            const markets: resources.Market[] = [...marketsByAddress, ...marketsByHash];
 
-                // create FlaggedItem for all the found Markets
-                for (const market of markets) {
-                    let flaggedMarketItem: resources.FlaggedItem;
+            // create FlaggedItem for all the found Markets
+            for (const market of markets) {
+                let flaggedMarketItem: resources.FlaggedItem;
 
-                    if (_.isEmpty(market.FlaggedItem)) {
-                        flaggedMarketItem = await this.create({
-                            proposal_id: proposal.id,
-                            market_id: market.id,
-                            reason: proposal.description
-                        } as FlaggedItemCreateRequest).then(value => value.toJSON());
-                    } else {
-                        // else just return the existing
-                        flaggedMarketItem = await this.findOne(market.FlaggedItem.id).then(value => value.toJSON());
-                    }
-                    flaggedItems.push(flaggedMarketItem);
+                if (_.isEmpty(market.FlaggedItem)) {
+                    flaggedMarketItem = await this.create({
+                        proposal_id: proposal.id,
+                        market_id: market.id,
+                        reason: proposal.description
+                    } as FlaggedItemCreateRequest).then(value => value.toJSON());
+                } else {
+                    // else just return the existing
+                    flaggedMarketItem = await this.findOne(market.FlaggedItem.id).then(value => value.toJSON());
                 }
-                break;
+                flaggedItems.push(flaggedMarketItem);
+            }
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
         return flaggedItems;
     }
@@ -171,43 +170,43 @@ export class FlaggedItemService {
                 if (shouldRemove) { // only consider remove if thresholds are hit
                     switch (proposalResult.Proposal.category) {
 
-                        case ProposalCategory.ITEM_VOTE:
-                            if (_.isNil(flaggedItem.ListingItem)) {
-                                return; // should not happen
-                            }
+                    case ProposalCategory.ITEM_VOTE:
+                        if (_.isNil(flaggedItem.ListingItem)) {
+                            return; // should not happen
+                        }
 
-                            const markets: resources.Market[] = await this.marketService.findAllByReceiveAddress(flaggedItem.ListingItem.market)
-                                .then(value => value.toJSON());
+                        const markets: resources.Market[] = await this.marketService.findAllByReceiveAddress(flaggedItem.ListingItem.market)
+                            .then(value => value.toJSON());
 
-                            for (const market of markets) {
-                                await this.coreRpcService.getAddressInfo(market.Identity.wallet, vote.voter)
-                                    .then(async addressInfo => {
-                                        if (addressInfo && addressInfo.ismine) {
-                                            await this.listingItemService.setRemovedFlag(flaggedItem.ListingItem!.id, remove);
-                                        }
-                                    });
-                            }
-
-                            break;
-
-                        case ProposalCategory.MARKET_VOTE:
-                            if (_.isNil(flaggedItem.Market)) {
-                                return; // should not happen
-                            }
-
-                            const flaggedMarket: resources.Market = await this.marketService.findOne(flaggedItem.Market.id).then(value => value.toJSON());
-
-                            // only flag if voter address is ours
-                            await this.coreRpcService.getAddressInfo(flaggedMarket.Identity.wallet, vote.voter)
+                        for (const market of markets) {
+                            await this.coreRpcService.getAddressInfo(market.Identity.wallet, vote.voter)
                                 .then(async addressInfo => {
                                     if (addressInfo && addressInfo.ismine) {
-                                        await this.marketService.setRemovedFlag(flaggedMarket.id, remove);
+                                        await this.listingItemService.setRemovedFlag(flaggedItem.ListingItem!.id, remove);
                                     }
                                 });
-                            break;
+                        }
 
-                        default:
-                            break;
+                        break;
+
+                    case ProposalCategory.MARKET_VOTE:
+                        if (_.isNil(flaggedItem.Market)) {
+                            return; // should not happen
+                        }
+
+                        const flaggedMarket: resources.Market = await this.marketService.findOne(flaggedItem.Market.id).then(value => value.toJSON());
+
+                        // only flag if voter address is ours
+                        await this.coreRpcService.getAddressInfo(flaggedMarket.Identity.wallet, vote.voter)
+                            .then(async addressInfo => {
+                                if (addressInfo && addressInfo.ismine) {
+                                    await this.marketService.setRemovedFlag(flaggedMarket.id, remove);
+                                }
+                            });
+                        break;
+
+                    default:
+                        break;
                     }
                 }
             }

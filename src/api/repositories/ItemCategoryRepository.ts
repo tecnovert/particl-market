@@ -11,6 +11,7 @@ import { NotFoundException } from '../exceptions/NotFoundException';
 import { Logger as LoggerType } from '../../core/Logger';
 import { ItemCategorySearchParams } from '../requests/search/ItemCategorySearchParams';
 
+/* eslint-disable jsdoc/check-indentation */
 export class ItemCategoryRepository {
 
     public log: LoggerType;
@@ -23,8 +24,8 @@ export class ItemCategoryRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ItemCategory>> {
-        const list = await this.ItemCategoryModel.fetchAll();
-        return list as Bookshelf.Collection<ItemCategory>;
+        const list = await this.ItemCategoryModel.fetchAll<ItemCategory>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true, parentRelations: boolean = true): Promise<ItemCategory> {
@@ -129,3 +130,4 @@ export class ItemCategoryRepository {
     }
 
 }
+/* eslint-enable jsdoc/check-indentation */

@@ -39,9 +39,9 @@ export class ShippingDestinationAddCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: country/countryCode
-     *  [2]: shippingAvailability: ShippingAvailability
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: country/countryCode
+     * [2]: shippingAvailability: ShippingAvailability
      *
      * If countryCode is country, convert to countryCode.
      * If countryCode is country code, validate, and possibly throw error.
@@ -65,9 +65,9 @@ export class ShippingDestinationAddCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: country/countryCode
-     *  [2]: shippingAvailability (ShippingAvailability enum)
+     * [0]: listingItemTemplateId
+     * [1]: country/countryCode
+     * [2]: shippingAvailability (ShippingAvailability enum)
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -91,10 +91,8 @@ export class ShippingDestinationAddCommand extends BaseCommand implements RpcCom
 
         // make sure ListingItemTemplate with the id exists
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(data.params[0])
-            .then(value => {
-                return value.toJSON();
-            })
-            .catch(reason => {
+            .then(value => value.toJSON())
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItemTemplate');
             });
 

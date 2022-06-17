@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import { Bookshelf } from '../../config/Database';
 import { Collection, Model } from 'bookshelf';
 import { Logger as LoggerType } from '../../core/Logger';
@@ -107,7 +106,7 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
     public static async fetchByHashAndMarketReceiveAddress(hash: string, marketReceiveAddress: string, withRelated: boolean = true): Promise<ListingItem> {
         return ListingItem.where<ListingItem>({ hash, market: marketReceiveAddress }).fetch(withRelated ? {withRelated: this.RELATIONS} : undefined);
     }
-/*
+    /*
     TODO: remove?
     public static async fetchAllByCategory(categoryId: number, withRelated: boolean = true): Promise<Collection<ListingItem>> {
 
@@ -129,7 +128,7 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
             return await listingCollection.fetchAll();
         }
     }
-*/
+    */
 
     public static async fetchAllExpired(): Promise<Collection<ListingItem>> {
         const listingCollection = ListingItem.forge<Model<ListingItem>>()
@@ -259,21 +258,22 @@ export class ListingItem extends Bookshelf.Model<ListingItem> {
                 // searchBy by shippingDestination
                 if (options.shippingDestination) {
                     qb.leftJoin('shipping_destinations', 'item_informations.id', 'shipping_destinations.item_information_id');
-                    qb.andWhere( qbInner => {
-                       return qbInner.where( qbInnerInner => {
-                           qbInnerInner.where('shipping_destinations.country', options.shippingDestination)
-                               .andWhere('shipping_destinations.shipping_availability', 'SHIPS');
-                       }).orWhereNull('shipping_destinations.country');
-                    });
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    qb.andWhere( qbInner =>
+                        qbInner.where( qbInnerInner => {
+                            qbInnerInner.where('shipping_destinations.country', options.shippingDestination)
+                                .andWhere('shipping_destinations.shipping_availability', 'SHIPS');
+                        }).orWhereNull('shipping_destinations.country')
+                    );
                 }
 
                 if (options.searchString) {
-                    qb.andWhere(qbInner => {
-                        return qbInner.where('item_informations.title', 'LIKE', '%' + options.searchString + '%')
-                            .orWhere('item_informations.short_description', 'LIKE', '%' + options.searchString + '%')
-                            .orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%')
-                            .orWhere('listing_items.hash', '=', options.searchString);
-                    });
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    qb.andWhere(qbInner => qbInner.where('item_informations.title', 'LIKE', '%' + options.searchString + '%')
+                        .orWhere('item_informations.short_description', 'LIKE', '%' + options.searchString + '%')
+                        .orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%')
+                        .orWhere('listing_items.hash', '=', options.searchString)
+                    );
                 }
 
                 if (options.flagged) {

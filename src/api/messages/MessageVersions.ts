@@ -13,32 +13,32 @@ export class MessageVersions {
 
     public static get(messageType: ActionMessageTypes): CoreMessageVersion {
         switch (messageType) {
-            case MPAction.MPA_LISTING_ADD:
-            case MPActionExtended.MPA_MARKET_ADD:
-                return CoreMessageVersion.PAID;
-            case MPAction.MPA_BID:
-            case MPAction.MPA_ACCEPT:
-            case MPAction.MPA_REJECT:
-            case MPAction.MPA_CANCEL:
-            case MPAction.MPA_LOCK:
-            case MPActionExtended.MPA_SHIP:
-            case MPActionExtended.MPA_RELEASE:
-            case MPActionExtended.MPA_REFUND:
-            case MPActionExtended.MPA_COMPLETE:
-            case MPActionExtended.MPA_LISTING_IMAGE_ADD:
-            case MPActionExtended.MPA_MARKET_IMAGE_ADD:
-            case GovernanceAction.MPA_PROPOSAL_ADD:
-            case GovernanceAction.MPA_VOTE:
-            case CommentAction.MPA_COMMENT_ADD:
-                return CoreMessageVersion.FREE;
-            default:
-                return CoreMessageVersion.PAID;
+        case MPAction.MPA_LISTING_ADD:
+        case MPActionExtended.MPA_MARKET_ADD:
+            return CoreMessageVersion.PAID;
+        case MPAction.MPA_BID:
+        case MPAction.MPA_ACCEPT:
+        case MPAction.MPA_REJECT:
+        case MPAction.MPA_CANCEL:
+        case MPAction.MPA_LOCK:
+        case MPActionExtended.MPA_SHIP:
+        case MPActionExtended.MPA_RELEASE:
+        case MPActionExtended.MPA_REFUND:
+        case MPActionExtended.MPA_COMPLETE:
+        case MPActionExtended.MPA_LISTING_IMAGE_ADD:
+        case MPActionExtended.MPA_MARKET_IMAGE_ADD:
+        case GovernanceAction.MPA_PROPOSAL_ADD:
+        case GovernanceAction.MPA_VOTE:
+        case CommentAction.MPA_COMMENT_ADD:
+            return CoreMessageVersion.FREE;
+        default:
+            return CoreMessageVersion.PAID;
         }
     }
 
     public static maxSize(messageVersion: CoreMessageVersion): number {
         return messageVersion === CoreMessageVersion.FREE
-            ? parseInt(process.env.SMSG_MAX_MSG_BYTES, 10) || 24000           // 24000
-            : parseInt(process.env.SMSG_MAX_MSG_BYTES_PAID, 10) || 524288;    // 512 * 1024
+            ? parseInt(process.env.SMSG_MAX_MSG_BYTES as string, 10) || 24000           // 24000
+            : parseInt(process.env.SMSG_MAX_MSG_BYTES_PAID as string, 10) || 524288;    // 512 * 1024
     }
 }

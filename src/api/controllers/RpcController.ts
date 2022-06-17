@@ -3,13 +3,14 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as _ from 'lodash';
+import { Response } from 'express';
 import * as interfaces from '../../types/interfaces';
 import { inject, named } from 'inversify';
 import { controller, httpPost, response, requestBody } from 'inversify-express-utils';
 import { app } from '../../app';
 import { Types, Core, Targets } from '../../constants';
 import { Logger as LoggerType } from '../../core/Logger';
-import { JsonRpc2Request, JsonRpc2Response, RpcErrorCode } from '../../core/api/jsonrpc';
+import { JsonRpc2Response, RpcErrorCode } from '../../core/api/jsonrpc';
 import { NotFoundException } from '../exceptions/NotFoundException';
 import { RpcCommandFactory } from '../factories/RpcCommandFactory';
 import { RpcRequest } from '../requests/RpcRequest';
@@ -22,8 +23,10 @@ const rpc = app.IoC.getNamed<interfaces.Middleware>(Types.Middleware, Targets.Mi
 const authenticateMiddleware = app.IoC.getNamed<interfaces.Middleware>(Types.Middleware, Targets.Middleware.AuthenticateMiddleware);
 
 let rpcIdCount = 0;
+/* eslint-disable @typescript-eslint/unbound-method */
 @controller('/rpc', authenticateMiddleware.use, rpc.use)
 export class RpcController {
+/* eslint-enable @typescript-eslint/unbound-method */
 
     private log: LoggerType;
     private VERSION = '2.0';
@@ -37,15 +40,15 @@ export class RpcController {
     }
 
     @httpPost('/')
-    public async handleRPC( @response() res: myExpress.Response, @requestBody() body: any): Promise<any> {
+    public async handleRPC( @response() res: Response, @requestBody() body: any): Promise<any> {
 
         let rpcRequest: RpcRequest = this.createRequest(body.method, body.params, body.id);
 
         if (Environment.isTruthy(process.env.LOG_RPC_INCOMING)) {
             if (rpcRequest.method === Commands.IMAGE_ROOT.commandName && rpcRequest.params[0] === Commands.IMAGE_ADD.commandName) {
-                this.log.debug('controller.handleRPC():', rpcRequest.method + ' ' + rpcRequest.params[0] + '...');
+                this.log.debug('controller.handleRPC():', `${rpcRequest.method} ${rpcRequest.params[0]}...`);
             } else {
-                this.log.debug('controller.handleRPC():', rpcRequest.method + ' ' + rpcRequest.params);
+                this.log.debug('controller.handleRPC():', `${rpcRequest.method} ${JSON.stringify(rpcRequest.params, null, 2)}`);
             }
         }
 
@@ -59,7 +62,7 @@ export class RpcController {
             const result = await rpcCommand.execute(rpcRequest, this.rpcCommandFactory);
             return this.createResponse(rpcRequest.id, result);
         } else {
-            throw new NotFoundException('Unknown command: ' + body.method + '\n');
+            throw new NotFoundException(`Unknown command: ${body.method}\n`);
         }
 
     }
@@ -90,18 +93,18 @@ export class RpcController {
 
     private getErrorMessage(code: number): string {
         switch (code) {
-            case RpcErrorCode.ParseError:
-                return 'Parse error';
-            case RpcErrorCode.InvalidRequest:
-                return 'Invalid Request';
-            case RpcErrorCode.MethodNotFound:
-                return 'Method not found';
-            case RpcErrorCode.InvalidParams:
-                return 'Invalid params';
-            case RpcErrorCode.InternalError:
-                return 'Internal error';
-            default:
-                return 'Unknown Error';
+        case RpcErrorCode.ParseError:
+            return 'Parse error';
+        case RpcErrorCode.InvalidRequest:
+            return 'Invalid Request';
+        case RpcErrorCode.MethodNotFound:
+            return 'Method not found';
+        case RpcErrorCode.InvalidParams:
+            return 'Invalid params';
+        case RpcErrorCode.InternalError:
+            return 'Internal error';
+        default:
+            return 'Unknown Error';
         }
     }
 }

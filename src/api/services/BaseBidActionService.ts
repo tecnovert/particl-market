@@ -35,7 +35,7 @@ import { BlacklistService } from './model/BlacklistService';
 
 
 export type ChildBidActionMessages = BidAcceptMessage | BidCancelMessage | BidRejectMessage | OrderItemShipMessage
-    | EscrowCompleteMessage | EscrowLockMessage | EscrowRefundMessage | EscrowReleaseMessage;
+| EscrowCompleteMessage | EscrowLockMessage | EscrowRefundMessage | EscrowReleaseMessage;
 
 export abstract class BaseBidActionService extends BaseActionService {
 
@@ -43,18 +43,19 @@ export abstract class BaseBidActionService extends BaseActionService {
     public bidService: BidService;
     public bidFactory: BidFactory;
 
-    // tslint:disable:parameters-max-number
+    /* eslint-disable max-params*/
     constructor(@unmanaged() eventType: ActionMessageTypes,
-                @unmanaged() smsgService: SmsgService,
-                @unmanaged() smsgMessageService: SmsgMessageService,
-                @unmanaged() notificationService: NotifyService,
-                @unmanaged() blacklistService: BlacklistService,
-                @unmanaged() smsgMessageFactory: SmsgMessageFactory,
-                @unmanaged() validator: ActionMessageValidatorInterface,
-                @unmanaged() Logger: typeof LoggerType,
-                @unmanaged() listingItemService: ListingItemService,
-                @unmanaged() bidService: BidService,
-                @unmanaged() bidFactory: BidFactory) {
+        @unmanaged() smsgService: SmsgService,
+        @unmanaged() smsgMessageService: SmsgMessageService,
+        @unmanaged() notificationService: NotifyService,
+        @unmanaged() blacklistService: BlacklistService,
+        @unmanaged() smsgMessageFactory: SmsgMessageFactory,
+        @unmanaged() validator: ActionMessageValidatorInterface,
+        @unmanaged() Logger: typeof LoggerType,
+        @unmanaged() listingItemService: ListingItemService,
+        @unmanaged() bidService: BidService,
+        @unmanaged() bidFactory: BidFactory
+    ) {
         super(
             eventType,
             smsgService,
@@ -65,12 +66,12 @@ export abstract class BaseBidActionService extends BaseActionService {
             validator,
             Logger
         );
-        // tslint:enable:parameters-max-number
 
         this.listingItemService = listingItemService;
         this.bidService = bidService;
         this.bidFactory = bidFactory;
     }
+    /* eslint-enable max-params*/
 
     public async createChildBidCreateRequest(actionMessage: ChildBidActionMessages, smsgMessage: resources.SmsgMessage): Promise<BidCreateRequest> {
 
@@ -93,16 +94,18 @@ export abstract class BaseBidActionService extends BaseActionService {
         return await this.bidFactory.get(bidCreateParams);
     }
 
-    public async createBidNotification(marketplaceMessage: MarketplaceMessage,
-                                       smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createBidNotification(
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         const bid: resources.Bid = await this.bidService.findOneByMsgId(smsgMessage.msgid)
             .then(value => value.toJSON());
 
         if (bid) {
-            const orderHash = _.find(Array.isArray(bid.BidDatas) ? bid.BidDatas : [], (kvs: KVS) => {
-                return kvs.key === ActionMessageObjects.ORDER_HASH;
-            });
+            const orderHash = _.find(
+                Array.isArray(bid.BidDatas) ? bid.BidDatas : [],
+                (kvs: KVS) => kvs.key === ActionMessageObjects.ORDER_HASH );
 
             return {
                 event: marketplaceMessage.action.type,

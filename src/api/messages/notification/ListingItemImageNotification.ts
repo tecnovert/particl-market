@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { ActionNotificationInterface } from './ActionNotificationInterface';
-import { MPActionExtended } from '../../enums/MPActionExtended';
 
 // todo: maybe just have ImageAddNotification?
 export class ListingItemImageNotification implements ActionNotificationInterface {

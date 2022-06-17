@@ -68,10 +68,10 @@ export class FavoriteItem extends Bookshelf.Model<FavoriteItem> {
     public set CreatedAt(value: Date) { this.set('createdAt', value); }
 
     public Profile(): Profile {
-      return this.belongsTo(Profile, 'profile_id', 'id');
+        return this.belongsTo(Profile, 'profile_id', 'id');
     }
 
     public ListingItem(): ListingItem {
-      return this.belongsTo(ListingItem, 'listing_item_id', 'id');
+        return this.belongsTo(ListingItem, 'listing_item_id', 'id');
     }
 }

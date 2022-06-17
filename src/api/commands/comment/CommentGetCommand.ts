@@ -2,8 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -37,7 +35,7 @@ export class CommentGetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: id or hash
+     * [0]: id or hash
      *
      * when data.params[0] is number then findById, else findOneByHash
      *
@@ -48,12 +46,12 @@ export class CommentGetCommand extends BaseCommand implements RpcCommandInterfac
     public async execute( @request(RpcRequest) data: RpcRequest): Promise<Comment> {
         if (typeof data.params[0] === 'number') {
             return await this.commentService.findOne(data.params[0])
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Comment');
                 });
         } else {
             return await this.commentService.findOneByHash(data.params[0])
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Comment');
                 });
         }
@@ -61,7 +59,7 @@ export class CommentGetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: id or hash
+     * [0]: id or hash
      *
      * @param data
      * @returns {Promise<ItemCategory>}

@@ -23,6 +23,7 @@ import { BidService } from '../../services/model/BidService';
 import { EscrowRefundActionService } from '../../services/action/EscrowRefundActionService';
 import { EscrowRefundRequest } from '../../requests/action/EscrowRefundRequest';
 import { IdentityService } from '../../services/model/IdentityService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';
 
 
@@ -50,9 +51,10 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *   [0]: orderItem: resources.OrderItem
-     *   [1]: memo
-     *   [2]: identity, resources.Identity
+     * [0]: orderItem: resources.OrderItem
+     * [1]: memo
+     * [2]: identity, resources.Identity
+     *
      * @param data
      * @returns {Promise<SmsgSendResponse>}
      */
@@ -66,17 +68,13 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
         // this.log.debug('orderItem:', JSON.stringify(orderItem, null, 2));
 
         const bid: resources.Bid = await this.bidService.findOne(orderItem.Bid.id).then(value => value.toJSON());
-        let bidAccept: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPAction.MPA_ACCEPT;
-        });
+        let bidAccept: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPAction.MPA_ACCEPT);
         if (!bidAccept) {
             throw new MessageException('No accepted Bid found.');
         }
         bidAccept = await this.bidService.findOne(bidAccept.id).then(value => value.toJSON());
 
-        let escrowLock: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPAction.MPA_LOCK;
-        });
+        let escrowLock: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPAction.MPA_LOCK);
         if (!escrowLock) {
             throw new MessageException('No locked Bid found.');
         }
@@ -88,7 +86,7 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
                 fromAddress: identity.address,
                 toAddress: orderItem.Order.seller,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -105,6 +103,7 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
      * data.params[]:
      * [0]: orderItemId
      * [1]: memo
+     *
      * @param data
      * @returns {Promise<any>}
      */
@@ -112,7 +111,7 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
         await super.validate(data);
 
         const orderItem: resources.OrderItem = data.params[0];
-        const memo: string = data.params[1];
+        // const memo: string = data.params[1];
 
         // TODO: check these
         const validOrderItemStatuses = [
@@ -129,7 +128,7 @@ export class EscrowRefundCommand extends BaseCommand implements RpcCommandInterf
 
         const identity: resources.Identity = await this.identityService.findOneByAddress(orderItem.Order.buyer)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 

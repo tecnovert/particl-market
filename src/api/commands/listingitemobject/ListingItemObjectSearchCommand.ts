@@ -31,7 +31,7 @@ export class ListingItemObjectSearchCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: searchString, string
+     * [0]: searchString, string
      *
      * @param data
      * @returns {Promise<ListingItemObject>}
@@ -45,7 +45,7 @@ export class ListingItemObjectSearchCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: searchString, string
+     * [0]: searchString, string
      *
      * @param data
      * @returns {Promise<RpcRequest>}

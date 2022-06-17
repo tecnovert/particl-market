@@ -23,6 +23,7 @@ import { MPAction} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { BidRejectReason } from '../../enums/BidRejectReason';
 import { BidRejectRequest } from '../../requests/action/BidRejectRequest';
 import { IdentityService } from '../../services/model/IdentityService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import { CommandParamValidationRules, EnumValidationRule, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
 import { EnumHelper } from '../../../core/helpers/EnumHelper';
 
@@ -71,7 +72,7 @@ export class BidRejectCommand extends BaseCommand implements RpcCommandInterface
                 fromAddress: identity.address,
                 toAddress: bid.OrderItem.Order.buyer,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -99,9 +100,7 @@ export class BidRejectCommand extends BaseCommand implements RpcCommandInterface
 
         if (data.params.length >= 3) {
             const reason = data.params[2];
-            if (typeof reason !== 'string') {
-                throw new InvalidParamException('reasonEnum', 'BidRejectReason');
-            } else if (!BidRejectReason[reason]) {
+            if ((typeof reason !== 'string') || (!BidRejectReason[reason])) {
                 throw new InvalidParamException('reasonEnum', 'BidRejectReason');
             }
             data.params[2] = BidRejectReason[reason];
@@ -119,9 +118,7 @@ export class BidRejectCommand extends BaseCommand implements RpcCommandInterface
         }
 
         // make sure the Bid has not been accepted yet
-        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPAction.MPA_ACCEPT;
-        });
+        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPAction.MPA_ACCEPT);
         if (childBid) {
             throw new MessageException('Bid has already been accepted.');
         }

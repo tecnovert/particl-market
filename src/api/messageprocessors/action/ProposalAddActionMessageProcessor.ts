@@ -13,7 +13,7 @@ import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BaseActionMessageProcessor } from '../BaseActionMessageProcessor';
 import { GovernanceAction } from '../../enums/GovernanceAction';
-import { ProposalAddMessage } from '../../messages/action/ProposalAddMessage';
+// import { ProposalAddMessage } from '../../messages/action/ProposalAddMessage';
 import { ProposalAddActionService } from '../../services/action/ProposalAddActionService';
 import { BidService } from '../../services/model/BidService';
 import { ProposalService } from '../../services/model/ProposalService';
@@ -57,7 +57,7 @@ export class ProposalAddActionMessageProcessor extends BaseActionMessageProcesso
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: ProposalAddMessage = marketplaceMessage.action as ProposalAddMessage;
+        // const actionMessage: ProposalAddMessage = marketplaceMessage.action as ProposalAddMessage;
 
         // processProposal will create or update the Proposal
         return await this.actionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)

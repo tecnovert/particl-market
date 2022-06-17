@@ -43,13 +43,13 @@ export class ItemLocationUpdateCommand extends BaseCommand implements RpcCommand
 
     /**
      * params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: country (country/countryCode)
-     *  [2]: address, optional
-     *  [3]: gpsMarkerTitle, optional
-     *  [4]: gpsMarkerDescription, optional
-     *  [5]: gpsMarkerLatitude, optional
-     *  [6]: gpsMarkerLongitude, optional
+     * [0]: listingItemTemplateId
+     * [1]: country (country/countryCode)
+     * [2]: address, optional
+     * [3]: gpsMarkerTitle, optional
+     * [4]: gpsMarkerDescription, optional
+     * [5]: gpsMarkerLatitude, optional
+     * [6]: gpsMarkerLongitude, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -70,13 +70,13 @@ export class ItemLocationUpdateCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate, resources.ListingItemTemplate
-     *  [1]: country (country/countryCode)
-     *  [2]: address, optional
-     *  [3]: gpsMarkerTitle, optional
-     *  [4]: gpsMarkerDescription, optional
-     *  [5]: gpsMarkerLatitude, optional
-     *  [6]: gpsMarkerLongitude, optional
+     * [0]: listingItemTemplate, resources.ListingItemTemplate
+     * [1]: country (country/countryCode)
+     * [2]: address, optional
+     * [3]: gpsMarkerTitle, optional
+     * [4]: gpsMarkerDescription, optional
+     * [5]: gpsMarkerLatitude, optional
+     * [6]: gpsMarkerLongitude, optional
      *
      * @param data
      * @returns {Promise<ItemLocation>}
@@ -117,7 +117,7 @@ export class ItemLocationUpdateCommand extends BaseCommand implements RpcCommand
 
         const listingItemTemplate: resources.ListingItemTemplate = data.params[0];   // required
         const country = data.params[1];                 // required
-        const address = data.params[2];                 // optional
+        // const address = data.params[2];                 // optional
         const gpsMarkerTitle = data.params[3];          // optional
         const gpsMarkerDescription = data.params[4];    // optional
         const gpsMarkerLatitude = data.params[5];       // optional

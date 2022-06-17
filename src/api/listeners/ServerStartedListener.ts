@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import * as interfaces from '../../types/interfaces';
 import pForever from 'pm-forever';
@@ -50,7 +49,7 @@ export class ServerStartedListener implements interfaces.Listener {
     private STOP = false;
     private BOOTSTRAPPING = true;
 
-    // tslint:disable:max-line-length
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.MessageProcessor) @named(Targets.MessageProcessor.CoreMessageProcessor) public coreMessageProcessor: CoreMessageProcessor,
         @inject(Types.Service) @named(Targets.Service.DefaultItemCategoryService) public defaultItemCategoryService: DefaultItemCategoryService,
@@ -78,7 +77,7 @@ export class ServerStartedListener implements interfaces.Listener {
     ) {
         this.log = new Logger(__filename);
     }
-    // tslint:enable:max-line-length
+    /* eslint-enable max-params */
 
     /**
      *
@@ -93,7 +92,7 @@ export class ServerStartedListener implements interfaces.Listener {
     public async start(): Promise<void> {
         this.log.debug('start(): ');
 
-        await pForever(async (i) => {
+        const fn = async (i: any) => {
             i++;
 
             // this.log.debug('this.coreCookieService.status: ' + this.coreCookieService.status);
@@ -128,13 +127,16 @@ export class ServerStartedListener implements interfaces.Listener {
             // this.log.debug('ServerStartedListener.start(), i: ', i);
 
             return i;
-        }, 0).catch(async reason => {
+        };
+
+        await pForever(fn, 0).catch(async reason => {
             this.log.error('ERROR: ', reason);
             await delay(this.INTERVAL);
             this.start();
         });
     }
 
+    /* eslint-disable jsdoc/check-indentation */
     /**
      *  - Default Profile, Market and Identity creation on app startup.
      *    - if updating from previous installation (a market wallet already exists),
@@ -145,6 +147,7 @@ export class ServerStartedListener implements interfaces.Listener {
      *    - create Market with new Identity (+wallet)
      *    - set the new Market as the default one
      */
+    /* eslint-enable jsdoc/check-indentation */
     public async bootstrap(): Promise<boolean> {
         // all is now ready for bootstrapping the app
         const blockchainInfo: RpcBlockchainInfo = await this.coreRpcService.getBlockchainInfo();
@@ -170,7 +173,7 @@ export class ServerStartedListener implements interfaces.Listener {
         }
 
         // save/update the default env vars as Settings
-        await this.defaultSettingService.saveDefaultSettings(defaultProfile);
+        await this.defaultSettingService.saveDefaultSettings();
         await this.defaultSettingService.upgradeDefaultSettings();
 
         await this.loadWalletsForProfile(defaultProfile);
@@ -197,6 +200,7 @@ export class ServerStartedListener implements interfaces.Listener {
 
     /**
      * loads wallets for given Profile, returns the names of wallets loaded
+     *
      * @param profile
      */
     private async loadWalletsForProfile(profile: resources.Profile): Promise<string[]> {
@@ -207,9 +211,7 @@ export class ServerStartedListener implements interfaces.Listener {
             await this.smsgService.smsgAddLocalAddress(identity.address);
         }
 
-        const walletsToLoad: string[] = identitiesToLoad.map( value => {
-            return value.wallet;
-        });
+        const walletsToLoad: string[] = identitiesToLoad.map( value => value.wallet);
         this.log.debug('loadWalletsForProfile(), walletsToLoad: ', JSON.stringify(walletsToLoad, null, 2));
         return await this.coreRpcService.loadWallets(walletsToLoad);
     }
@@ -223,29 +225,30 @@ export class ServerStartedListener implements interfaces.Listener {
             .then(value => value.toJSON())
             .catch(() => []);
 
-        const TASK_COUNT = 2;
+        const TASK_COUNT = 3;
         const settingID = (foundSettings.length > 0) && (+foundSettings[0].id > 0) ? foundSettings[0].id : 0;
         const tasksRun: number = (foundSettings.length > 0) && foundSettings[0] && (+foundSettings[0].value >= 0) ? +foundSettings[0].value : 0;
         let requiresUpdate = tasksRun < TASK_COUNT;
 
         // tslint:disable:no-small-switch
         switch (tasksRun) {
-            case 0:
-            case 1:
-                // once-off fix for joined market keys having been removed from particl-core when the equivalent promoted market expires
-                this.log.info('Running once-off task 1...');
-                const marketslist: any[] = await this.marketService.findAll().then(value => value.toJSON()).catch(() => []);
-                for (const market of marketslist) {
-                    if (+market.identityId > 0) {
-                        await this.marketService.importMarketKeys(market, false).catch((err) => {
-                            /* do nothing for now - might fail because it already exists */
-                        });
-                    }
+        case 0:
+        case 1:
+        case 2:
+            // once-off fix for joined market keys having been removed from particl-core when the equivalent promoted market expires
+            this.log.info('Running once-off tasks 0/1/2...');
+            const marketslist: any[] = await this.marketService.findAll().then(value => value.toJSON()).catch(() => []);
+            for (const market of marketslist) {
+                if (+market.identityId > 0) {
+                    await this.marketService.importMarketKeys(market, false).catch(() => {
+                        /* do nothing for now - might fail because it already exists */
+                    });
                 }
-                // for further tasks, remove the break here to let fallthrough to the next case statement occur; except last statement
-                break;
-            default:
-                requiresUpdate = false;
+            }
+            // for further tasks, remove the break here to let fallthrough to the next case statement occur; except last statement
+            break;
+        default:
+            requiresUpdate = false;
         }
         // tslint:enable:no-small-switch
 
@@ -255,13 +258,13 @@ export class ServerStartedListener implements interfaces.Listener {
                     settingID,
                     {
                         key: SettingValue.SCRIPT_TASK_MIGRATION.toString(),
-                        value: '' + TASK_COUNT
+                        value: `${TASK_COUNT}`
                     } as SettingUpdateRequest
                 ).catch(() => null);
             } else {
                 await this.settingService.create({
                     key: SettingValue.SCRIPT_TASK_MIGRATION.toString(),
-                    value: '' + TASK_COUNT
+                    value: `${TASK_COUNT}`
                 } as SettingCreateRequest).catch(() => null);
             }
         }

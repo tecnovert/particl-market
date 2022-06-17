@@ -22,13 +22,10 @@ import { ListingItemTemplateService } from '../../services/model/ListingItemTemp
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableListingItemTemplateConfig } from '../../factories/hashableconfig/model/HashableListingItemTemplateConfig';
-import { CryptoAddress, CryptoAddressType, OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
-import { EscrowType } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
-import { NotImplementedException } from '../../exceptions/NotImplementedException';
+import {  OutputType } from '@zasmilingidiot/omp-lib/dist/interfaces/crypto';
 import { CoreRpcService } from '../../services/CoreRpcService';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { CryptocurrencyAddressService } from '../../services/model/CryptocurrencyAddressService';
-import { CryptocurrencyAddressCreateRequest } from '../../requests/model/CryptocurrencyAddressCreateRequest';
 import { ItemPriceService } from '../../services/model/ItemPriceService';
 import { ListingItemImageAddRequest } from '../../requests/action/ListingItemImageAddRequest';
 import { ListingItemImageAddActionService } from '../../services/action/ListingItemImageAddActionService';
@@ -42,12 +39,13 @@ import { CoreMessageVersion } from '../../enums/CoreMessageVersion';
 import { RpcUnspentOutput } from '@zasmilingidiot/omp-lib/dist/interfaces/rpc';
 import { BigNumber } from 'mathjs';
 import { SmsgSendCoinControl } from '../../services/SmsgService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 
 
 export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCommandInterface<SmsgSendResponse> {
 
     constructor(
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.action.ListingItemAddActionService) public listingItemAddActionService: ListingItemAddActionService,
@@ -58,7 +56,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
         @inject(Types.Service) @named(Targets.Service.model.ListingItemTemplateService) public listingItemTemplateService: ListingItemTemplateService,
         @inject(Types.Service) @named(Targets.Service.model.ItemCategoryService) public itemCategoryService: ItemCategoryService,
         @inject(Types.Factory) @named(Targets.Factory.model.ItemCategoryFactory) private itemCategoryFactory: ItemCategoryFactory
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super(Commands.TEMPLATE_POST);
         this.log = new Logger(__filename);
@@ -82,13 +80,13 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
      * posts a ListingItem to the network based on ListingItemTemplate
      *
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: daysRetention
-     *  [2]: estimateFee
-     *  [3]: paidImageMessages (optional, default: false)
-     *  [4]: market: resources.Market
-     *  [5]: anonFee: boolean
-     *  [6]: ringSize (optional, default: 12)
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: daysRetention
+     * [2]: estimateFee
+     * [3]: paidImageMessages (optional, default: false)
+     * [4]: market: resources.Market
+     * [5]: anonFee: boolean
+     * [6]: ringSize (optional, default: 12)
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -97,7 +95,9 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
     public async execute(@request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
 
         let listingItemTemplate: resources.ListingItemTemplate = data.params[0];
-        const daysRetention: number = data.params[1] || parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10);
+        const daysRetention: number = data.params[1] || parseInt(
+            process.env.PAID_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.PAID_MESSAGE_RETENTION_DAYS}`, 10
+        );
         const estimateFee: boolean = data.params[2];
         const paidImageMessages: boolean = data.params[3];
         const market: resources.Market = data.params[4];
@@ -207,12 +207,12 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: daysRetention
-     *  [2]: estimateFee (optional, default: false)
-     *  [3]: paidImageMessages (optional, default: false)
-     *  [4]: feeType (optional, default: PART)
-     *  [5]: ringSize (optional, default: 12)
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: daysRetention
+     * [2]: estimateFee (optional, default: false)
+     * [3]: paidImageMessages (optional, default: false)
+     * [4]: feeType (optional, default: PART)
+     * [5]: ringSize (optional, default: 12)
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -245,7 +245,7 @@ export class ListingItemTemplatePostCommand extends BaseCommand implements RpcCo
         const market: resources.Market = await this.marketService.findOneByProfileIdAndReceiveAddress(listingItemTemplate.Profile.id,
             listingItemTemplate.market)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Market');
             });
 

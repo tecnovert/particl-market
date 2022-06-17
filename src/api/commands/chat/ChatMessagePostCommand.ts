@@ -46,7 +46,7 @@ export class ChatMessagePostCommand extends BaseCommand implements RpcCommandInt
 
     private MESSAGE_MAX_LENGTH = 500;
 
-    private HELP_FIELDS: Array<{ name: string; description: string, required: boolean, valueType: string, exampleValue: string }> = [
+    private HELP_FIELDS: Array<{ name: string; description: string; required: boolean; valueType: string; exampleValue: string }> = [
         {
             name: 'identityId',
             description: 'The ID of the identity posting the message',
@@ -102,11 +102,11 @@ export class ChatMessagePostCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: identityId, IdentityData
-     *  [1]: channel, string (listing hash or bid hash)
-     *  [2]: channelType, ChatChannelType
-     *  [3]: message, string
-     *  [4]: recipientAddress, string
+     * [0]: identityId, IdentityData
+     * [1]: channel, string (listing hash or bid hash)
+     * [2]: channelType, ChatChannelType
+     * [3]: message, string
+     * [4]: recipientAddress, string
      *
      * @param data, RpcRequest
      * @returns {Promise<ChatPostResponse>}
@@ -139,27 +139,27 @@ export class ChatMessagePostCommand extends BaseCommand implements RpcCommandInt
             }
             retValue.id = success;
             return null;
-        }).catch((err: Error) => {
-            return err.message;
-        }).then(errMsg => {
-            if (errMsg !== null) {
-                retValue.errorReason = (EnumHelper.containsValue(ADD_ACTION_ERRORS, errMsg)) ?
-                    (errMsg as ADD_ACTION_ERRORS) : 'GENERIC_ERROR' ;
-                retValue.success = false;
-                return;
-            }
-            retValue.success = true;
-        });
+        })
+            .catch((err: Error) => err.message)
+            .then(errMsg => {
+                if (errMsg !== null) {
+                    retValue.errorReason = (EnumHelper.containsValue(ADD_ACTION_ERRORS, errMsg)) ?
+                        (errMsg as ADD_ACTION_ERRORS) : 'GENERIC_ERROR' ;
+                    retValue.success = false;
+                    return;
+                }
+                retValue.success = true;
+            });
 
         return retValue;
     }
 
     /**
      * data.params[]:
-     *  [0]: identityId, number
-     *  [1]: channel, string (listing hash or bid hash)
-     *  [2]: channelType
-     *  [3]: message
+     * [0]: identityId, number
+     * [1]: channel, string (listing hash or bid hash)
+     * [2]: channelType
+     * [3]: message
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -207,7 +207,7 @@ export class ChatMessagePostCommand extends BaseCommand implements RpcCommandInt
             const n = `   <${f.name}>`;
             const p = ' '.repeat((n.length > 5) && (n.length < 26) ? 26 - n.length : 0);
             return n + p + `- [${f.required ? 'required' : 'optional'}] ${f.valueType} ; ${f.description}.\n`;
-        });
+        }).join('');
     }
 
     public description(): string {

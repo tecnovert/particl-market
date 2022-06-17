@@ -53,7 +53,7 @@ export class FavoriteItemService {
         const favoriteItem = await this.favoriteItemRepo.findOneByProfileIdAndListingItemId(profileId, itemId, withRelated);
         if (favoriteItem === null) {
             this.log.warn(`FavoriteItem with the profileId=${profileId} or listingItemId=${itemId} was not found!`);
-            throw new NotFoundException(profileId + ' or ' + itemId);
+            throw new NotFoundException(`${profileId} or ${itemId}`);
         }
         return favoriteItem;
     }
@@ -86,7 +86,7 @@ export class FavoriteItemService {
     public async update(id: number, @request(FavoriteItemUpdateRequest) body: FavoriteItemUpdateRequest): Promise<FavoriteItem> {
 
         // find the existing one without related
-        const favoriteItem = await this.findOne(id, false);
+        await this.findOne(id, false);
 
         // set new values
         // update favoriteItem record

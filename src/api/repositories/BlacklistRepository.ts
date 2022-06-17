@@ -29,8 +29,8 @@ export class BlacklistRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Blacklist>> {
-        const list = await this.BlacklistModel.fetchAll();
-        return list as Bookshelf.Collection<Blacklist>;
+        const list = await this.BlacklistModel.fetchAll<Blacklist>();
+        return list;
     }
 
     public async findAllByType(type: BlacklistType): Promise<Bookshelf.Collection<Blacklist>> {

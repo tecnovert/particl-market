@@ -2,15 +2,11 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
+
 import { ImageProcessing } from '../../../src/core/helpers/ImageProcessing';
-import { ImageTriplet } from '../../../src/core/helpers/ImageTriplet';
 import * as Jimp from 'jimp';
 import * as piexif from 'piexifjs';
 import { ImageVersions } from '../../../src/core/helpers/ImageVersionEnumType';
-import { CoreMessageVersion } from '../../../src/api/enums/CoreMessageVersion';
-import { MessageVersions } from '../../../src/api/messages/MessageVersions';
-import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { Logger as LoggerType } from '../../../src/core/Logger';
 import * as dotenv from 'dotenv';
 
@@ -24,24 +20,18 @@ describe('ImageProcessing', () => {
 
 
     test('Test data should have metadata before processing', async () => {
-        expect.assertions(0);
+        expect.assertions(1);
         const rawImage = ImageProcessing.PIEXIF_JPEG_START_STR + ImageProcessing.milkcatSmall;
-        try {
-            const processedImage: ImageTriplet = piexif.remove(rawImage);
-        } catch ( ex ) {
-            expect(ex).not.toBe('Exif not found.');
-            expect(false).toBe(true);
-        }
+        expect(piexif.remove(rawImage)).toBeTruthy();
     });
 
     test('convertToJPEG() should complain of invalid format', async () => {
         expect.assertions(1);
-        await ImageProcessing.convertToJPEG(ImageProcessing.milkcatBroken).catch(e =>
-            expect(e).toEqual('unknown JPEG marker 0')
-        );
+        const errorMsg = await ImageProcessing.convertToJPEG(ImageProcessing.milkcatBroken).catch(e => e.message);
+        expect(errorMsg).toBe('unknown JPEG marker 0');
     });
 
-    test('convertToJPEG() should resize tall(er than wide, by the ratio in the static bounds) image to reach MAX height', async () => {
+    test('convertToJPEG() should resize (taller than wide, by the ratio in the static bounds) image to reach MAX height', async () => {
         expect.assertions(8);
         const rawImage = ImageProcessing.milkcatTall;
 
@@ -71,9 +61,9 @@ describe('ImageProcessing', () => {
         expect(imageBuffer.bitmap.height).toBe(ImageVersions.THUMBNAIL.imageHeight);
         expect(imageBuffer.bitmap.width).toBeLessThanOrEqual(ImageVersions.THUMBNAIL.imageWidth);
 
-    });
+    }, 30_000);
 
-    test('resizeImageData() should resize wide(er than tall, by the ratio in the static bounds) image to reach MAX width', async () => {
+    test('resizeImageData() should resize (wider than tall, by the ratio in the static bounds) image to reach MAX width', async () => {
         expect.assertions(12);
         const rawImage = ImageProcessing.milkcatWide;
 
@@ -89,9 +79,6 @@ describe('ImageProcessing', () => {
 
         let dataBuffer = Buffer.from(largeData, 'base64');
         let imageBuffer = await Jimp.read(dataBuffer);
-
-        const dataBufferOriginal = Buffer.from(rawImage, 'base64');
-        const imageBufferOriginal = await Jimp.read(dataBufferOriginal);
 
         expect(imageBuffer.bitmap.width).toBe(ImageVersions.LARGE.imageWidth);
         expect(imageBuffer.bitmap.height).toBe(ImageVersions.LARGE.imageHeight);
@@ -118,10 +105,10 @@ describe('ImageProcessing', () => {
         expect(imageBuffer.bitmap.width).toBe(ImageVersions.THUMBNAIL.imageWidth);
         expect(imageBuffer.bitmap.height).toBeLessThanOrEqual(ImageVersions.THUMBNAIL.imageHeight);
 
-    });
+    }, 30_000);
 
 
-    test('resizeImageToVersion() should resize tall(er than wide, by the ratio in the static bounds) image to thumbnail size', async () => {
+    test('resizeImageToVersion() should resize (taller than wide, by the ratio in the static bounds) image to thumbnail size', async () => {
         expect.assertions(3);
         const rawImage = ImageProcessing.milkcatTall;
         const resizedImage = await ImageProcessing.resizeImageToVersion(rawImage, ImageVersions.THUMBNAIL);
@@ -133,10 +120,10 @@ describe('ImageProcessing', () => {
 
         expect(imageBuffer.bitmap.height).toBe(ImageVersions.THUMBNAIL.imageHeight);
         expect(imageBuffer.bitmap.width).toBeLessThanOrEqual(ImageVersions.THUMBNAIL.imageWidth);
-    });
+    }, 30_000);
 
 
-    test('resizeImageToVersion() should resize wide(er than tall, by the ratio in the static bounds) image to thumbnail size', async () => {
+    test('resizeImageToVersion() should resize (wider than tall, by the ratio in the static bounds) image to thumbnail size', async () => {
         expect.assertions(3);
         const rawImage = ImageProcessing.milkcatWide;
         const resizedImage = await ImageProcessing.resizeImageToVersion(rawImage, ImageVersions.THUMBNAIL);
@@ -148,6 +135,6 @@ describe('ImageProcessing', () => {
 
         expect(imageBuffer.bitmap.width).toBe(ImageVersions.THUMBNAIL.imageWidth);
         expect(imageBuffer.bitmap.height).toBeLessThanOrEqual(ImageVersions.THUMBNAIL.imageHeight);
-    });
+    }, 30_000);
 
 });

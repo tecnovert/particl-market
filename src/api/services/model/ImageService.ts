@@ -77,7 +77,7 @@ export class ImageService {
     }
 
     public async findOneByMsgId(msgid: string, withRelated: boolean = true): Promise<Image> {
-        const image = await this.imageRepository.findOneByMsgId(msgid, withRelated);
+        const image = await this.imageRepository.findOneByMsgId(msgid, withRelated).catch(() => null);
         if (image === null) {
             this.log.warn(`Image with the msgid=${msgid} was not found!`);
             throw new NotFoundException(msgid);
@@ -92,13 +92,13 @@ export class ImageService {
      */
     @validate()
     public async create( @request(ImageCreateRequest) data: ImageCreateRequest): Promise<Image> {
-        const body: ImageCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ImageCreateRequest> = JSON.parse(JSON.stringify(data));
 
         // this.log.debug('body: ', JSON.stringify(body, null, 2));
 
-        const imageDataCreateRequestOriginal: ImageDataCreateRequest | undefined = _.find(body.data, (imageData) => {
-            return imageData.imageVersion === ImageVersions.ORIGINAL.propName;
-        });
+        const imageDataCreateRequestOriginal: ImageDataCreateRequest | undefined = _.find(body.data, (imageData) =>
+            imageData.imageVersion === ImageVersions.ORIGINAL.propName
+        );
 
         delete body.data;
 
@@ -111,7 +111,7 @@ export class ImageService {
             // then create the ORIGINAL ImageData
             imageDataCreateRequestOriginal.image_id = image.id;
 
-            const originalImageData: resources.ImageData = await this.imageDataService.create(imageDataCreateRequestOriginal).then(value => value.toJSON());
+            await this.imageDataService.create(imageDataCreateRequestOriginal).then(value => value.toJSON());
             // this.log.debug('originalImageData: ', JSON.stringify(originalImageData, null, 2));
 
             // then create the other versions from the given original data,
@@ -134,7 +134,7 @@ export class ImageService {
      */
     public async createVersions(originalImageData: ImageDataCreateRequest, toVersions: ImageVersion[]): Promise<resources.ImageData[]> {
 
-        let startTime = Date.now();
+        // let startTime = Date.now();
         const imageDatas: resources.ImageData[] = [];
 
         if (originalImageData.data) {
@@ -142,7 +142,7 @@ export class ImageService {
             const originalData = await ImageProcessing.convertToJPEG(originalImageData.data);
             // this.log.debug('createVersions(), convertToJPEG: ' + (Date.now() - startTime) + 'ms');
 
-            startTime = Date.now();
+            // startTime = Date.now();
             const resizedDatas: Map<string, string> = await ImageProcessing.resizeImageData(originalData, toVersions);
             // this.log.debug('createVersions() resizeImageData: ' + (Date.now() - startTime) + 'ms');
 
@@ -164,16 +164,21 @@ export class ImageService {
         return imageDatas;
     }
 
-    public async createResizedVersion(id: number, messageVersionToFit: CoreMessageVersion, scalingFraction: number = 0.9, qualityFraction: number = 0.95,
-                                      maxIterations: number = 10): Promise<Image> {
+    public async createResizedVersion(
+        id: number,
+        messageVersionToFit: CoreMessageVersion,
+        scalingFraction: number = 0.9,
+        qualityFraction: number = 0.95,
+        maxIterations: number = 10
+    ): Promise<Image> {
 
         const image: resources.Image = await this.findOne(id).then(value => value.toJSON());
-        const imageDataOriginal: resources.ImageData | undefined = _.find(image.ImageDatas, (imageData) => {
-            return imageData.imageVersion === ImageVersions.ORIGINAL.propName;
-        });
-        const imageDataResized: resources.ImageData | undefined = _.find(image.ImageDatas, (imageData) => {
-            return imageData.imageVersion === ImageVersions.RESIZED.propName;
-        });
+        const imageDataOriginal: resources.ImageData | undefined = _.find(image.ImageDatas, (imageData) =>
+            imageData.imageVersion === ImageVersions.ORIGINAL.propName
+        );
+        const imageDataResized: resources.ImageData | undefined = _.find(image.ImageDatas, (imageData) =>
+            imageData.imageVersion === ImageVersions.RESIZED.propName
+        );
 
         if (_.isNil(imageDataOriginal)) {
             throw new ModelNotFoundException('ImageData');
@@ -181,7 +186,7 @@ export class ImageService {
         // this.log.debug('resized image exists: ', !_.isNil(imageDataResized));
 
         const originalData = await this.imageDataService.loadImageFile(image.hash, ImageVersions.ORIGINAL.propName)
-            .catch(reason => {
+            .catch(() => {
                 this.log.warn('Can\'t create RESIZED version, failed to load the ORIGINAL.');
                 return undefined;
             });
@@ -218,18 +223,18 @@ export class ImageService {
 
     @validate()
     public async update(id: number, @request(ImageUpdateRequest) data: ImageUpdateRequest): Promise<Image> {
-        const body: ImageUpdateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ImageUpdateRequest> = JSON.parse(JSON.stringify(data));
 
-        const imageDataUpdateRequestOriginal: ImageDataCreateRequest | undefined = _.find(body.data, (imageData) => {
-            return imageData.imageVersion === ImageVersions.ORIGINAL.propName;
-        });
+        const imageDataUpdateRequestOriginal: ImageDataCreateRequest | undefined = _.find(body.data, (imageData) =>
+            imageData.imageVersion === ImageVersions.ORIGINAL.propName
+        );
         delete body.data;
 
         // this.log.debug('imageDataUpdateRequestOriginal:', imageDataUpdateRequestOriginal);
         if (imageDataUpdateRequestOriginal) {
             const image = await this.findOne(id, false);
-            image.Hash = body.hash;
-            image.Featured = body.featured;
+            image.Hash = body.hash as string;
+            image.Featured = !!body.featured;
             const updatedImage: resources.Image = await this.imageRepository.update(id, image.toJSON()).then(value => value.toJSON());
 
             // then remove old related ImageDatas and files
@@ -275,11 +280,11 @@ export class ImageService {
 
         if (image.ItemInformation && image.ItemInformation.ListingItem) {
             const altImages: resources.Image[] = await this.findAllByHashAndTarget(image.hash, image.ItemInformation.ListingItem.hash)
-            .then(value => value.toJSON())
-            .catch(err => {
-                this.log.warn(`Error retrieving associated listing images for image hash=${image.hash}`, err);
-                return [];
-            });
+                .then(value => value.toJSON())
+                .catch(err => {
+                    this.log.warn(`Error retrieving associated listing images for image hash=${image.hash}`, err);
+                    return [];
+                });
 
             allImages = [...allImages, ...altImages];
         }
@@ -298,10 +303,10 @@ export class ImageService {
 
             /**
              *
-             *  Apparently, no need to clean the original listing image(s), beacuse the msgid of the original image message points to the listing_add smsg...
-             *  So if there are only the single imagedata object (because wtf... something something multiple incorrect associations something something)
-             *  then its likely the image references the "indication" of an image as included in the LISTING_ADD smsg, rather than some actual
-             *  received LISTING_IMAGE_ADD smsg.
+             * Apparently, no need to clean the original listing image(s), beacuse the msgid of the original image message points to the listing_add smsg...
+             * So if there are only the single imagedata object (because wtf... something something multiple incorrect associations something something)
+             * then its likely the image references the "indication" of an image as included in the LISTING_ADD smsg, rather than some actual
+             * received LISTING_IMAGE_ADD smsg.
              *
              */
             if (img.msgid && !((img.ImageDatas.length === 1) && (img.ImageDatas[0].protocol === ProtocolDSN.SMSG))) {

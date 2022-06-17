@@ -10,7 +10,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { ProfileService } from '../../services/model/ProfileService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { Profile } from '../../models/Profile';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
@@ -19,7 +18,6 @@ import { BooleanValidationRule, CommandParamValidationRules, IdValidationRule, P
 import {IdentityType} from '../../enums/IdentityType';
 import {MessageException} from '../../exceptions/MessageException';
 import {IdentityService} from '../../services/model/IdentityService';
-import {IdentityUpdateRequest} from '../../requests/model/IdentityUpdateRequest';
 
 
 export interface ProfileMnemonic {
@@ -52,8 +50,8 @@ export class ProfileMnemonicCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]; clean: boolean
+     * [0]: profile: resources.Profile
+     * [1]; clean: boolean
      *
      * @param data
      * @returns {Promise<Profile>}
@@ -77,9 +75,7 @@ export class ProfileMnemonicCommand extends BaseCommand implements RpcCommandInt
         await super.validate(data);
 
         const profile: resources.Profile = data.params[0];
-        const profileIdentity: resources.Identity | undefined = _.find(profile.Identities, identity => {
-            return identity.type === IdentityType.PROFILE;
-        });
+        const profileIdentity: resources.Identity | undefined = _.find(profile.Identities, identity => identity.type === IdentityType.PROFILE);
 
         if (!profileIdentity) {
             throw new MessageException('Missing Profile Identity.');

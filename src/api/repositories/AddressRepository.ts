@@ -22,8 +22,8 @@ export class AddressRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Address>> {
-        const list = await this.AddressModel.fetchAll();
-        return list as Bookshelf.Collection<Address>;
+        const list = await this.AddressModel.fetchAll<Address>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<Address> {

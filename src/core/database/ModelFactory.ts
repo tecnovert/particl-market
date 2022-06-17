@@ -18,7 +18,9 @@ export class ModelFactory {
     constructor(
         private faker: Faker.FakerStatic,
         private blueprint: BluePrint,
-        private args: any[]) {
+        private args: any[]
+    ) {
+        // empty constructor
     }
 
     public returning(identifier: string): ModelFactory {

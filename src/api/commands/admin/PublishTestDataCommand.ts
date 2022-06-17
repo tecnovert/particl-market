@@ -86,9 +86,9 @@ export interface RpcTransactionDetails {
 export class PublishTestDataCommand extends BaseCommand implements RpcCommandInterface<boolean> {
 
     private queue: PQueue;
-
+    /* eslint-disable max-len, max-params */
     constructor(
-        // tslint:disable:max-line-length
+
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Command) @named(Targets.Command.listingitemtemplate.ListingItemTemplatePostCommand) private listingItemTemplatePostCommand: ListingItemTemplatePostCommand,
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
@@ -100,8 +100,8 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
         @inject(Types.Service) @named(Targets.Service.model.ImageService) private imageService: ImageService,
         @inject(Types.Factory) @named(Targets.Factory.model.ListingItemTemplateFactory) public listingItemTemplateFactory: ListingItemTemplateFactory,
         @inject(Types.Factory) @named(Targets.Factory.model.ImageFactory) public imageFactory: ImageFactory
-        // tslint:enable:max-line-length
     ) {
+    /* eslint-enable max-len, max-params */
         super(Commands.ADMIN_PUBLISH_TEST_DATA);
         this.log = new Logger(__filename);
 
@@ -168,7 +168,7 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
         let i = 0;
         i++;
 
-        this.log.debug('create template: ' + i + '/' + count);
+        this.log.debug(`create template: ${i}/${count}`);
         let baseTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.create(createRequest).then(value => value.toJSON());
         const randomImageData = await this.testDataService.generateRandomImage(10, 10);
 
@@ -189,7 +189,7 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
         baseTemplate = await this.listingItemTemplateService.createResizedTemplateImages(baseTemplate, CoreMessageVersion.FREE,
             0.9, 0.9, 10).then(value => value.toJSON());
 
-        this.log.debug('clone template: ' + i + '/' + count);
+        this.log.debug(`clone template: ${i}/${count}`);
         let marketTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.clone(baseTemplate, baseTemplate.id, market)
             .then(value => value.toJSON());
 
@@ -197,7 +197,7 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
 
         randomCategory = await this.getRandomCategory(market);
         await this.itemInformationService.update(marketTemplate.ItemInformation.id, {
-            title: Faker.random.words(3) + ' [' + Date.now() + ']',
+            title: `${Faker.random.words(3)} [${Date.now()}]`,
             shortDescription: Faker.lorem.paragraph(1),
             longDescription: Faker.lorem.paragraph(5),
             itemCategory: {
@@ -210,7 +210,7 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
         // this.log.debug('marketTemplate: ', JSON.stringify(marketTemplate, null, 2));
         // 0.00119444
 
-        this.log.debug('post template: ' + i + '/' + count);
+        this.log.debug(`post template: ${i}/${count}`);
         await this.listingItemTemplatePostCommand.execute({
             id: i,
             jsonrpc: '2.0',
@@ -234,11 +234,17 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
             const inputs: RpcInput[] = await this.getInputs(market.Identity.wallet, chunk);
             for (const input of inputs) {
                 i++;
-                this.queue.add(() => this.cloneAndPost(marketTemplate, market, changeAddress, input.tx, input.n, i), {
-                    concurrency: 1
-                    // interval: 60 * 1000,
-                    // intervalCap: 15
-                } as DefaultAddOptions);
+                this.queue.add(
+                    () => this.cloneAndPost(marketTemplate, market, changeAddress, input.tx, input.n, i),
+                    {
+                        concurrency: 1
+                        // interval: 60 * 1000,
+                        // intervalCap: 15
+                    } as DefaultAddOptions
+                ).then(
+                    () => { /* nothing to do */ },
+                    () => { /* nothing to do */ }
+                );
             }
         }
         return true;
@@ -291,16 +297,17 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
         const txid = await this.coreRpcService.sendTypeTo(walletFrom, OutputType.PART, OutputType.PART, outputs, false);
         const transaction: RpcTransaction = await this.coreRpcService.getTransaction(walletFrom, txid, false, true);
         const txDetails: RpcTransactionDetails[] = _.filter(transaction.details, detail => detail.category === 'receive');
-        return _.map(txDetails, txDetail => {
-            return {
-                tx: txid,
-                n: txDetail.vout
-            } as RpcInput;
-        });
+        return _.map(txDetails, txDetail => ({tx: txid, n: txDetail.vout} as RpcInput));
     }
 
-    private async cloneAndPost(marketTemplate: resources.ListingItemTemplate, market: resources.Market,
-                               changeAddress: string, tx: string, n: number, i: number): Promise<void> {
+    private async cloneAndPost(
+        marketTemplate: resources.ListingItemTemplate,
+        market: resources.Market,
+        changeAddress: string,
+        tx: string,
+        n: number,
+        i: number
+    ): Promise<void> {
 
         const coinControl = {
             changeaddress: changeAddress,
@@ -314,7 +321,7 @@ export class PublishTestDataCommand extends BaseCommand implements RpcCommandInt
 
         const randomCategory = await this.getRandomCategory(market);
         await this.itemInformationService.update(marketTemplate.ItemInformation.id, {
-            title: Faker.random.words(3) + ' [' + marketTemplate.id + ']',
+            title: `${Faker.random.words(3)} [${marketTemplate.id}]`,
             shortDescription: Faker.lorem.paragraph(3),
             longDescription: Faker.lorem.paragraphs(3),
             itemCategory: {

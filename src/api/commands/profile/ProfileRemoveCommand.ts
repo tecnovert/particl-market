@@ -35,7 +35,7 @@ export class ProfileRemoveCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
+     * [0]: profile: resources.Profile
      * todo: should we even allow Profile removal?
      *
      * @param data
@@ -49,7 +49,7 @@ export class ProfileRemoveCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: id
+     * [0]: id
      *
      * @param data
      * @returns {Promise<RpcRequest>}

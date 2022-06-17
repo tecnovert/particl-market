@@ -2,8 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
@@ -22,11 +20,11 @@ export class MarketImageAddMessageFactory extends BaseMessageFactory {
     public log: LoggerType;
 
     constructor(
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.Service) @named(Targets.Service.model.ImageDataService) public imageDataService: ImageDataService,
         @inject(Types.Factory) @named(Targets.Factory.message.ListingItemImageAddMessageFactory) private listingItemImageAddMessageFactory: ListingItemImageAddMessageFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super();
         this.log = new Logger(__filename);

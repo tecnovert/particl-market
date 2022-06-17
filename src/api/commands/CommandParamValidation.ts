@@ -2,9 +2,8 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file, @typescript-eslint/no-unused-vars */
 import * as _ from 'lodash';
-import * as resources from 'resources';
 import { MissingParamException } from '../exceptions/MissingParamException';
 import { InvalidParamException } from '../exceptions/InvalidParamException';
 import { BidDataValue } from '../enums/BidDataValue';
@@ -17,7 +16,6 @@ import { SearchOrder } from '../enums/SearchOrder';
 import { OrderItemStatus } from '../enums/OrderItemStatus';
 import { OrderStatus } from '../enums/OrderStatus';
 import { MPActionExtended } from '../enums/MPActionExtended';
-import { MessageException } from '../exceptions/MessageException';
 import { GovernanceAction } from '../enums/GovernanceAction';
 import { CommentAction } from '../enums/CommentAction';
 
@@ -208,7 +206,7 @@ export class NumberValidationRule extends BaseParamValidationRule {
 
     public async customValidate(value: number, index: number, allValues: any[]): Promise<boolean> {
         if (!_.isNil(value) && value < this.minValue) {
-            throw new InvalidParamException(this.name, 'greater than or equal to ' + this.minValue);
+            throw new InvalidParamException(this.name, `greater than or equal to ${this.minValue}`);
         }
         return true;
     }
@@ -237,11 +235,11 @@ export class MessageRetentionValidationRule extends NumberValidationRule {
         if (value <= 0) {
             throw new InvalidParamException(this.name, 'larger than 0');
         }
-        if (value > parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10)) {
-            throw new InvalidParamException(this.name, 'smaller than ' + process.env.PAID_MESSAGE_RETENTION_DAYS);
+        if (value > parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS || '0', 10)) {
+            throw new InvalidParamException(this.name, `smaller than ${process.env.PAID_MESSAGE_RETENTION_DAYS || '0'}`);
         }
 
-        return value > 0 && value <= parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10);
+        return value > 0 && value <= parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS || '0', 10);
     }
 }
 
@@ -330,9 +328,7 @@ export class ActionMessageTypesValidationRule extends EnumValidationRule {
     public async customValidate(value: any, index: number, allValues: string[]): Promise<boolean> {
         if (!_.isNil(value)
             && (!Array.isArray(value)
-                || value.every(type => {
-                    return typeof type !== 'string' || this.validEnumValues.indexOf(type) === -1;
-                })
+                || value.every(type => typeof type !== 'string' || this.validEnumValues.indexOf(type) === -1)
             )) {
             throw new InvalidParamException('types', 'ActionMessageTypes[]');
         }
@@ -412,4 +408,4 @@ export class SearchOrderFieldValidationRule extends EnumValidationRule {
     }
 }
 
-// tslint:enable:max-classes-per-file
+/* eslint-enable max-classes-per-file, @typescript-eslint/no-unused-vars */

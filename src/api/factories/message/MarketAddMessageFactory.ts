@@ -2,14 +2,13 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { MarketAddMessage } from '../../messages/action/MarketAddMessage';
 import { MissingParamException } from '../../exceptions/MissingParamException';
-import { MarketImageAddMessageFactory } from './MarketImageAddMessageFactory';
+// import { MarketImageAddMessageFactory } from './MarketImageAddMessageFactory';
 import { MarketAddRequest } from '../../requests/action/MarketAddRequest';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
@@ -18,8 +17,6 @@ import { ContentReference, DSN } from '@zasmilingidiot/omp-lib/dist/interfaces/d
 import { ListingItemImageAddMessageFactory } from './ListingItemImageAddMessageFactory';
 import { BaseMessageFactory } from '../BaseMessageFactory';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
-import {HashableBidCreateRequestConfig} from '../hashableconfig/createrequest/HashableBidCreateRequestConfig';
-import {HashableBidField} from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import {HashableMarketField} from '../hashableconfig/HashableField';
 
 export class MarketAddMessageFactory extends BaseMessageFactory {
@@ -27,11 +24,11 @@ export class MarketAddMessageFactory extends BaseMessageFactory {
     public log: LoggerType;
 
     constructor(
-        // tslint:disable:max-line-length
-        @inject(Types.Factory) @named(Targets.Factory.message.MarketImageAddMessageFactory) private marketImageAddMessageFactory: MarketImageAddMessageFactory,
+        /* eslint-disable max-len */
+        // @inject(Types.Factory) @named(Targets.Factory.message.MarketImageAddMessageFactory) private marketImageAddMessageFactory: MarketImageAddMessageFactory,
         @inject(Types.Factory) @named(Targets.Factory.message.ListingItemImageAddMessageFactory) private listingItemImageAddMessageFactory: ListingItemImageAddMessageFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super();
         this.log = new Logger(__filename);

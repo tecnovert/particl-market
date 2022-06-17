@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { RpcRequest } from '../../requests/RpcRequest';
@@ -13,7 +12,6 @@ import { Types, Core, Targets } from '../../../constants';
 import { BaseCommand } from '../BaseCommand';
 import { Commands } from '../CommandEnumType';
 import { ShoppingCartService } from '../../services/model/ShoppingCartService';
-import { ShoppingCart } from '../../models/ShoppingCart';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { MissingParamException } from '../../exceptions/MissingParamException';
@@ -32,7 +30,7 @@ export class ShoppingCartGetCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: cart, resources.ShoppingCart
+     * [0]: cart, resources.ShoppingCart
      *
      * @param data
      * @returns {Promise<resources.ShoppingCart>}
@@ -44,7 +42,7 @@ export class ShoppingCartGetCommand extends BaseCommand implements RpcCommandInt
 
     /**
      * data.params[]:
-     *  [0]: cartId
+     * [0]: cartId
      *
      * @param data
      * @returns {Promise<ShoppingCart>}
@@ -61,7 +59,7 @@ export class ShoppingCartGetCommand extends BaseCommand implements RpcCommandInt
 
         data.params[0] = await this.shoppingCartService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ShoppingCart');
             });
 

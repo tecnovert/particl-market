@@ -55,9 +55,9 @@ export class BlacklistAddCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: type: BlacklistType
-     *  [1]: target: string
-     *  [2]: market: resources.Market, optional
+     * [0]: type: BlacklistType
+     * [1]: target: string
+     * [2]: market: resources.Market, optional
      *
      * @param data
      * @returns {Promise<Blacklist>}
@@ -77,9 +77,9 @@ export class BlacklistAddCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: type: BlacklistType
-     *  [1]: target: string
-     *  [2]: market: resources.Market, optional
+     * [0]: type: BlacklistType
+     * [1]: target: string
+     * [2]: market: resources.Market, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -92,23 +92,23 @@ export class BlacklistAddCommand extends BaseCommand implements RpcCommandInterf
         const market: resources.Market = data.params[2];
 
         switch (type) {
-            case BlacklistType.LISTINGITEM:
-                if (_.isNil(market)) {
-                    throw new MissingParamException('marketId');
-                }
-                await this.listingItemService.findOneByHashAndMarketReceiveAddress(target, market.receiveAddress)
-                    .catch(reason => {
-                        throw new ModelNotFoundException('ListingItem');
-                    });
-                break;
-            case BlacklistType.MARKET:
-                const markets = await this.marketService.findAllByHash(target).then(value => value.toJSON());
-                if (markets.length === 0) {
-                    throw new ModelNotFoundException('Market');
-                }
-                break;
-            default:
-                throw new InvalidParamException('type', 'BlacklistType');
+        case BlacklistType.LISTINGITEM:
+            if (_.isNil(market)) {
+                throw new MissingParamException('marketId');
+            }
+            await this.listingItemService.findOneByHashAndMarketReceiveAddress(target, market.receiveAddress)
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItem');
+                });
+            break;
+        case BlacklistType.MARKET:
+            const markets = await this.marketService.findAllByHash(target).then(value => value.toJSON());
+            if (markets.length === 0) {
+                throw new ModelNotFoundException('Market');
+            }
+            break;
+        default:
+            throw new InvalidParamException('type', 'BlacklistType');
         }
 
         return data;

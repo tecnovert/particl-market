@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Core, Targets, Types } from '../../constants';
 import { MarketplaceMessage } from '../messages/MarketplaceMessage';
@@ -12,7 +11,7 @@ import { MessageException } from '../exceptions/MessageException';
 import { GovernanceAction } from '../enums/GovernanceAction';
 import { VoteMessage } from '../messages/action/VoteMessage';
 import { ProposalService } from '../services/model/ProposalService';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 import { Logger as LoggerType } from '../../core/Logger';
 import { CoreRpcService } from '../services/CoreRpcService';
 import { VoteService } from '../services/model/VoteService';
@@ -31,7 +30,7 @@ export class VoteValidator implements ActionMessageValidatorInterface {
         this.log = new Logger(__filename);
     }
 
-    public async validateMessage(marketplaceMessage: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(marketplaceMessage: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // TODO: move common checks to base class
         if (!marketplaceMessage.version) {
             throw new MessageException('version: missing');
@@ -62,7 +61,7 @@ export class VoteValidator implements ActionMessageValidatorInterface {
         }
 
         // TODO: propably fails validation here if Proposal is not received yet
-/*
+        /*
         const proposal: resources.Proposal = await this.proposalService.findOneByHash(actionMessage.proposalHash).then(value => value.toJSON());
 
         if (actionMessage && actionMessage.generated > proposal.expiredAt) {
@@ -71,11 +70,11 @@ export class VoteValidator implements ActionMessageValidatorInterface {
             // smsgMessage.sent > proposal.expiredAt -> message was sent after expiration
             throw new MessageException('Vote is invalid, it was sent after Proposal expiration.');
         }
-*/
+        */
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // MPA_PROPOSAL_ADD should exists
         // -> (msg.action as MPA_VOTE).proposalHash is the hash of Proposal
         return await this.proposalService.findOneByHash((message.action as VoteMessage).proposalHash, true)

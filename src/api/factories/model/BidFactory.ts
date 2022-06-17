@@ -2,11 +2,10 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
-import { Types, Core, Targets } from '../../../constants';
+import { Types, Core } from '../../../constants';
 import { BidMessage } from '../../messages/action/BidMessage';
 import { BidCreateRequest } from '../../requests/model/BidCreateRequest';
 import { BidDataCreateRequest } from '../../requests/model/BidDataCreateRequest';
@@ -27,10 +26,10 @@ import { HashableBidReleaseField } from '../hashableconfig/HashableField';
 import { OrderItemShipMessage } from '../../messages/action/OrderItemShipMessage';
 
 export type BidMessageTypes = BidMessage | BidAcceptMessage | BidRejectMessage | BidCancelMessage
-    | EscrowLockMessage | EscrowReleaseMessage | EscrowRefundMessage | EscrowCompleteMessage | OrderItemShipMessage;
+| EscrowLockMessage | EscrowReleaseMessage | EscrowRefundMessage | EscrowCompleteMessage | OrderItemShipMessage;
 
 export type BidMessageTypesWithParentBid = BidAcceptMessage | BidRejectMessage | BidCancelMessage
-    | EscrowLockMessage | EscrowReleaseMessage | EscrowRefundMessage | EscrowCompleteMessage | OrderItemShipMessage;
+| EscrowLockMessage | EscrowReleaseMessage | EscrowRefundMessage | EscrowCompleteMessage | OrderItemShipMessage;
 
 export class BidFactory implements ModelFactoryInterface {
 
@@ -79,12 +78,7 @@ export class BidFactory implements ModelFactoryInterface {
         }
 
         // create bidDataCreateRequests
-        const bidDatas = Object.keys(bidDataValues).map((key) => {
-            return {
-                key,
-                value: bidDataValues[key]
-            } as BidDataCreateRequest;
-        });
+        const bidDatas = Object.keys(bidDataValues).map((key) => ({key, value: bidDataValues[key]} as BidDataCreateRequest));
 
         const createRequest = {
             // profile_id: params.profile.id,

@@ -111,7 +111,6 @@ export class PriceTickerService {
     public async getPriceTickers(currencies: string[]): Promise<PriceTicker[]> {
         const returnData: any = [];
         for (let currency of currencies) { // ETH, BTC, XRP
-            let priceTicker;
             currency = currency.toUpperCase(); // convert to UPPERCASE
             const symbolData = await this.getOneBySymbol(currency);
             if (symbolData) {
@@ -125,7 +124,7 @@ export class PriceTickerService {
                 // call api and create
                 await this.checkUpdateCreateRecord();
             }
-            priceTicker = await this.getOneBySymbol(currency);
+            const priceTicker = await this.getOneBySymbol(currency);
             returnData.push(priceTicker.toJSON());
         }
         return returnData;
@@ -163,13 +162,12 @@ export class PriceTickerService {
             };
             if (symbolData) {
                 // update record
-                const updateSymbolRecord = await this.update(symbolData.id, cryptoData as PriceTickerUpdateRequest);
+                await this.update(symbolData.id, cryptoData as PriceTickerUpdateRequest);
             } else {
                 // insert
-                const createdPriceTicker = await this.create(cryptoData as PriceTickerCreateRequest);
+                await this.create(cryptoData as PriceTickerCreateRequest);
             }
         }
-        return;
     }
 
     /**
@@ -191,16 +189,19 @@ export class PriceTickerService {
     private async getLatestData(): Promise<any> {
         try {
             return new Promise<any>((resolve, reject) => {
-                Request(`https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=200`, async (error, response, body) => {
-                    if (error) {
-                        reject(error);
+                Request(
+                    `https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=200`,
+                    (error, response, body) => {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve(JSON.parse(body));
                     }
-                    resolve(JSON.parse(body));
-                });
+                );
             }).catch(() => {
                 throw new MessageException(`Invalid currency`);
             });
-        } catch (err) {
+        } catch (err: any) {
             throw new MessageException(`Error : ${err}`);
         }
     }

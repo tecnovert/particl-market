@@ -2,16 +2,13 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { IsNotEmpty, IsEnum } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { BidDataCreateRequest } from './BidDataCreateRequest';
 import { AddressCreateRequest } from './AddressCreateRequest';
-import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { ModelRequestInterface } from './ModelRequestInterface';
 import {ActionMessageTypes} from '../../enums/ActionMessageTypes';
-import {MPActionExtended} from '../../enums/MPActionExtended';
 
-// tslint:disable:variable-name
 export class BidCreateRequest extends RequestBody implements ModelRequestInterface {
 
     @IsNotEmpty()
@@ -44,4 +41,3 @@ export class BidCreateRequest extends RequestBody implements ModelRequestInterfa
 
     public bidDatas: BidDataCreateRequest[];
 }
-// tslint:enable:variable-name

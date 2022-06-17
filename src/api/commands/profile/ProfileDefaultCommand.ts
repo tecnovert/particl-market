@@ -41,7 +41,7 @@ export class ProfileDefaultCommand extends BaseCommand implements RpcCommandInte
 
     /**
      * data.params[]:
-     *  [0]: id
+     * [0]: id
      *
      * @param data
      * @returns {Promise<Profile>}
@@ -62,7 +62,7 @@ export class ProfileDefaultCommand extends BaseCommand implements RpcCommandInte
 
     /**
      * data.params[]:
-     *  [0]: id, optional
+     * [0]: id, optional
      *
      * @param data
      * @returns {Promise<Profile>}

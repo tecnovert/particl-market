@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as _ from 'lodash';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { inject, named } from 'inversify';
@@ -17,7 +16,6 @@ import { ShippingCountries } from '../../../core/helpers/ShippingCountries';
 import { ShippingZips } from '../../../core/helpers/ShippingZips';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ZipCodeNotFoundException } from '../../exceptions/ZipCodeNotFoundException';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -38,23 +36,23 @@ export class AddressUpdateCommand extends BaseCommand implements RpcCommandInter
     /**
      *
      * data.params[]:
-     *  [0]: addressId
-     *  [1]: title
-     *  [2]: firstName
-     *  [3]: lastName
-     *  [4]: addressLine1
-     *  [5]: addressLine2
-     *  [6]: city
-     *  [7]: state
-     *  [8]: country/countryCode
-     *  [9]: zipCode
+     * [0]: addressId
+     * [1]: title
+     * [2]: firstName
+     * [3]: lastName
+     * [4]: addressLine1
+     * [5]: addressLine2
+     * [6]: city
+     * [7]: state
+     * [8]: country/countryCode
+     * [9]: zipCode
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<Address>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Address> {
+    public async execute( @request(RpcRequest) data: RpcRequest ): Promise<Address> {
 
         // TODO: type is ignored
         return this.addressService.update(data.params[0], {
@@ -73,16 +71,16 @@ export class AddressUpdateCommand extends BaseCommand implements RpcCommandInter
     /**
      *
      * data.params[]:
-     *  [0]: addressId
-     *  [1]: title
-     *  [2]: firstName
-     *  [3]: lastName
-     *  [4]: addressLine1
-     *  [5]: addressLine2
-     *  [6]: city
-     *  [7]: state
-     *  [8]: country/countryCode
-     *  [9]: zipCode
+     * [0]: addressId
+     * [1]: title
+     * [2]: firstName
+     * [3]: lastName
+     * [4]: addressLine1
+     * [5]: addressLine2
+     * [6]: city
+     * [7]: state
+     * [8]: country/countryCode
+     * [9]: zipCode
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -140,7 +138,7 @@ export class AddressUpdateCommand extends BaseCommand implements RpcCommandInter
 
         // Validate ZIP code
         const zipCodeStr = data.params[9];
-        if (!ShippingZips.validate(countryCode, zipCodeStr)) {
+        if (!ShippingZips.validate(/* countryCode, zipCodeStr */)) {
             throw new ZipCodeNotFoundException(zipCodeStr);
         }
 

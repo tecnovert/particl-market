@@ -111,54 +111,43 @@ export class Bid extends Bookshelf.Model<Bid> {
                 qb.join('listing_items', 'bids.listing_item_id', 'listing_items.id');
 
                 if (options.listingItemId) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('listing_items.id', '=', options.listingItemId);
-                    });
+                    qb.andWhere('listing_items.id', '=', options.listingItemId);
                 }
 
                 if (options.type) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('bids.type', '=', options.type);
-                    });
+                    qb.andWhere('bids.type', '=', options.type);
                 }
 
                 if (options.searchString) {
                     qb.innerJoin('item_informations', 'item_informations.listing_item_id', 'bids.listing_item_id');
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('item_informations.title', 'LIKE', '%' + options.searchString + '%')
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    qb.andWhere( qbInner =>
+                        qbInner.where('item_informations.title', 'LIKE', '%' + options.searchString + '%')
                             .orWhere('item_informations.short_description', 'LIKE', '%' + options.searchString + '%')
-                            .orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%');
-                    });
+                            .orWhere('item_informations.long_description', 'LIKE', '%' + options.searchString + '%')
+                    );
                 }
 
                 if (options.market) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('listing_items.market', '=', options.market);
-                    });
+                    qb.andWhere('listing_items.market', '=', options.market);
                 }
 
                 if (options.identityId) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('bids.identity_id', '=', options.identityId);
-                    });
+                    qb.andWhere('bids.identity_id', '=', options.identityId);
                 }
 
                 if (options.profileId) {
                     qb.join('identities', 'bids.identity_id', 'identities.id');
-                    qb.andWhere( qbInner => {
-                        return qbInner.where('identities.profile_id', '=', options.profileId);
-                    });
+                    qb.andWhere('identities.profile_id', '=', options.profileId);
                 }
 
                 if (options.orderItemStatus) {
                     qb.innerJoin('order_items', 'order_items.bid_id', 'bids.id');
-                    qb.where('order_items.status', '=', options.orderItemStatus);
+                    qb.andWhere('order_items.status', '=', options.orderItemStatus);
                 }
 
                 if (!_.isEmpty(options.bidders)) {
-                    qb.andWhere( qbInner => {
-                        return qbInner.whereIn('bids.bidder', options.bidders);
-                    });
+                    qb.whereIn('bids.bidder', options.bidders);
                 }
 
             })
@@ -212,7 +201,7 @@ export class Bid extends Bookshelf.Model<Bid> {
     public set CreatedAt(value: Date) { this.set('createdAt', value); }
 
     public BidDatas(): Collection<BidData> {
-       return this.hasMany(BidData, 'bid_id', 'id');
+        return this.hasMany(BidData, 'bid_id', 'id');
     }
 
     public ShippingAddress(): Address {

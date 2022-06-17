@@ -7,8 +7,5 @@ import { ActionMessageInterface } from '../messages/action/ActionMessageInterfac
 import { CoreSmsgMessage } from '../messages/CoreSmsgMessage';
 import { MarketplaceMessageEvent } from '../messages/MarketplaceMessageEvent';
 
-export type ProcessableMessages = MarketplaceMessageEvent
-                                | ActionMessageInterface
-                                | CoreSmsgMessage[]
-                                | resources.SmsgMessage[]
-                                | string;
+export type ProcessableMessages =
+MarketplaceMessageEvent | ActionMessageInterface | CoreSmsgMessage[] | resources.SmsgMessage[] | string;

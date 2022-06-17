@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as Bookshelf from 'bookshelf';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
@@ -12,7 +11,7 @@ import { NotFoundException } from '../../exceptions/NotFoundException';
 import { ProposalOptionRepository } from '../../repositories/ProposalOptionRepository';
 import { ProposalOption } from '../../models/ProposalOption';
 import { ProposalOptionCreateRequest } from '../../requests/model/ProposalOptionCreateRequest';
-import { ProposalOptionUpdateRequest } from '../../requests/model/ProposalOptionUpdateRequest';
+// import { ProposalOptionUpdateRequest } from '../../requests/model/ProposalOptionUpdateRequest';
 import { NotImplementedException } from '../../exceptions/NotImplementedException';
 
 export class ProposalOptionService {
@@ -66,11 +65,11 @@ export class ProposalOptionService {
     }
 
     @validate()
-    public async update(id: number, @request(ProposalOptionUpdateRequest) body: ProposalOptionUpdateRequest): Promise<ProposalOption> {
+    public async update(/* id: number, @request(ProposalOptionUpdateRequest) body: ProposalOptionUpdateRequest */): Promise<ProposalOption> {
         // update not needed
         throw new NotImplementedException();
 
-/*
+        /*
         // find the existing one without related
         const proposalOption = await this.findOne(id, false);
 
@@ -87,7 +86,7 @@ export class ProposalOptionService {
         // return newProposalOption;
 
         return updatedProposalOption;
-*/
+        */
     }
 
     public async destroy(id: number): Promise<void> {

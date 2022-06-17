@@ -104,31 +104,31 @@ export class BlacklistService {
                     let blacklist: resources.Blacklist;
 
                     switch (voteRequest.proposal.category) {
-                        case ProposalCategory.ITEM_VOTE:
+                    case ProposalCategory.ITEM_VOTE:
 
-                            blacklist = await this.create({
-                                type: BlacklistType.LISTINGITEM,        // todo: add the type as command param
-                                target: voteRequest.proposal.target,
-                                market: voteRequest.proposal.market,
-                                profile_id: voteRequest.sender.Profile.id,      // profile specific since user requested this
-                                listing_item_id: flaggedItem.ListingItem!.id
-                            } as BlacklistCreateRequest).then(value => value.toJSON());
-                            blacklisted.push(blacklist);
-                            break;
+                        blacklist = await this.create({
+                            type: BlacklistType.LISTINGITEM,        // todo: add the type as command param
+                            target: voteRequest.proposal.target,
+                            market: voteRequest.proposal.market,
+                            profile_id: voteRequest.sender.Profile.id,      // profile specific since user requested this
+                            listing_item_id: flaggedItem.ListingItem!.id
+                        } as BlacklistCreateRequest).then(value => value.toJSON());
+                        blacklisted.push(blacklist);
+                        break;
 
-                        case ProposalCategory.MARKET_VOTE:
-                            blacklist = await this.create({
-                                type: BlacklistType.MARKET,
-                                target: voteRequest.proposal.target,
-                                market: voteRequest.proposal.market,
-                                profile_id: voteRequest.sender.Profile.id,      // profile specific since user requested this
-                                market_id: flaggedItem.Market!.id
-                            } as BlacklistCreateRequest).then(value => value.toJSON());
-                            blacklisted.push(blacklist);
-                            break;
+                    case ProposalCategory.MARKET_VOTE:
+                        blacklist = await this.create({
+                            type: BlacklistType.MARKET,
+                            target: voteRequest.proposal.target,
+                            market: voteRequest.proposal.market,
+                            profile_id: voteRequest.sender.Profile.id,      // profile specific since user requested this
+                            market_id: flaggedItem.Market!.id
+                        } as BlacklistCreateRequest).then(value => value.toJSON());
+                        blacklisted.push(blacklist);
+                        break;
 
-                        default:
-                            break;
+                    default:
+                        break;
                     }
                 }
             }

@@ -33,13 +33,14 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
     private queue: PQueue;          // Queue processing the SmsgMessages
 
     constructor(
-        // tslint:disable-next-line:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.MessageProcessor) @named(Targets.MessageProcessor.MarketplaceMessageProcessor) public marketplaceMessageProcessor: MarketplaceMessageProcessor,
         @inject(Types.Factory) @named(Targets.Factory.model.SmsgMessageFactory) private smsgMessageFactory: SmsgMessageFactory,
         @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) private smsgMessageService: SmsgMessageService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) private smsgService: SmsgService,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter
+        /* eslint-enable max-len */
     ) {
         this.log = new Logger(__filename);
 
@@ -108,7 +109,6 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
             this.log.debug('Not a MarketplaceMessage, ignoring: ', msgid);
         }
 
-        return;
     }
 
     private async saveSmsgMessage(msg: CoreSmsgMessage): Promise<resources.SmsgMessage> {
@@ -128,7 +128,7 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
 
                 // after the smsgMessage is stored, remove it
                 await this.smsgService.smsg(msg.msgid, true, true)
-                    .then(removed => {
+                    .then(() => {
                         // this.log.debug('REMOVED: ', JSON.stringify(removed.msgid, null, 2));
                     });
                 return smsgMessage;
@@ -151,15 +151,11 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
         // check whether an SmsgMessage with the same msgid can already be found
         const existingSmsgMessage: resources.SmsgMessage = await this.smsgMessageService.findOneByMsgIdAndDirection(msg.msgid, ActionDirection.INCOMING)
             .then(value => value.toJSON())
-            .catch(error => {
-                return undefined;
-            });
+            .catch(() => undefined);
 
         // in case of resent SmsgMessasge, ...
         const marketplaceMessage: MarketplaceMessage = JSON.parse(msg.text);
-        const resentMsgIdKVS = _.find(marketplaceMessage.action.objects, (kvs: KVS) => {
-            return kvs.key === ActionMessageObjects.RESENT_MSGID;
-        });
+        const resentMsgIdKVS = _.find(marketplaceMessage.action.objects, (kvs: KVS) => kvs.key === ActionMessageObjects.RESENT_MSGID);
 
         let existingResentSmsgMessage: resources.SmsgMessage | undefined;
 
@@ -167,11 +163,9 @@ export class CoreMessageProcessor implements MessageProcessorInterface {
         if (resentMsgIdKVS) {
             this.log.debug('SmsgMessage was resent: ', resentMsgIdKVS.value);
 
-            existingResentSmsgMessage = await this.smsgMessageService.findOneByMsgIdAndDirection(resentMsgIdKVS.value + '', ActionDirection.INCOMING)
+            existingResentSmsgMessage = await this.smsgMessageService.findOneByMsgIdAndDirection(`${resentMsgIdKVS.value}`, ActionDirection.INCOMING)
                 .then(value => value.toJSON())
-                .catch(error => {
-                    return undefined;
-                });
+                .catch(() => undefined);
         } else {
             existingResentSmsgMessage = undefined;
         }

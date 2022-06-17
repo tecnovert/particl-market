@@ -12,7 +12,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { ProposalOptionService } from '../../services/model/ProposalOptionService';
 import { CommandParamValidationRules, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';
@@ -39,14 +38,14 @@ export class VoteListCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * command description
-     *  [0]: proposal: resources.Proposal
+     * [0]: proposal: resources.Proposal
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<resources.Vote[]> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.Vote[]> {
 
         const proposal: resources.Proposal = data.params[0];
 
@@ -60,7 +59,7 @@ export class VoteListCommand extends BaseCommand implements RpcCommandInterface<
 
     /**
      * data.params[]:
-     *  [0]: proposalHash
+     * [0]: proposalHash
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -72,7 +71,7 @@ export class VoteListCommand extends BaseCommand implements RpcCommandInterface<
         data.params[0] = await this.proposalService.findOneByHash(data.params[0])
             .then(value => value.toJSON())
             .catch(reason => {
-                this.log.error('Proposal not found. ' + reason);
+                this.log.error(`Proposal not found. ${reason}`);
                 throw new ModelNotFoundException('Proposal');
             });
 

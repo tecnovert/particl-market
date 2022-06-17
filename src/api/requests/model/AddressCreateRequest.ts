@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import { IsNotEmpty, IsDefined, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsDefined } from 'class-validator';
 import { RequestBody } from '../../../core/api/RequestBody';
 import { AddressType } from '../../enums/AddressType';
 import { ModelRequestInterface } from './ModelRequestInterface';

@@ -3,10 +3,9 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { app } from '../../app';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../core/Logger';
-import { Types, Core, Targets } from '../../constants';
+import { Types, Core } from '../../constants';
 import { MarketplaceNotification } from '../messages/MarketplaceNotification';
 
 export class NotifyService {

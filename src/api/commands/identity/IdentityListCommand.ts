@@ -11,7 +11,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { Identity } from '../../models/Identity';
 import { ProfileService } from '../../services/model/ProfileService';
 import { IdentityService } from '../../services/model/IdentityService';
@@ -41,21 +40,21 @@ export class IdentityListCommand extends BaseCommand implements RpcCommandInterf
      * command description
      *
      * data.params[]:
-     *  [0]: profile: resources.Profile
+     * [0]: profile: resources.Profile
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<Identity>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Collection<Identity>> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Collection<Identity>> {
         const profile: resources.Profile = data.params[0];
         return await this.identityService.findAllByProfileId(profile.id);
     }
 
     /**
      * data.params[]:
-     *  [0]: profileId
+     * [0]: profileId
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

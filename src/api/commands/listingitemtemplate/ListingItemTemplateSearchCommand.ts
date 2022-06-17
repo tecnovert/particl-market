@@ -66,16 +66,17 @@ export class ListingItemTemplateSearchCommand extends BaseSearchCommand implemen
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: profile, resources.Profile, required
-     *  [5]: searchString, string, optional
-     *  [6]: categories, optional, number[]|string[], if string -> find using key
-     *  [7]: isBaseTemplate, boolean, optional, default true
-     *  [8]: market, resources.Market, optional
-     *  [9]: hasItems, boolean, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: profile, resources.Profile, required
+     * [5]: searchString, string, optional
+     * [6]: categories, optional, number[]|string[], if string -> find using key
+     * [7]: isBaseTemplate, boolean, optional, default true
+     * [8]: market, resources.Market, optional
+     * [9]: hasItems, boolean, optional
+     *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
      */
@@ -103,16 +104,17 @@ export class ListingItemTemplateSearchCommand extends BaseSearchCommand implemen
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: profileId: number, required -> profile: resources.Profile
-     *  [5]: searchString, string, * for all, optional
-     *  [6]: categories, optional, number[]|string[], if string -> find using key
-     *  [7]: isBaseTemplate, boolean, optional, default true
-     *  [8]: marketReceiveAddress, string, * for all, optional
-     *  [9]: hasItems, boolean, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: profileId: number, required -> profile: resources.Profile
+     * [5]: searchString, string, * for all, optional
+     * [6]: categories, optional, number[]|string[], if string -> find using key
+     * [7]: isBaseTemplate, boolean, optional, default true
+     * [8]: marketReceiveAddress, string, * for all, optional
+     * [9]: hasItems, boolean, optional
+     *
      * @param data
      * @returns {Promise<RpcRequest>}
      */
@@ -122,9 +124,9 @@ export class ListingItemTemplateSearchCommand extends BaseSearchCommand implemen
         const profile: resources.Profile = data.params[4];  // required
         const searchString = data.params[5];                // optional
         const categories = data.params[6];                  // optional
-        const isBaseTemplate = data.params[7];              // optional
+        // const isBaseTemplate = data.params[7];              // optional
         let marketReceiveAddress = data.params[8];          // optional
-        const hasItems = data.params[9];                    // optional
+        // const hasItems = data.params[9];                    // optional
 
         this.log.debug('profileId: ', JSON.stringify(profile.id, null, 2));
 
@@ -134,9 +136,7 @@ export class ListingItemTemplateSearchCommand extends BaseSearchCommand implemen
                 throw new InvalidParamException('categories', 'number[] | string[]');
             } else {
                 // validate types, since we could have any[]...
-                const foundDiffenent = _.find(categories, value => {
-                    return typeof value !== typeof categories[0];
-                });
+                const foundDiffenent = _.find(categories, value => typeof value !== typeof categories[0]);
                 if (foundDiffenent) {
                     throw new InvalidParamException('categories', 'number[] | string[]');
                 }
@@ -147,7 +147,7 @@ export class ListingItemTemplateSearchCommand extends BaseSearchCommand implemen
         if (marketReceiveAddress) {
             const market: resources.Market = await this.marketService.findOneByProfileIdAndReceiveAddress(profile.id, marketReceiveAddress)
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Market');
                 });
             data.params[8] = market;

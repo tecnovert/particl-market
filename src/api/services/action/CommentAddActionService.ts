@@ -33,6 +33,7 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class CommentAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
@@ -57,6 +58,7 @@ export class CommentAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -87,10 +89,12 @@ export class CommentAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: CommentAddRequest,
-                           marketplaceMessage: MarketplaceMessage,
-                           smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: CommentAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
 
         return smsgSendResponse;
     }
@@ -106,17 +110,19 @@ export class CommentAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest, undefined when called from onEvent
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: CommentAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: CommentAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         const commentAddMessage: CommentAddMessage = marketplaceMessage.action as CommentAddMessage;
 
         let parentCommentId;
         if (commentAddMessage.parentCommentHash) {
             parentCommentId = await this.commentService.findOneByHash(commentAddMessage.parentCommentHash)
-            .then(value => value.toJSON().id);
+                .then(value => value.toJSON().id);
         }
         this.log.debug('processMessage(), commentAddMessage.hash: ', commentAddMessage.hash);
 
@@ -151,9 +157,11 @@ export class CommentAddActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {
@@ -164,11 +172,9 @@ export class CommentAddActionService extends BaseActionService {
 
             if (comment) {
                 // TODO: this doesn't consider that there could be different Profiles!!!
-                const isMyComment = await this.identityService.findOneByAddress(comment.sender).then(value => {
-                    return true;
-                }).catch(reason => {
-                    return false;
-                });
+                const isMyComment = await this.identityService.findOneByAddress(comment.sender)
+                    .then(() => true)
+                    .catch(() => false);
 
                 // Dont need notifications about my own comments
                 if (isMyComment) {

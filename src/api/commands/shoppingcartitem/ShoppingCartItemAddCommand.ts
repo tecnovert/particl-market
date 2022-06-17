@@ -38,8 +38,8 @@ export class ShoppingCartItemAddCommand extends BaseCommand implements RpcComman
 
     /**
      * data.params[]:
-     *  [0]: cart, resources.ShoppingCart
-     *  [1]: listingItem, resources.ListingItem
+     * [0]: cart, resources.ShoppingCart
+     * [1]: listingItem, resources.ListingItem
      *
      * @param data
      * @returns {Promise<ShoppingCartItem>}
@@ -57,8 +57,8 @@ export class ShoppingCartItemAddCommand extends BaseCommand implements RpcComman
 
     /**
      * data.params[]:
-     *  [0]: cartId, number
-     *  [1]: listingItemId, number
+     * [0]: cartId, number
+     * [1]: listingItemId, number
      *
      * @param data
      * @returns {Promise<ShoppingCartItem>}
@@ -82,19 +82,19 @@ export class ShoppingCartItemAddCommand extends BaseCommand implements RpcComman
         // make sure ShoppingCart exists
         data.params[0] = await this.shoppingCartService.findOne(cartId)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ShoppingCart');
             });
 
         // make sure ListingItem exists
         data.params[1] = await this.listingItemService.findOne(listingItemId)
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItem');
             });
 
         const shoppingCartItem: resources.ShoppingCartItem = await this.shoppingCartItemService.findOneByCartIdAndListingItemId(cartId, listingItemId)
             .then(value => value.toJSON())
-            .catch(reason => undefined);
+            .catch(() => undefined);
 
         if (!_.isNil(shoppingCartItem)) {
             this.log.warn(`ListingItem already added to ShoppingCart`);

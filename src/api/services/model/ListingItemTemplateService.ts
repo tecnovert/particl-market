@@ -64,6 +64,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
     public log: LoggerType;
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Repository) @named(Targets.Repository.ListingItemTemplateRepository) public listingItemTemplateRepo: ListingItemTemplateRepository,
         @inject(Types.Service) @named(Targets.Service.model.ItemInformationService) public itemInformationService: ItemInformationService,
@@ -79,7 +80,9 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         @inject(Types.Factory) @named(Targets.Factory.model.ImageDataFactory) public imageDataFactory: ImageDataFactory,
         @inject(Types.Factory) @named(Targets.Factory.model.ImageFactory) public imageFactory: ImageFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-    ) {
+    )
+    /* eslint-enable max-params */
+    {
         this.log = new Logger(__filename);
     }
 
@@ -113,6 +116,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
     /**
      * TODO: test
+     *
      * @param templateId
      * @param market
      */
@@ -127,6 +131,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
     /**
      * TODO: test
+     *
      * @param templateId
      * @param market
      */
@@ -146,27 +151,28 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
     @validate()
     public async create( @request(ListingItemTemplateCreateRequest) data: ListingItemTemplateCreateRequest): Promise<ListingItemTemplate> {
-        const body: ListingItemTemplateCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ListingItemTemplateCreateRequest> = JSON.parse(JSON.stringify(data));
         // this.log.debug('create(), body:', JSON.stringify(body, null, 2));
 
         const itemInformation = body.itemInformation;
-        delete body.itemInformation;
         const paymentInformation = body.paymentInformation;
-        delete body.paymentInformation;
         const messagingInformation = body.messagingInformation || [];
-        delete body.messagingInformation;
         const listingItemObjects = body.listingItemObjects || [];
+
+        delete body.itemInformation;
+        delete body.paymentInformation;
+        delete body.messagingInformation;
         delete body.listingItemObjects;
 
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateRepo.create(body).then(value => value.toJSON());
         // this.log.debug('create(), listingItemTemplate.id:', listingItemTemplate.id);
 
-        if (!_.isEmpty(itemInformation)) {
+        if (itemInformation && !_.isEmpty(itemInformation)) {
             itemInformation.listing_item_template_id = listingItemTemplate.id;
             await this.itemInformationService.create(itemInformation).then(value => value.toJSON());
         }
 
-        if (!_.isEmpty(paymentInformation)) {
+        if (paymentInformation && !_.isEmpty(paymentInformation)) {
             paymentInformation.listing_item_template_id = listingItemTemplate.id;
             await this.paymentInformationService.create(paymentInformation).then(value => value.toJSON());
         }
@@ -221,7 +227,9 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         const body = JSON.parse(JSON.stringify(data));
         const listingItemTemplate = await this.findOne(id, false);
 
+        /* eslint-disable @typescript-eslint/unbound-method */
         if (!_.isEmpty(listingItemTemplate.Hash) || !_.isEmpty(listingItemTemplate.ListingItems)) {
+        /* eslint-enable @typescript-eslint/unbound-method */
             throw new ModelNotModifiableException('ListingItemTemplate');
         }
 
@@ -356,15 +364,17 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         const listingItemTemplate = await this.findOne(id, false);
         listingItemTemplate.Hash = hash;
         const updated = await this.listingItemTemplateRepo.update(id, listingItemTemplate.toJSON());
-        this.log.debug('updated ListingItemTemplate ' + id + ' hash to: ' + updated.Hash);
+        this.log.debug(`updated ListingItemTemplate ${id} hash to: ${updated.Hash}`);
         return updated;
     }
 
     /**
      * update the paymentaddress for the template to one from the given identity
      */
-    public async updatePaymentAddress(identity: resources.Identity, listingItemTemplate: resources.ListingItemTemplate):
-        Promise<resources.ListingItemTemplate> {
+    public async updatePaymentAddress(
+        identity: resources.Identity,
+        listingItemTemplate: resources.ListingItemTemplate
+    ): Promise<resources.ListingItemTemplate> {
         let cryptocurrencyAddressId = 0;
 
         if (
@@ -373,7 +383,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         ) {
             const parentListingItemTemplate: resources.ListingItemTemplate = await this.findOne(
                 +listingItemTemplate.ParentListingItemTemplate.id
-            ).then(parentTemplate => parentTemplate.toJSON()).catch(err => null);
+            ).then(parentTemplate => parentTemplate.toJSON()).catch(() => null);
 
             if (
                 !_.isEmpty(parentListingItemTemplate.PaymentInformation) &&
@@ -385,7 +395,9 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
             }
         }
 
+        /* eslint-disable sonarjs/no-inverted-boolean-check */
         if (!(+cryptocurrencyAddressId > 0)) {
+        /* eslint-enable sonarjs/no-inverted-boolean-check */
             const paymentAddress: CryptoAddress = await this.generateCryptoAddressForEscrowType(identity, listingItemTemplate.PaymentInformation.Escrow.type);
             const cryptocurrencyAddress: resources.CryptocurrencyAddress = await this.cryptocurrencyAddressService.create({
                 profile_id: listingItemTemplate.Profile.id,
@@ -409,7 +421,7 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         // template is modifiable if it hasn't been posted, and it hasnt been posted unless it has a hash
         const isModifiable = _.isNil(listingItemTemplate.hash);
 
-        this.log.debug('isModifiable: ' + isModifiable);
+        this.log.debug(`isModifiable: ${isModifiable ? 'true' : 'false'}`);
         return isModifiable;
     }
 
@@ -417,9 +429,9 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
      * creates resized versions of the ListingItemTemplate Images, so that all of them fit in one smsgmessage
      *
      * message sizes:
-     *  SMSG_MAX_MSG_BYTES_PAID: 512 * 1024,
-     *  SMSG_MAX_AMSG_BYTES: 512,
-     *  SMSG_MAX_MSG_BYTES: 24000
+     * SMSG_MAX_MSG_BYTES_PAID: 512 * 1024,
+     * SMSG_MAX_AMSG_BYTES: 512,
+     * SMSG_MAX_MSG_BYTES: 24000
      *
      * @param listingItemTemplate
      * @param messageVersionToFit
@@ -428,13 +440,17 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
      * @param maxIterations
      * @returns {Promise<ListingItemTemplate>}
      */
-    public async createResizedTemplateImages(listingItemTemplate: resources.ListingItemTemplate, messageVersionToFit: CoreMessageVersion,
-                                             scalingFraction: number = 0.9, qualityFraction: number = 0.95,
-                                             maxIterations: number = 10): Promise<ListingItemTemplate> {
+    public async createResizedTemplateImages(
+        listingItemTemplate: resources.ListingItemTemplate,
+        messageVersionToFit: CoreMessageVersion,
+        scalingFraction: number = 0.9,
+        qualityFraction: number = 0.95,
+        maxIterations: number = 10
+    ): Promise<ListingItemTemplate> {
 
         const images: resources.Image[] = listingItemTemplate.ItemInformation.Images;
         for (const image of images) {
-            const updatedImage: resources.Image = await this.imageService.createResizedVersion(image.id, messageVersionToFit, scalingFraction,
+            await this.imageService.createResizedVersion(image.id, messageVersionToFit, scalingFraction,
                 qualityFraction, maxIterations).then(value => value.toJSON());
             // this.log.debug('updatedImage: ', JSON.stringify(updatedImage, null, 2));
             // this.log.debug('listingItemTemplate.id: ', JSON.stringify(listingItemTemplate.id, null, 2));
@@ -466,28 +482,28 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
     private async generateCryptoAddressForEscrowType(identity: resources.Identity, type: EscrowType): Promise<CryptoAddress> {
         let cryptoAddress: CryptoAddress;
         switch (type) {
-            case EscrowType.MULTISIG:
-                const address = await this.coreRpcService.getNewAddress(identity.wallet);
-                cryptoAddress = {
-                    address,
-                    type: CryptoAddressType.NORMAL
-                };
-                break;
-            case EscrowType.MAD_CT:
-                cryptoAddress = await this.coreRpcService.getNewStealthAddress(identity.wallet);
-                break;
-            case EscrowType.MAD:
-            case EscrowType.FE:
-            default:
-                throw new NotImplementedException();
+        case EscrowType.MULTISIG:
+            const address = await this.coreRpcService.getNewAddress(identity.wallet);
+            cryptoAddress = {
+                address,
+                type: CryptoAddressType.NORMAL
+            };
+            break;
+        case EscrowType.MAD_CT:
+            cryptoAddress = await this.coreRpcService.getNewStealthAddress(identity.wallet);
+            break;
+        case EscrowType.MAD:
+        case EscrowType.FE:
+        default:
+            throw new NotImplementedException();
         }
         return cryptoAddress;
     }
 
     private async checkExistingObjectFieldValueExistsInArray<T>(objectArray: T[], fieldName: string, value: string | number): Promise<T | undefined> {
-        return _.find<T>(objectArray, (object) => {
-            return (object[fieldName] === value);
-        });
+        return _.find<T>(
+            objectArray,
+            (object) => (object[fieldName] === value));
     }
 
 
@@ -508,12 +524,10 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
         let shippingDestinations: ShippingDestinationCreateRequest[] = [];
 
         if (!_.isEmpty(templateToClone.ItemInformation.ShippingDestinations)) {
-            shippingDestinations = _.map(templateToClone.ItemInformation.ShippingDestinations, (destination) => {
-                return _.assign({} as ShippingDestinationCreateRequest, {
-                    country: destination.country,
-                    shippingAvailability: destination.shippingAvailability
-                });
-            });
+            shippingDestinations = _.map(templateToClone.ItemInformation.ShippingDestinations, (destination) => _.assign(
+                {} as ShippingDestinationCreateRequest,
+                { country: destination.country, shippingAvailability: destination.shippingAvailability }
+            ));
         }
 
         let images: ImageCreateRequest[] = [];
@@ -523,14 +537,15 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
                 // for each image, get the data from ORIGINAL and create a new ImageCreateRequest based on that data
                 // the other image versions will be created later
-                const imageDataOriginal: resources.ImageData = _.find(image.ImageDatas, (imageData) => {
-                    return imageData.imageVersion === ImageVersions.ORIGINAL.propName;
-                })!;
+                const imageDataOriginal: resources.ImageData = _.find(
+                    image.ImageDatas,
+                    (imageData) => imageData.imageVersion === ImageVersions.ORIGINAL.propName
+                )!;
 
                 // try to load data, if it exists.
                 const data = await this.imageDataService.loadImageFile(image.hash, ImageVersions.ORIGINAL.propName)
                     .then(value => value)
-                    .catch(reason => undefined);
+                    .catch(() => undefined);
                 imageDataOriginal.data = data ? data : imageDataOriginal.data;
 
                 // this.log.debug('imageDataOriginal: ', JSON.stringify(imageDataOriginal, null, 2));
@@ -560,25 +575,21 @@ export class ListingItemTemplateService implements ModelServiceInterface<Listing
 
         let messagingInformation: MessagingInformationCreateRequest[] = [];
         if (!_.isEmpty(templateToClone.MessagingInformation)) {
-            messagingInformation = _.map(templateToClone.MessagingInformation, (msgInfo) => {
-                return _.assign({} as MessagingInformationCreateRequest, {
-                    protocol: msgInfo.protocol,
-                    publicKey: msgInfo.publicKey
-                });
-            });
+            messagingInformation = _.map(templateToClone.MessagingInformation, (msgInfo) => _.assign(
+                {} as MessagingInformationCreateRequest, { protocol: msgInfo.protocol, publicKey: msgInfo.publicKey}
+            ));
         }
 
         let listingItemObjects: ListingItemObjectCreateRequest[] = [];
         if (!_.isEmpty(templateToClone.MessagingInformation)) {
             listingItemObjects = _.map(templateToClone.ListingItemObjects, (liObject) => {
                 // this.log.debug('liObject.ListingItemObjectDatas: ', JSON.stringify(liObject.ListingItemObjectDatas, null, 2));
-                const listingItemObjectDatas: ListingItemObjectDataCreateRequest[] = _.map(liObject.ListingItemObjectDatas, (liObjectData) => {
-                    // this.log.debug('liObjectData: ', JSON.stringify(liObjectData, null, 2));
-                    return _.assign({} as ListingItemObjectCreateRequest, {
-                        key: liObjectData.key,
-                        value: liObjectData.value
-                    } as ListingItemObjectDataCreateRequest);
-                });
+                const listingItemObjectDatas: ListingItemObjectDataCreateRequest[] = _.map(
+                    liObject.ListingItemObjectDatas,
+                    (liObjectData) => _.assign(
+                        {} as ListingItemObjectCreateRequest,
+                        {key: liObjectData.key, value: liObjectData.value} as ListingItemObjectDataCreateRequest
+                    ));
                 // this.log.debug('listingItemObjectDatas: ', JSON.stringify(listingItemObjectDatas, null, 2));
 
                 return _.assign({} as ListingItemObjectCreateRequest, {

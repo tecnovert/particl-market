@@ -46,12 +46,12 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
     public log: LoggerType;
 
     constructor(
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Factory) @named(Targets.Factory.model.ItemCategoryFactory) private itemCategoryFactory: ItemCategoryFactory,
         @inject(Types.Factory) @named(Targets.Factory.message.ListingItemImageAddMessageFactory) private listingItemImageAddMessageFactory: ListingItemImageAddMessageFactory,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ) {
         super();
         this.log = new Logger(__filename);
@@ -216,21 +216,21 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
         const shippingDesArray: string[] = [];
         for (const destination of shippingDestinations) {
             switch (destination.shippingAvailability) {
-                case ShippingAvailability.SHIPS:
-                    shippingDesArray.push(destination.country);
-                    break;
-                case ShippingAvailability.DOES_NOT_SHIP:
-                    shippingDesArray.push('-' + destination.country);
-                    break;
-                case ShippingAvailability.ASK:
-                    //
-                    break;
-                case ShippingAvailability.UNKNOWN:
-                    //
-                    break;
-                default:
-                    //
-                    break;
+            case ShippingAvailability.SHIPS:
+                shippingDesArray.push(destination.country);
+                break;
+            case ShippingAvailability.DOES_NOT_SHIP:
+                shippingDesArray.push('-' + destination.country);
+                break;
+            case ShippingAvailability.ASK:
+                //
+                break;
+            case ShippingAvailability.UNKNOWN:
+                //
+                break;
+            default:
+                //
+                break;
             }
         }
 
@@ -239,7 +239,7 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
         }
         return shippingDesArray;
     }
-
+    /* eslint-disable jsdoc/check-indentation */
     /**
      * create message.item.information.images: ContentReference[]
      * we are now sending the images as separate messages, so skip the image data...
@@ -251,6 +251,7 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
      *
      * @param actionRequest
      */
+    /* eslint-enable jsdoc/check-indentation */
     private async getMessageInformationImages(actionRequest: ListingItemAddRequest): Promise<ContentReference[]> {
         const images: resources.Image[] = actionRequest.listingItem.ItemInformation.Images;
         const withData: boolean = actionRequest.imagesWithData;
@@ -285,20 +286,20 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
         const options: PaymentOption[] = await this.getMessagePaymentOptions(paymentInformation.ItemPrice, cryptoAddress);
 
         switch (paymentInformation.type) {
-            case SaleType.SALE:
-                return {
-                    type: paymentInformation.type,
-                    escrow,
-                    // TODO: missing support for optional price pegging
-                    options
-                } as PaymentInfoEscrow;
+        case SaleType.SALE:
+            return {
+                type: paymentInformation.type,
+                escrow,
+                // TODO: missing support for optional price pegging
+                options
+            } as PaymentInfoEscrow;
 
-            case SaleType.AUCTION:
-            case SaleType.FREE:
-            case SaleType.RENT:
-            case SaleType.WANTED:
-            default:
-                throw new NotImplementedException();
+        case SaleType.AUCTION:
+        case SaleType.FREE:
+        case SaleType.RENT:
+        case SaleType.WANTED:
+        default:
+            throw new NotImplementedException();
         }
     }
 
@@ -380,30 +381,30 @@ export class ListingItemAddMessageFactory extends BaseMessageFactory {
 
     private async getItemObject(value: resources.ListingItemObject): Promise<ItemObject> {
         switch (value.type) {
-            case 'TABLE':
-                return {
-                    type: 'TABLE',
-                    description: value.description,
-                    table: await this.getObjectDataOptions(value.ListingItemObjectDatas)
-                } as ItemObject;
-            case 'DROPDOWN':
-                return {
-                    type: 'DROPDOWN',
-                    description: value.description,
-                    objectId: value.objectId,
-                    forceInput: value.forceInput,
-                    options: await this.getObjectDataOptions(value.ListingItemObjectDatas)
-                } as ItemObject;
-            case 'CHECKBOX':
-                return {
-                    type: 'CHECKBOX',
-                    description: value.description,
-                    objectId: value.objectId,
-                    forceInput: value.forceInput,
-                    options: await this.getObjectDataOptions(value.ListingItemObjectDatas)
-                } as ItemObject;
-            default:
-                throw new NotImplementedException();
+        case 'TABLE':
+            return {
+                type: 'TABLE',
+                description: value.description,
+                table: await this.getObjectDataOptions(value.ListingItemObjectDatas)
+            } as ItemObject;
+        case 'DROPDOWN':
+            return {
+                type: 'DROPDOWN',
+                description: value.description,
+                objectId: value.objectId,
+                forceInput: value.forceInput,
+                options: await this.getObjectDataOptions(value.ListingItemObjectDatas)
+            } as ItemObject;
+        case 'CHECKBOX':
+            return {
+                type: 'CHECKBOX',
+                description: value.description,
+                objectId: value.objectId,
+                forceInput: value.forceInput,
+                options: await this.getObjectDataOptions(value.ListingItemObjectDatas)
+            } as ItemObject;
+        default:
+            throw new NotImplementedException();
         }
     }
 

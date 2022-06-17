@@ -33,10 +33,10 @@ export class DataGenerateCommand extends BaseCommand implements RpcCommandInterf
 
     /**
      * data.params[]:
-     *  [0]: CreatableModel, model to generate
-     *  [1]: amount
-     *  [2]: withRelated, return full objects or just id's
-     *  [3...]: generateParams
+     * [0]: CreatableModel, model to generate
+     * [1]: amount
+     * [2]: withRelated, return full objects or just id's
+     * [3...]: generateParams
      *
      * @param {RpcRequest} data
      * @returns {Promise<any>}

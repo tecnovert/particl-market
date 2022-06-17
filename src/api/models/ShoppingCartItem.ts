@@ -65,7 +65,6 @@ export class ShoppingCartItem extends Bookshelf.Model<ShoppingCartItem> {
                 qb.where('shopping_cart_id', '=', cartId);
             });
         await ShoppingCartItemCollection.destroy();
-        return;
     }
 
     public get tableName(): string { return 'shopping_cart_items'; }

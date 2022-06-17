@@ -13,82 +13,80 @@ export class ShippingZips {
 
         // Countries not supported by the lib but should be.
         switch (countryCode) {
-            case 'AQ':
-            case 'GS':
-            case 'IO':
-            case 'NI':
-            case 'PN':
-            case 'TF':
-            case 'UM':
-            case 'AG':
-            case 'AE':
-            case 'AO':
-            case 'BF':
-            case 'BI':
-            case 'BJ':
-            case 'BM':
-            case 'BQ':
-            case 'BS':
-            case 'BW':
-            case 'BZ':
-            // Below here haven't had their zips programmed into validate()
-            case 'CD':
-            case 'CF':
-            case 'CG':
-            case 'CI':
-            case 'CK':
-            case 'CM':
-            case 'DJ':
-            case 'DM':
-            case 'ER':
-            case 'FJ':
-            case 'GA':
-            case 'GD':
-            case 'GH':
-            case 'GM':
-            case 'GQ':
-            case 'GY':
-            case 'HK':
-            case 'IE':
-            case 'KI':
-            case 'KM':
-            case 'KN':
-            case 'KP':
-            case 'ML':
-            case 'MO':
-            case 'MR':
-            case 'MW':
-            case 'NR':
-            case 'NU':
-            case 'QA':
-            case 'RW':
-            case 'SB':
-            case 'SC':
-            case 'SS':
-            case 'SL':
-            case 'SR':
-            case 'ST':
-            case 'SY':
-            case 'TG':
-            case 'TK':
-            case 'TL':
-            case 'TO':
-            case 'TV':
-            case 'UG':
-            case 'VU':
-            case 'YE':
-            case 'ZW':
-                return true;
-            default:
-                //
-                break;
+        case 'AQ':
+        case 'GS':
+        case 'IO':
+        case 'NI':
+        case 'PN':
+        case 'TF':
+        case 'UM':
+        case 'AG':
+        case 'AE':
+        case 'AO':
+        case 'BF':
+        case 'BI':
+        case 'BJ':
+        case 'BM':
+        case 'BQ':
+        case 'BS':
+        case 'BW':
+        case 'BZ': // Below here haven't had their zips programmed into validate()
+        case 'CD':
+        case 'CF':
+        case 'CG':
+        case 'CI':
+        case 'CK':
+        case 'CM':
+        case 'DJ':
+        case 'DM':
+        case 'ER':
+        case 'FJ':
+        case 'GA':
+        case 'GD':
+        case 'GH':
+        case 'GM':
+        case 'GQ':
+        case 'GY':
+        case 'HK':
+        case 'IE':
+        case 'KI':
+        case 'KM':
+        case 'KN':
+        case 'KP':
+        case 'ML':
+        case 'MO':
+        case 'MR':
+        case 'MW':
+        case 'NR':
+        case 'NU':
+        case 'QA':
+        case 'RW':
+        case 'SB':
+        case 'SC':
+        case 'SS':
+        case 'SL':
+        case 'SR':
+        case 'ST':
+        case 'SY':
+        case 'TG':
+        case 'TK':
+        case 'TL':
+        case 'TO':
+        case 'TV':
+        case 'UG':
+        case 'VU':
+        case 'YE':
+        case 'ZW':
+            return true;
+        default:
+            // no value
 
         }
 
         try {
             const retval = postalCodes.validate(countryCode, '___SOMETHINGTHATISNTAPOSTCODE___');
             const regex = new RegExp('^(Missing country code.|Unknown alpha2/alpha3 country code: )');
-            return (regex.test(retval) === false);
+            return regex.test(retval) === false;
         } catch (ex) {
             return false;
         }
@@ -96,7 +94,7 @@ export class ShippingZips {
 
     /*
      */
-    public static validate( countryCode: string, zip: string ): boolean {
+    public static validate(/* countryCode: string, zip: string */): boolean {
         return true;
         //
         // countryCode = countryCode.toString().toUpperCase();

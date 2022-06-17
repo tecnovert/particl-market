@@ -12,7 +12,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ListingItemTemplate } from '../../models/ListingItemTemplate';
 import { ListingItemTemplateService } from '../../services/model/ListingItemTemplateService';
 import { MessageException } from '../../exceptions/MessageException';
@@ -55,20 +54,20 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
      * Clone a ListingItemTemplate
      *
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: market: resources.Market, optional
-     *  [2]: targetParentId: number, optional
-     *  [3]: messageVersionToFit: CoreMessageVersion, default: FREE
-     *  [4]: scalingFraction, default: 0.9
-     *  [5]: qualityFraction, default: 0.9
-     *  [6]: maxIterations, default: 10
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: market: resources.Market, optional
+     * [2]: targetParentId: number, optional
+     * [3]: messageVersionToFit: CoreMessageVersion, default: FREE
+     * [4]: scalingFraction, default: 0.9
+     * [5]: qualityFraction, default: 0.9
+     * [6]: maxIterations, default: 10
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<ListingItemTemplate> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<ListingItemTemplate> {
         let listingItemTemplate: resources.ListingItemTemplate = data.params[0];
         const market = data.params[1];
         const targetParentId = data.params[2];
@@ -87,8 +86,8 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId -> resources.ListingItemTemplate
-     *  [1]: marketId, optional, when set, create a new market template else new base template -> resources.Market
+     * [0]: listingItemTemplateId -> resources.ListingItemTemplate
+     * [1]: marketId, optional, when set, create a new market template else new base template -> resources.Market
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -166,7 +165,7 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
         return await this.listingItemTemplateService.findOne(id).then(value => value.toJSON());
     }
 
-    // tslint:disable:max-line-length
+    /* eslint-disable max-len */
     public usage(): string {
         return this.getName() + ' <listingItemTemplateId> [marketId] [messageVersionToFit] [scalingFraction] [qualityFraction] [maxIterations] [cloneProductCode]';
     }
@@ -182,7 +181,7 @@ export class ListingItemTemplateCloneCommand extends BaseCommand implements RpcC
             + '    <cloneProductCode>               - [optional] boolean (true/false), default: false; indicates whether the product code of the source template should be cloned to the target template';
 
     }
-    // tslint:enable:max-line-length
+    /* eslint-enable max-len */
 
     public description(): string {
         return 'Clone a ListingItemTemplate.';

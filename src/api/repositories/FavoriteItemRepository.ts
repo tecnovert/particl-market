@@ -22,8 +22,8 @@ export class FavoriteItemRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<FavoriteItem>> {
-        const list = await this.FavoriteItemModel.fetchAll();
-        return list as Bookshelf.Collection<FavoriteItem>;
+        const list = await this.FavoriteItemModel.fetchAll<FavoriteItem>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<FavoriteItem> {

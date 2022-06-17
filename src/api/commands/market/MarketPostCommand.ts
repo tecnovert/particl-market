@@ -81,14 +81,14 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
      * posts a ListingItem to the network based on ListingItemTemplate
      *
      * data.params[]:
-     *  [0]: promotedMarket: resources.Market
-     *  [1]: daysRetention
-     *  [2]: estimateFee
-     *  [3]: fromDetails: { walletName: string; publishAddress: string; }
-     *  [4]: toAddress: string
-     *  [5]: paidImageMessages: boolean
-     *  [6]: anonFee: boolean
-     *  [7]: ringSize: number
+     * [0]: promotedMarket: resources.Market
+     * [1]: daysRetention
+     * [2]: estimateFee
+     * [3]: fromDetails: { walletName: string; publishAddress: string; }
+     * [4]: toAddress: string
+     * [5]: paidImageMessages: boolean
+     * [6]: anonFee: boolean
+     * [7]: ringSize: number
      *
      * @param data
      * @returns {Promise<ListingItemTemplate>}
@@ -99,7 +99,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
         const promotedMarket: resources.Market = data.params[0];
         const daysRetention: number = data.params[1];
         const estimateFee: boolean = data.params[2];
-        const fromDetails: { walletName: string; publishAddress: string; } = data.params[3];
+        const fromDetails: { walletName: string; publishAddress: string } = data.params[3];
         const toAddress: string = data.params[4];
         const paidImageMessages: boolean = data.params[5];
         const anonFee: boolean = data.params[6];
@@ -107,6 +107,29 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
 
         const wallet = fromDetails.walletName;
         const fromAddress = fromDetails.publishAddress;
+
+        // this.log.debug('execute(), posting market: ', JSON.stringify(promotedMarket, null, 2));
+        const imageCount = _.isEmpty(promotedMarket.Image) ? 0 : 1;
+        const paidSmsgCount = 1 + imageCount;
+
+        const unspentUtxos: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(
+            wallet,
+            anonFee ? OutputType.ANON : OutputType.PART
+        ).catch(err => {
+            this.log.error(err);
+            return [];
+        });
+
+        let smsgSendResponse: SmsgSendResponse = {
+            result: 'Not Sent.',
+            availableUtxos: unspentUtxos.length
+        };
+
+        if (unspentUtxos.length < paidSmsgCount) {
+            smsgSendResponse.error = 'Not enough utxos.';
+
+            return smsgSendResponse;
+        }
 
         const marketAddRequest = {
             sendParams: {
@@ -121,50 +144,64 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
             market: promotedMarket
         } as MarketAddRequest;
 
-        // this.log.debug('execute(), posting market: ', JSON.stringify(promotedMarket, null, 2));
+        // now post the Market
+        const smsgSendResponseMarket = await this.marketAddActionService.post(marketAddRequest);
+        smsgSendResponse = { ...smsgSendResponse, ...smsgSendResponseMarket };
 
-        // first post the Market
-        const smsgSendResponse: SmsgSendResponse = await this.marketAddActionService.post(marketAddRequest);
+        const marketContentFee = math.bignumber(smsgSendResponse.fee ? smsgSendResponse.fee : 0);
+
+        if (!estimateFee && (smsgSendResponse.result !== 'Sent.')) {
+            // if we're not just estimating AND the post was not successful, then market posting failed, so do not continue to attemp to post any images
+            smsgSendResponse.childResults = [];
+            return smsgSendResponse;
+        }
 
         // then post the Image related to the Market
-        const imageSmsgSendResponse: SmsgSendResponse | undefined = await this.postMarketImage(promotedMarket, marketAddRequest, paidImageMessages);
-        smsgSendResponse.childResults = imageSmsgSendResponse ? [imageSmsgSendResponse] : undefined;
+        smsgSendResponse.childResults = await this.postMarketImage(promotedMarket, marketAddRequest, paidImageMessages);
 
-        // then create the response, add totalFees and availableUtxos
-        const unspentUtxos: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(marketAddRequest.sendParams.wallet,
-            anonFee ? OutputType.ANON : OutputType.PART);
-        smsgSendResponse.availableUtxos = unspentUtxos.length;
-        let minRequiredUtxos = 1;
 
-        if (!_.isNil(smsgSendResponse.childResults)) {
-            let childSum: BigNumber = math.bignumber(0);
-            for (const childResult of smsgSendResponse.childResults) {
-                childSum = math.add(childSum, math.bignumber(childResult.fee ? childResult.fee : 0));
+        let childError = '';
+        let childSum: BigNumber = math.bignumber(0);
+        for (const childResult of smsgSendResponse.childResults) {
+            childSum = math.add(childSum, math.bignumber(childResult.fee ? childResult.fee : 0));
+            if (!childError && (typeof childResult.error === 'string') && (childResult.error.length > 0)) {
+                childError = childResult.error;
             }
-            smsgSendResponse.totalFees = +math.format(math.add(childSum, math.bignumber(smsgSendResponse.fee ? smsgSendResponse.fee : 0)), {precision: 8});
-            minRequiredUtxos = minRequiredUtxos + (paidImageMessages ? smsgSendResponse.childResults.length : 0);
+        }
+
+        // calculate errors and fees, etc
+        if (paidImageMessages && smsgSendResponse.childResults.length < imageCount) {
+            smsgSendResponse.error = 'Not all images included.';
+        }
+        if (!smsgSendResponse.error && childError) {
+            smsgSendResponse.error = childError;
+        }
+        if (!smsgSendResponse.error) {
+            smsgSendResponse.totalFees = +math.format(math.add(childSum, marketContentFee), { precision: 8 });
         } else {
-            smsgSendResponse.totalFees = 0;
+            smsgSendResponse.totalFees = -1;
         }
 
-        if (smsgSendResponse.availableUtxos < minRequiredUtxos) {
-            smsgSendResponse.error = 'Not enough utxos.';
-        }
+        const unspentUtxosPostSend: RpcUnspentOutput[] = await this.coreRpcService.listUnspent(wallet, anonFee ? OutputType.ANON : OutputType.PART)
+            .catch(() => ([]));
+        smsgSendResponse.availableUtxos = unspentUtxosPostSend.length;
 
+        this.log.debug('smsgSendResponse: ', JSON.stringify(smsgSendResponse, null, 2));
         return smsgSendResponse;
+
     }
 
     /**
      * data.params[]:
-     *  [0]: promotedMarketId
-     *  [1]: fromIdentityId
-     *  [2]: daysRetention
-     *  [3]: estimateFee, optional, default: false
-     *  [4]: toMarketIdOrAddress, optional, to which Markets address or to which address the message is sent to.
-     *       if number: toMarketId, if string: toAddress, default: the default broadcast/receive address
-     *  [5]: paidImageMessages (optional, default: false)
-     *  [6]: feeType (optional, default: PART)
-     *  [7]: ringSize (optional, default: 12)
+     * [0]: promotedMarketId
+     * [1]: fromIdentityId
+     * [2]: daysRetention
+     * [3]: estimateFee, optional, default: false
+     * [4]: toMarketIdOrAddress, optional, to which Markets address or to which address the message is sent to.
+     * if number: toMarketId, if string: toAddress, default: the default broadcast/receive address
+     * [5]: paidImageMessages (optional, default: false)
+     * [6]: feeType (optional, default: PART)
+     * [7]: ringSize (optional, default: 12)
      *
      * Promotes a Market.
      *
@@ -185,7 +222,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
 
         let toAddress: string | undefined;
 
-        const fromDetails: { walletName: string; publishAddress: string; } = {
+        const fromDetails: { walletName: string; publishAddress: string } = {
             walletName: fromIdentity.wallet,
             publishAddress: fromIdentity.address
         };
@@ -203,7 +240,7 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
                 toAddress = await this.marketService.findOne(toMarketIdOrAddress)
                     .then(value => value.toJSON() as resources.Market)
                     .then(market => market.receiveAddress)
-                    .catch(reason => {
+                    .catch(() => {
                         throw new ModelNotFoundException('Market');
                     });
             } else if (typeof toMarketIdOrAddress === 'string') {
@@ -231,7 +268,8 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
 
     public usage(): string {
         // tslint:disable:max-line-length
-        return this.getName() + ' <promotedMarketId> <fromIdentityId> [daysRetention] [estimateFee] [toMarketIdOrAddress] [usePaidImageMessages] [feeType] [ringSize]';
+        return this.getName() +
+        ' <promotedMarketId> <fromIdentityId> [daysRetention] [estimateFee] [toMarketIdOrAddress] [usePaidImageMessages] [feeType] [ringSize]';
         // tslint:enable:max-line-length
     }
 
@@ -262,8 +300,13 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
      * @param marketAddRequest
      * @param usePaid
      */
-    private async postMarketImage(promotedMarket: resources.Market, marketAddRequest: MarketAddRequest,
-                                  usePaid: boolean = false): Promise<SmsgSendResponse | undefined> {
+    private async postMarketImage(
+        promotedMarket: resources.Market,
+        marketAddRequest: MarketAddRequest,
+        usePaid: boolean = false
+    ): Promise<SmsgSendResponse[]> {
+
+        const imageSendResp: SmsgSendResponse[] = [];
 
         if (!_.isEmpty(promotedMarket.Image)) {
 
@@ -281,10 +324,14 @@ export class MarketPostCommand extends BaseCommand implements RpcCommandInterfac
 
             // optionally use paid messages
             imageAddRequest.sendParams.messageType = usePaid ? CoreMessageVersion.PAID : undefined;
-
-            return await this.marketImageAddActionService.post(imageAddRequest);
-        } else {
-            return undefined;
+            const smsgSendResponse: SmsgSendResponse | void =  await this.marketImageAddActionService.post(imageAddRequest).catch(err => {
+                this.log.error('ERROR: posting market image failed: ', err);
+            });
+            if (smsgSendResponse) {
+                imageSendResp.push(smsgSendResponse);
+            }
         }
+
+        return imageSendResp;
     }
 }

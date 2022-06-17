@@ -12,7 +12,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ProposalResult } from '../../models/ProposalResult';
 import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException';
 import { ProposalService } from '../../services/model/ProposalService';
@@ -47,14 +46,14 @@ export class ProposalResultCommand extends BaseCommand implements RpcCommandInte
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<ProposalResult> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<ProposalResult> {
         const proposal: resources.Proposal = data.params[0];
         return await this.proposalResultService.findLatestByProposalHash(proposal.hash, true);
     }
 
     /**
      * data.params[]:
-     *  [0]: proposalHash
+     * [0]: proposalHash
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -65,7 +64,7 @@ export class ProposalResultCommand extends BaseCommand implements RpcCommandInte
         data.params[0] = await this.proposalService.findOneByHash(data.params[0])
             .then(value => value.toJSON())
             .catch(reason => {
-                this.log.error('Proposal not found. ' + reason);
+                this.log.error(`Proposal not found. ${reason}`);
                 throw new ModelNotFoundException('Proposal');
             });
 

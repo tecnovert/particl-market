@@ -43,6 +43,7 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class BidActionService extends BaseActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -71,6 +72,7 @@ export class BidActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -105,17 +107,19 @@ export class BidActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: BidRequest,
-                           marketplaceMessage: MarketplaceMessage,
-                           smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: BidRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
     /**
      * - create the Bid (+BidDatas)
      * - use the Factory to create OrderCreateRequest for creating Order and OrderItems
-     *   - also creates the hash, which should later be passed also to the seller
+     * - also creates the hash, which should later be passed also to the seller
      * - create the Order with OrderItems
      *
      * @param marketplaceMessage, the message being posted or received
@@ -123,10 +127,12 @@ export class BidActionService extends BaseActionService {
      * @param smsgMessage, the inbox/outbox smsgMessage
      * @param actionRequest, contains the data to create the Bid, exists only when we are posting
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: BidRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage,
+        actionRequest?: BidRequest
+    ): Promise<resources.SmsgMessage> {
 
         this.log.debug('processMessage(), actionDirection: ', actionDirection);
 
@@ -138,9 +144,7 @@ export class BidActionService extends BaseActionService {
 
         // first get the Market address on which the bid was made on
         const bidMessage: BidMessage = marketplaceMessage.action as BidMessage;
-        const marketReceiveAddressKVS: KVS | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => {
-            return kvs.key === ActionMessageObjects.BID_ON_MARKET;
-        });
+        const marketReceiveAddressKVS: KVS | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => kvs.key === ActionMessageObjects.BID_ON_MARKET);
         // tslint:disable:no-useless-cast
         const marketReceiveAddress = marketReceiveAddressKVS!.value as string;
         // tslint:enable:no-useless-cast
@@ -200,19 +204,17 @@ export class BidActionService extends BaseActionService {
 
         // if we're the buyer, Order hash was generated before posting the BidMessage to the seller
         // if we're the seller, we should have received the Order hash from the buyer in the message
-        const orderHash: any | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => {
-            return kvs.key === ActionMessageObjects.ORDER_HASH;
-        });
+        const orderHash: any | undefined = _.find(bidMessage.objects || [], (kvs: KVS) => kvs.key === ActionMessageObjects.ORDER_HASH);
         this.log.debug('createBid(), orderHash: ', orderHash);
 
-        // tslint:disable:no-useless-cast
+        /* eslint-disable @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion */
         const orderCreateRequest: OrderCreateRequest = await this.orderFactory.get({
-                actionMessage: marketplaceMessage.action as BidMessage,
-                smsgMessage,
-                bids: [bid],
-                hash: orderHash!.value
-            } as OrderCreateParams);
-        // tslint:enable:no-useless-cast
+            actionMessage: marketplaceMessage.action as BidMessage,
+            smsgMessage,
+            bids: [bid],
+            hash: orderHash!.value
+        } as OrderCreateParams);
+        /* eslint-enable @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion */
 
         await this.orderService.create(orderCreateRequest).then(value => value.toJSON());
 
@@ -225,9 +227,11 @@ export class BidActionService extends BaseActionService {
      * @param actionDirection
      * @param smsgMessage
      */
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {
@@ -236,9 +240,7 @@ export class BidActionService extends BaseActionService {
                 .then(value => value.toJSON());
 
             if (bid) {
-                const orderHash = _.find(Array.isArray(bid.BidDatas) ? bid.BidDatas : [], (kvs: KVS) => {
-                    return kvs.key === ActionMessageObjects.ORDER_HASH;
-                });
+                const orderHash = _.find(Array.isArray(bid.BidDatas) ? bid.BidDatas : [], (kvs: KVS) => kvs.key === ActionMessageObjects.ORDER_HASH);
 
                 return {
                     event: marketplaceMessage.action.type,

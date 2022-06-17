@@ -42,8 +42,9 @@ export class ListingItemTemplateFeatureImageCommand extends BaseCommand implemen
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: itemImage: resources.Image
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: itemImage: resources.Image
+     *
      * @param data
      * @returns {Promise<Image>}
      */
@@ -58,8 +59,9 @@ export class ListingItemTemplateFeatureImageCommand extends BaseCommand implemen
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId: number -> listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: imageId: number -> image: resources.Image
+     * [0]: listingItemTemplateId: number -> listingItemTemplate: resources.ListingItemTemplate
+     * [1]: imageId: number -> image: resources.Image
+     *
      * @param data
      * @returns {Promise<Image>}
      */
@@ -73,7 +75,7 @@ export class ListingItemTemplateFeatureImageCommand extends BaseCommand implemen
 
         // make sure the given image belongs to the template
         const foundImage: resources.Image | undefined = _.find(listingItemTemplate.ItemInformation.Images, img => {
-            this.log.debug(img.id + ' === ' + image.id + ' = ' + (img.id === image.id));
+            this.log.debug(`${img.id} === ${image.id} = ${img.id === image.id}`);
             return img.id === image.id;
         });
         if (_.isEmpty(foundImage)) {

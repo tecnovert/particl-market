@@ -12,6 +12,6 @@ import { OrderItemStatus } from './OrderItemStatus';
 
 export type OrderItemStatusSequence = {
     [state in OrderItemStatus]?: {
-        nextStates: OrderItemStatus[]
+        nextStates: OrderItemStatus[];
     }
 };

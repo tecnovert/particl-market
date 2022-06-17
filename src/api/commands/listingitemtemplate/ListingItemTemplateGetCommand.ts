@@ -39,8 +39,8 @@ export class ListingItemTemplateGetCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate: resources.ListingItemTemplate
-     *  [1]: returnImageData
+     * [0]: listingItemTemplate: resources.ListingItemTemplate
+     * [1]: returnImageData
      *
      * @param data
      * @returns {Promise<resources.ListingItemTemplate>}
@@ -64,8 +64,8 @@ export class ListingItemTemplateGetCommand extends BaseCommand implements RpcCom
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
-     *  [1]: returnImageData (optional), default false
+     * [0]: listingItemTemplateId
+     * [1]: returnImageData (optional), default false
      *
      * @param data
      * @returns {Promise<RpcRequest>}

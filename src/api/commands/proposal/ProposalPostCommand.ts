@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -12,7 +11,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ProposalAddActionService } from '../../services/action/ProposalAddActionService';
 import { MarketService } from '../../services/model/MarketService';
 import { ProposalCategory } from '../../enums/ProposalCategory';
@@ -21,6 +19,7 @@ import { ModelNotFoundException } from '../../exceptions/ModelNotFoundException'
 import { SmsgSendParams } from '../../requests/action/SmsgSendParams';
 import { ProposalAddRequest } from '../../requests/action/ProposalAddRequest';
 import { IdentityService } from '../../services/model/IdentityService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import {
     BooleanValidationRule,
     CommandParamValidationRules,
@@ -73,7 +72,7 @@ export class ProposalPostCommand extends BaseCommand implements RpcCommandInterf
      * @returns {Promise<any>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<SmsgSendResponse> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
 
         const market: resources.Market = data.params.shift();
         const title = data.params.shift();
@@ -90,7 +89,7 @@ export class ProposalPostCommand extends BaseCommand implements RpcCommandInterf
                 fromAddress: market.Identity.address,      // send from the given identity
                 toAddress: market.receiveAddress,
                 paid: false,
-                daysRetention: daysRetention || parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: daysRetention || parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee,
                 anonFee: false
             } as SmsgSendParams,
@@ -131,7 +130,7 @@ export class ProposalPostCommand extends BaseCommand implements RpcCommandInterf
         // make sure Identity with the id exists
         await this.identityService.findOne(market.Identity.id)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 

@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { validate, request } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -13,7 +12,6 @@ import { Proposal } from '../../models/Proposal';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { CommandParamValidationRules, ParamValidationRule, StringValidationRule } from '../CommandParamValidation';
 
 export class ProposalGetCommand extends BaseCommand implements RpcCommandInterface<Proposal> {
@@ -44,7 +42,7 @@ export class ProposalGetCommand extends BaseCommand implements RpcCommandInterfa
      * @returns {Promise<Proposal>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Proposal> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Proposal> {
         const proposalHash = data.params[0];
         return await this.proposalService.findOneByHash(proposalHash, true);
     }

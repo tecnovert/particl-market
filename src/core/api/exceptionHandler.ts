@@ -10,19 +10,29 @@
  * send them directly to the client or otherwise it calls the next middleware.
  */
 
+import { Request, Response, NextFunction } from 'express';
 import { Environment } from '../helpers/Environment';
 import { Exception, isException } from '../api/Exception';
 
 
-export const exceptionHandler = (error: Exception | Error, req: myExpress.Request, res: myExpress.Response, next: myExpress.NextFunction) => {
+const setFailureResponse = (res: Response, errCode: number, message: string, error?: any): any => {
+    res.status(errCode);
+    return res.json({
+        success: false,
+        message,
+        ...{ error }
+    });
+};
+
+export const exceptionHandler = (error: Exception | Error, req: Request, res: Response, next: NextFunction): void => {
     if (error instanceof Exception || error[isException]) {
-        res.failed(error['code'], error.message, error['body'] || null);
+        setFailureResponse(res, error['code'], error.message, error['body'] || null);
         next();
     } else {
-        if (Environment.isDevelopment() || Environment.isAlpha() || Environment.isTest()) {
+        if (Environment.isDevelopment() || Environment.isAlpha() || Environment.isTest()) {
             console.error(error.stack);
         }
-        res.failed(500, 'Something broke!', error['body'] || null);
+        setFailureResponse(res, 500, 'Something broke!', error['body'] || null);
         next(error);
     }
 };

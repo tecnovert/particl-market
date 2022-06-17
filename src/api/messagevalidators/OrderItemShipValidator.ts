@@ -14,16 +14,17 @@ import { Targets, Types } from '../../constants';
 import { BidService } from '../services/model/BidService';
 import { OrderItemShipMessage } from '../messages/action/OrderItemShipMessage';
 import { OrderItemStatus } from '../enums/OrderItemStatus';
-import { ActionDirection } from '../enums/ActionDirection';
+// import { ActionDirection } from '../enums/ActionDirection';
 
 export class OrderItemShipValidator implements ActionMessageValidatorInterface {
 
     constructor(
         @inject(Types.Service) @named(Targets.Service.model.BidService) public bidService: BidService
     ) {
+        // empty constructor
     }
 
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (!message.version) {
             throw new MessageException('version: missing');
         }
@@ -42,7 +43,7 @@ export class OrderItemShipValidator implements ActionMessageValidatorInterface {
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         // MPA_COMPLETE should exists
         // -> orderItem should have status OrderItemStatus.ESCROW_COMPLETED, meaning there's no race condition
         // -> (msg.action as MPA_SHIP).bid is the hash of MPA_BID and should be found
@@ -53,9 +54,7 @@ export class OrderItemShipValidator implements ActionMessageValidatorInterface {
                 if (mpaBid.OrderItem.status !== OrderItemStatus.ESCROW_COMPLETED) {
                     return false;
                 }
-                const childBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => {
-                    return child.type === MPActionExtended.MPA_COMPLETE;
-                });
+                const childBid: resources.Bid | undefined = _.find(mpaBid.ChildBids, (child) => child.type === MPActionExtended.MPA_COMPLETE);
                 return !!childBid;
             })
             .catch( () => false);

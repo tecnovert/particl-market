@@ -22,8 +22,8 @@ export class ListingItemObjectDataRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ListingItemObjectData>> {
-        const list = await this.ListingItemObjectDataModel.fetchAll();
-        return list as Bookshelf.Collection<ListingItemObjectData>;
+        const list = await this.ListingItemObjectDataModel.fetchAll<ListingItemObjectData>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<ListingItemObjectData> {

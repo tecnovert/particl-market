@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -37,6 +36,7 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class ProposalAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.model.SmsgMessageService) public smsgMessageService: SmsgMessageService,
@@ -64,6 +64,7 @@ export class ProposalAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -93,10 +94,12 @@ export class ProposalAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: ProposalAddRequest,
-                           marketplaceMessage: MarketplaceMessage,
-                           smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: ProposalAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
 
         // this.log.debug('afterPost(), smsgSendResponse:', JSON.stringify(smsgSendResponse, null, 2));
         return smsgSendResponse;
@@ -113,10 +116,12 @@ export class ProposalAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: ProposalAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: ProposalAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         this.log.debug('processMessage(), actionDirection: ', actionDirection);
 
@@ -126,7 +131,7 @@ export class ProposalAddActionService extends BaseActionService {
 
         const proposal: resources.Proposal = await this.proposalService.findOneByHash(proposalAddMessage.hash)
             .then(value => value.toJSON())
-            .catch(async reason => {
+            .catch(async () => {
 
                 const proposalRequest: ProposalCreateRequest = await this.proposalFactory.get({
                     actionMessage: proposalAddMessage,
@@ -161,9 +166,11 @@ export class ProposalAddActionService extends BaseActionService {
      * @param actionDirection
      * @param smsgMessage
      */
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         const proposalAddMessage: ProposalAddMessage = marketplaceMessage.action as ProposalAddMessage;
 
@@ -177,7 +184,7 @@ export class ProposalAddActionService extends BaseActionService {
             const listingItem: resources.ListingItem = await this.listingItemService.findOneByHashAndMarketReceiveAddress(
                 proposalAddMessage.target!, smsgMessage.to)
                 .then(value => value.toJSON())
-                .catch(err => undefined);
+                .catch(() => undefined);
 
             const notification: MarketplaceNotification = {
                 event: marketplaceMessage.action.type,

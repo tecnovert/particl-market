@@ -28,7 +28,6 @@ import {EnumHelper} from '../../../core/helpers/EnumHelper';
 import {NotificationSearchOrderField, SearchOrderField} from '../../enums/SearchOrderField';
 import {SearchOrder} from '../../enums/SearchOrder';
 import {NotificationSearchParams} from '../../requests/search/NotificationSearchParams';
-import {BidRejectReason} from '../../enums/BidRejectReason';
 import {CommentCategory} from '../../enums/CommentCategory';
 import {ProposalCategory} from '../../enums/ProposalCategory';
 import {ActionMessageTypes} from '../../enums/ActionMessageTypes';
@@ -47,10 +46,10 @@ export class NotificationSearchCommand extends BaseSearchCommand implements RpcC
 
     /**
      * params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: types: ActionMessageTypes[]
-     *  [2]: category: boolean
-     *  [3]: read: boolean
+     * [0]: profile: resources.Profile
+     * [1]: types: ActionMessageTypes[]
+     * [2]: category: boolean
+     * [3]: read: boolean
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
@@ -59,10 +58,10 @@ export class NotificationSearchCommand extends BaseSearchCommand implements RpcC
                 new IdValidationRule('profileId', false, this.profileService),
                 new ActionMessageTypesValidationRule(false),
                 new EnumValidationRule('category', false, 'CommentCategory|ProposalCategory', [
-                        CommentCategory.LISTINGITEM_QUESTION_AND_ANSWERS, CommentCategory.PROPOSAL_QUESTION_AND_ANSWERS,
-                        CommentCategory.MARKETPLACE_COMMENT, CommentCategory.PRIVATE_MESSAGE,
-                        ProposalCategory.PUBLIC_VOTE, ProposalCategory.ITEM_VOTE, ProposalCategory.MARKET_VOTE
-                    ] as string[]),
+                    CommentCategory.LISTINGITEM_QUESTION_AND_ANSWERS, CommentCategory.PROPOSAL_QUESTION_AND_ANSWERS,
+                    CommentCategory.MARKETPLACE_COMMENT, CommentCategory.PRIVATE_MESSAGE,
+                    ProposalCategory.PUBLIC_VOTE, ProposalCategory.ITEM_VOTE, ProposalCategory.MARKET_VOTE
+                ] as string[]),
                 new BooleanValidationRule('read', false, false)
             ] as ParamValidationRule[]
         } as CommandParamValidationRules;
@@ -74,10 +73,10 @@ export class NotificationSearchCommand extends BaseSearchCommand implements RpcC
 
     /**
      * data.params[]:
-     *  [4]: profile: resources.Profile
-     *  [5]: types: ActionMessageTypes[]
-     *  [6]: category: boolean
-     *  [7]: read: boolean
+     * [4]: profile: resources.Profile
+     * [5]: types: ActionMessageTypes[]
+     * [6]: category: boolean
+     * [7]: read: boolean
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<Market>>}

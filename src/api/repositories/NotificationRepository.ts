@@ -24,8 +24,8 @@ export class NotificationRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Notification>> {
-        const list = await this.NotificationModel.fetchAll();
-        return list as Bookshelf.Collection<Notification>;
+        const list = await this.NotificationModel.fetchAll<Notification>();
+        return list;
     }
 
     public async findAllByProfileId(id: number | undefined, withRelated: boolean = true): Promise<Bookshelf.Collection<Notification>> {

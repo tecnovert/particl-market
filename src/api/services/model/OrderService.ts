@@ -73,7 +73,7 @@ export class OrderService {
     public async create( @request(OrderCreateRequest) data: OrderCreateRequest): Promise<Order> {
         const startTime = new Date().getTime();
 
-        const body: OrderCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<OrderCreateRequest> = JSON.parse(JSON.stringify(data));
         // this.log.debug('OrderCreateRequest: ', JSON.stringify(body, null, 2));
 
         const orderItemCreateRequests = body.orderItems || [];
@@ -90,11 +90,11 @@ export class OrderService {
         // then create the OrderItems
         for (const orderItemCreateRequest of orderItemCreateRequests) {
             orderItemCreateRequest.order_id = order.id;
-            const orderItem: resources.OrderItem = await this.orderItemService.create(orderItemCreateRequest).then(value => value.toJSON());
+            await this.orderItemService.create(orderItemCreateRequest).then(value => value.toJSON());
             // this.log.debug('created orderItem: ', JSON.stringify(orderItem, null, 2));
         }
 
-        this.log.debug('orderService.create: ' + (new Date().getTime() - startTime) + 'ms');
+        this.log.debug(`orderService.create: ${(new Date().getTime() - startTime)}ms`);
 
         // finally find and return the created order
         return await this.findOne(order.id);
@@ -133,7 +133,7 @@ export class OrderService {
         const order = await this.findOne(id, false);
         order.Status = status;
         const updated = await this.orderRepo.update(id, order.toJSON());
-        this.log.debug('updated Order ' + id + ' status to: ' + updated.Status);
+        this.log.debug(`updated Order ${id} status to: ${updated.Status}`);
         return updated;
 
     }

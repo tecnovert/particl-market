@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -16,7 +15,7 @@ import { ListingItemService } from '../../services/model/ListingItemService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BidFactory } from '../../factories/model/BidFactory';
 import { BidService } from '../../services/model/BidService';
-import { BidCancelMessage } from '../../messages/action/BidCancelMessage';
+// import { BidCancelMessage } from '../../messages/action/BidCancelMessage';
 import { BidCancelActionService } from '../../services/action/BidCancelActionService';
 import { ProposalService } from '../../services/model/ProposalService';
 import { BaseBidActionMessageProcessor } from '../BaseBidActionMessageProcessor';
@@ -63,18 +62,14 @@ export class BidCancelActionMessageProcessor extends BaseBidActionMessageProcess
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: BidCancelMessage = marketplaceMessage.action as BidCancelMessage;
+        // const actionMessage: BidCancelMessage = marketplaceMessage.action as BidCancelMessage;
 
         // - first get the previous Bid (MPA_BID), fail if it doesn't exist
         // - then get the ListingItem the Bid is for, fail if it doesn't exist
         // - then, save the new Bid (MPA_CANCEL) and update the OrderItem.status and Order.status
 
         return await this.bidCancelActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
-                return SmsgMessageStatus.PROCESSED;
-            })
-            .catch(reason => {
-                return SmsgMessageStatus.PROCESSING_FAILED;
-            });
+            .then(() => SmsgMessageStatus.PROCESSED)
+            .catch(() => SmsgMessageStatus.PROCESSING_FAILED);
     }
 }

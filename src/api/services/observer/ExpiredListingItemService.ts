@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import { inject, multiInject, named } from 'inversify';
+import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { ListingItemService } from '../model/ListingItemService';
@@ -16,7 +16,7 @@ export class ExpiredListingItemService extends BaseObserverService {
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType,
         @inject(Types.Service) @named(Targets.Service.model.ListingItemService) private listingItemService: ListingItemService
     ) {
-        super(__filename, process.env.LISTING_ITEMS_EXPIRED_INTERVAL * 60 * 1000, Logger);
+        super(__filename, +(process.env.LISTING_ITEMS_EXPIRED_INTERVAL || -1) * 60 * 1000, Logger);
     }
 
     /**
@@ -24,7 +24,7 @@ export class ExpiredListingItemService extends BaseObserverService {
      *
      * @param currentStatus
      */
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         const listingItems: resources.ListingItem[] = await this.listingItemService.findAllExpired().then(value => value.toJSON());
         for (const listingItem of listingItems) {

@@ -59,7 +59,7 @@ export class ProposalFactory implements ModelFactoryInterface {
         // hash the proposal
         let hashableOptions = '';
         for (const option of createRequest.options) {
-            hashableOptions = hashableOptions + option.optionId + ':' + option.description + ':';
+            hashableOptions = `${hashableOptions}${option.optionId}:${option.description}:`;
         }
         createRequest.hash = ConfigurableHasher.hash(createRequest, new HashableProposalCreateRequestConfig([{
             value: hashableOptions,

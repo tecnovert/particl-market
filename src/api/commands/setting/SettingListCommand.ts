@@ -14,7 +14,6 @@ import { Setting } from '../../models/Setting';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { SettingService } from '../../services/model/SettingService';
 import { ProfileService } from '../../services/model/ProfileService';
 import { MissingParamException } from '../../exceptions/MissingParamException';
@@ -38,15 +37,15 @@ export class SettingListCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: market: resources.Market, optional
+     * [0]: profile: resources.Profile
+     * [1]: market: resources.Market, optional
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<Bookshelf.Collection<Setting>>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<Bookshelf.Collection<Setting>> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<Bookshelf.Collection<Setting>> {
         const profile: resources.Profile = data.params[0];
         const market: resources.Market = data.params[1];
 
@@ -59,8 +58,8 @@ export class SettingListCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: marketId, optional
+     * [0]: profileId
+     * [1]: marketId, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -83,7 +82,7 @@ export class SettingListCommand extends BaseCommand implements RpcCommandInterfa
         // make sure Profile with the id exists
         data.params[0] = await this.profileService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
 
@@ -91,7 +90,7 @@ export class SettingListCommand extends BaseCommand implements RpcCommandInterfa
         if (!_.isNil(data.params[1])) {
             data.params[1] = await this.marketService.findOne(data.params[1])
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Market');
                 });
         }

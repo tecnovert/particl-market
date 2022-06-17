@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
-import { validate, request } from '../../../core/api/Validate';
+import { validate } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
@@ -31,7 +31,7 @@ export class ProfileListCommand extends BaseCommand implements RpcCommandInterfa
      * @returns {Promise<resources.Identity[]>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.Identity[]> {
+    public async execute(): Promise<resources.Identity[]> {
         const profileIdentities = await this.identityService.findAll()
             .then(value => value.toJSON())
             .catch(() => [])

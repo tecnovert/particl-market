@@ -39,12 +39,7 @@ export class IocConfig {
         /**
          * Bind custom classes here. This will be bound at the end
          */
-        ioc.configure((container: Container) => {
-
-            // Add your custom class here
-
-            return container;
-        });
+        ioc.configure((container: Container) => container);
     }
 }
 

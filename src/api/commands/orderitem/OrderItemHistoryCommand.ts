@@ -9,7 +9,6 @@ import { request, validate } from '../../../core/api/Validate';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Targets, Types } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { ListingItem } from '../../models/ListingItem';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
@@ -42,7 +41,7 @@ export class OrderItemHistoryCommand extends BaseCommand implements RpcCommandIn
 
     /**
      * data.params[]:
-     *  [0]: orderItem, resources.OrderItem
+     * [0]: orderItem, resources.OrderItem
      *
      * @param data
      * @returns {Promise<ListingItem>}
@@ -83,7 +82,7 @@ export class OrderItemHistoryCommand extends BaseCommand implements RpcCommandIn
     }
 
     /**
-     *  [0]: orderItemId, number
+     * [0]: orderItemId, number
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

@@ -36,7 +36,7 @@ import { ImageDataService } from '../model/ImageDataService';
 import { ImageVersions } from '../../../core/helpers/ImageVersionEnumType';
 import { ImageDataCreateRequest } from '../../requests/model/ImageDataCreateRequest';
 import { ImageUpdateRequest } from '../../requests/model/ImageUpdateRequest';
-import { ListingItemImageNotification } from '../../messages/notification/ListingItemImageNotification';
+// import { ListingItemImageNotification } from '../../messages/notification/ListingItemImageNotification';
 import { ImageCreateParams } from '../../factories/ModelCreateParams';
 import { ImageFactory } from '../../factories/model/ImageFactory';
 import { BlacklistService } from '../model/BlacklistService';
@@ -44,8 +44,8 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class ListingItemImageAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params, max-len */
     constructor(
-        // tslint:disable:max-line-length
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -66,7 +66,6 @@ export class ListingItemImageAddActionService extends BaseActionService {
         @inject(Types.MessageValidator) @named(Targets.MessageValidator.ListingItemImageAddValidator) public validator: ListingItemImageAddValidator,
         @inject(Types.Core) @named(Core.Events) public eventEmitter: EventEmitter,
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
-        // tslint:enable:max-line-length
     ) {
         super(MPActionExtended.MPA_LISTING_IMAGE_ADD,
             smsgService,
@@ -78,6 +77,7 @@ export class ListingItemImageAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params, max-len */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -106,8 +106,12 @@ export class ListingItemImageAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: ListingItemAddRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: ListingItemAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
@@ -121,10 +125,12 @@ export class ListingItemImageAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: ListingItemAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: ListingItemAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         const actionMessage: ListingItemImageAddMessage = marketplaceMessage.action as ListingItemImageAddMessage;
 
@@ -155,7 +161,7 @@ export class ListingItemImageAddActionService extends BaseActionService {
                     } as ImageUpdateRequest;
 
                     // update the image with the real data
-                    await this.imageService.update(image.id, updateRequest).then(value => {
+                    await this.imageService.update(image.id, updateRequest).then(() => {
                         // this.log.debug('updated: ', JSON.stringify(value.toJSON(), null, 2));
                     });
                 }
@@ -165,7 +171,7 @@ export class ListingItemImageAddActionService extends BaseActionService {
                     actionMessage,
                     smsgMessage
                 } as ImageCreateParams);
-                await this.imageService.create(createRequest).then(value => {
+                await this.imageService.create(createRequest).then(() => {
                     // this.log.debug('created: ', JSON.stringify(value.toJSON(), null, 2));
                 });
             }
@@ -173,18 +179,32 @@ export class ListingItemImageAddActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+
+        /*
+         * Removing the below need to send websocket notifications for newly created images as it seems to make little practical sense.
+         * Removal is temporary, at least until a sensible need for it arises.
+
 
         const imageAddMessage: ListingItemImageAddMessage = marketplaceMessage.action as ListingItemImageAddMessage;
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {
 
-            const image: resources.Image = await this.imageService.findOneByMsgId(smsgMessage.msgid)
-                .then(value => value.toJSON());
+            const image: resources.Image | null = await this.imageService.findOneByMsgId(smsgMessage.msgid)
+                .then(value => value.toJSON())
+                .catch(() => null);
 
+            if (image === null) {
+                this.log.info(`Not sending notification for msgid=${smsgMessage.msgid} as its likely the image already exists`);
+                return;
+            }
             // this.log.debug('image: ', JSON.stringify(image, null, 2));
 
             const notification: MarketplaceNotification = {
@@ -199,6 +219,8 @@ export class ListingItemImageAddActionService extends BaseActionService {
             };
             return notification;
         }
+
+        */
         return undefined;
     }
 

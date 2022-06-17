@@ -27,7 +27,7 @@ export class NotificationRemoveCommand extends BaseCommand implements RpcCommand
 
     /**
      * params[]:
-     *  [0]: notification: resources.Notification
+     * [0]: notification: resources.Notification
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
@@ -40,7 +40,7 @@ export class NotificationRemoveCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: notification: resources.Notification
+     * [0]: notification: resources.Notification
      *
      * @param data
      * @returns {Promise<void>}

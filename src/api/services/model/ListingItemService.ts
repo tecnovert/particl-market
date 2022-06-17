@@ -26,10 +26,8 @@ import { ListingItemObjectCreateRequest } from '../../requests/model/ListingItem
 import { ListingItemObjectUpdateRequest } from '../../requests/model/ListingItemObjectUpdateRequest';
 import { ListingItemObjectService } from './ListingItemObjectService';
 import { CommentService } from './CommentService';
-import { CommentCategory } from '../../enums/CommentCategory';
 import { ImageService } from './ImageService';
 import { ShoppingCartItemService } from './ShoppingCartItemService';
-import { ProposalCategory } from '../../enums/ProposalCategory';
 
 
 export class ListingItemService {
@@ -76,7 +74,7 @@ export class ListingItemService {
      * @param {boolean} withRelated
      * @returns {Promise<Bookshelf.Collection<ListingItem>>}
      */
-     public async findAllByHashAndMarketReceiveAddress(
+    public async findAllByHashAndMarketReceiveAddress(
         hash: string, marketReceiveAddress: string, withRelated: boolean = true
     ): Promise<Bookshelf.Collection<ListingItem>> {
         return await this.listingItemRepo.findAllByHashAndMarketReceiveAddress(hash, marketReceiveAddress, withRelated);
@@ -130,8 +128,9 @@ export class ListingItemService {
      * @returns {Promise<Bookshelf.Collection<ListingItem>>}
      */
     @validate()
-    public async search(@request(ListingItemSearchParams) options: ListingItemSearchParams,
-                        withRelated: boolean = true): Promise<Bookshelf.Collection<ListingItem>> {
+    public async search(
+        @request(ListingItemSearchParams) options: ListingItemSearchParams, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<ListingItem>> {
 
         // this.log.debug('searchBy(), options: ', JSON.stringify(options, null, 2));
         return await this.listingItemRepo.search(options, withRelated);
@@ -145,7 +144,7 @@ export class ListingItemService {
     @validate()
     public async create( @request(ListingItemCreateRequest) data: ListingItemCreateRequest): Promise<ListingItem> {
 
-        const body: ListingItemCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<ListingItemCreateRequest> = JSON.parse(JSON.stringify(data));
         // this.log.debug('create ListingItem, body: ', JSON.stringify(body, null, 2));
 
         // extract and remove related models from request
@@ -165,12 +164,12 @@ export class ListingItemService {
         const listingItem: resources.ListingItem = await this.listingItemRepo.create(body).then(value => value.toJSON());
 
         // create related models
-        if (!_.isEmpty(itemInformation)) {
+        if (itemInformation && !_.isEmpty(itemInformation)) {
             itemInformation.listing_item_id = listingItem.id;
             await this.itemInformationService.create(itemInformation);
         }
 
-        if (!_.isEmpty(paymentInformation)) {
+        if (paymentInformation && !_.isEmpty(paymentInformation)) {
             paymentInformation.listing_item_id = listingItem.id;
             await this.paymentInformationService.create(paymentInformation);
         }
@@ -374,8 +373,10 @@ export class ListingItemService {
      * @param listingItem
      * @param listingItemTemplate
      */
-    public async updateListingItemAndTemplateRelation(listingItem: resources.ListingItem,
-                                                      listingItemTemplate: resources.ListingItemTemplate): Promise<ListingItem> {
+    public async updateListingItemAndTemplateRelation(
+        listingItem: resources.ListingItem,
+        listingItemTemplate: resources.ListingItemTemplate
+    ): Promise<ListingItem> {
         const listingItemModel: ListingItem = await this.findOne(listingItem.id, false);
         listingItemModel.set('listingItemTemplateId', listingItemTemplate.id);
         await this.listingItemRepo.update(listingItem.id, listingItemModel.toJSON());
@@ -390,7 +391,7 @@ export class ListingItemService {
     public async setRemovedFlag(id: number, removed: boolean): Promise<void> {
         const listingItem: resources.ListingItem = await this.findOne(id).then(value => value.toJSON());
         await this.listingItemRepo.update(listingItem.id, { removed });
-     }
+    }
 
     /**
      * check if object is exist in a array
@@ -402,9 +403,7 @@ export class ListingItemService {
      * @returns {Promise<any>}
      */
     private async checkExistingObject(objectArray: string[], fieldName: string, value: string | number): Promise<any> {
-        return _.find(objectArray, (object) => {
-            return ( object[fieldName] === value );
-        });
+        return _.find(objectArray, (object) => object[fieldName] === value );
     }
 
     /**
@@ -414,9 +413,7 @@ export class ListingItemService {
      * @returns {Promise<any>}
      */
     private async findHighestOrderNumber(listingItemObjects: string[]): Promise<any> {
-        const highestOrder = await _.maxBy(listingItemObjects, (itemObject) => {
-          return itemObject['order'];
-        });
+        const highestOrder = _.maxBy(listingItemObjects, (itemObject) => itemObject['order']);
         return highestOrder ? highestOrder['order'] : 0;
     }
 }

@@ -14,7 +14,7 @@ import { OrderItemCreateRequest } from '../../requests/model/OrderItemCreateRequ
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
 import { ConfigurableHasher } from '@zasmilingidiot/omp-lib/dist/hasher/hash';
 import { HashableOrderCreateRequestConfig } from '../hashableconfig/createrequest/HashableOrderCreateRequestConfig';
-import { BidMessage } from '../../messages/action/BidMessage';
+// import { BidMessage } from '../../messages/action/BidMessage';
 import { ActionDirection } from '../../enums/ActionDirection';
 import { OrderStatus } from '../../enums/OrderStatus';
 import { OrderItemFactory } from './OrderItemFactory';
@@ -40,7 +40,7 @@ export class OrderFactory implements ModelFactoryInterface {
      */
     public async get(params: OrderCreateParams): Promise<OrderCreateRequest> {
 
-        const actionMessage: BidMessage = params.actionMessage as BidMessage;
+        // const actionMessage: BidMessage = params.actionMessage as BidMessage;
         const smsgMessage: resources.SmsgMessage | undefined = params.smsgMessage;
 
         // for now, params.bids only contains a single bid for single listingItem

@@ -46,7 +46,7 @@ export class MarketService {
         @inject(Types.Core) @named(Core.Logger) public Logger: typeof LoggerType
     ) {
         this.log = new Logger(__filename);
-        this.DEFAULT_BROADCAST_ADDRESS = process.env[SettingValue.APP_DEFAULT_MARKETPLACE_ADDRESS];
+        this.DEFAULT_BROADCAST_ADDRESS = process.env[SettingValue.APP_DEFAULT_MARKETPLACE_ADDRESS] || '';
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Market>> {
@@ -101,21 +101,22 @@ export class MarketService {
     }
 
     @validate()
-    public async search(@request(MarketSearchParams) options: MarketSearchParams,
-                        withRelated: boolean = true): Promise<Bookshelf.Collection<Market>> {
+    public async search(
+        @request(MarketSearchParams) options: MarketSearchParams, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<Market>> {
         return await this.marketRepo.search(options, withRelated);
     }
 
     @validate()
     public async create( @request(MarketCreateRequest) data: MarketCreateRequest): Promise<Market> {
-        const body: MarketCreateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<MarketCreateRequest> = JSON.parse(JSON.stringify(data));
 
-        const imageCreateRequest = body.image;
+        const imageCreateRequest = body.image ? body.image : undefined;
         delete body.image;
 
         const market: resources.Market = await this.marketRepo.create(body).then(value => value.toJSON());
 
-        if (!_.isEmpty(imageCreateRequest)) {
+        if (imageCreateRequest && !_.isEmpty(imageCreateRequest)) {
             await this.imageService.create(imageCreateRequest).then(async value => {
                 const image: resources.Image = value.toJSON();
                 await this.setImage(market.id, image.id);
@@ -175,23 +176,26 @@ export class MarketService {
         // remove market image
         const imageId = +market.Image().id;
         if (imageId) {
-            await this.imageService.destroy(imageId).catch(err => {
+            await this.imageService.destroy(imageId).catch(() => {
                 this.log.warn(`Failed to remove image for Market with the address=${marketReceiveAddress}!`);
             });
         }
 
+        const identityID = +marketData.identityId;
+        let doCleanup = false;
+
         // only be concerned with removing listings, smsg messages, etc if the market is joined (ie: ignore running these steps for a promoted market)
-        if (+marketData.identityId > 0) {
+        if (identityID > 0) {
             // first check that the market is not added for another identity or profile
             const similarMarkets: resources.Market[] = await this.findAllByReceiveAddress(marketReceiveAddress).then(value => value.toJSON());
-            if (similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1) {
-
-                const identityID = similarMarkets[0] ? +similarMarkets[0].Identity.id : 0;
+            doCleanup = similarMarkets.filter(m => m.Identity && +m.Identity.id > 0).length <= 1;
+            if (doCleanup) {
+                this.log.info(`cleaning up market related context, id=${id}!`);
 
                 // remove listings
                 const listings: resources.ListingItem[] = await this.listingItemService.findAllByMarketReceiveAddress(marketReceiveAddress)
                     .then(value => value.toJSON())
-                    .catch(err => {
+                    .catch(() => {
                         this.log.warn(`Failed to find listings for Market with the address=${marketReceiveAddress}! Will wait for any listings to expire...`);
                         return [];
                     });
@@ -215,24 +219,26 @@ export class MarketService {
                             this.log.error('Failed to remove expired ListingItem (' + listingItem.hash + ') on Market ('
                                 + listingItem.market + '): ' + JSON.stringify(reason, null, 2));
                         });
-
-                    // deregister the smsg listener for this market
-                    await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(err => {
-                        this.log.warn(`Failed to remove smsg listener for Market with the address=${marketReceiveAddress}!`);
-                    });
                 }
             }
         }
 
         // destroy the market
         await this.marketRepo.destroy(id);
+
+        if (doCleanup) {
+            this.log.info(`removing smsg listener in particl-core for market id=${id}!`);
+            // deregister the smsg listener for this market
+            await this.smsgService.smsgRemoveAddress(marketReceiveAddress).catch(() => {
+                this.log.warn(`Failed to de-register smsg listener for Market using address=${marketReceiveAddress}!`);
+            });
+        }
     }
 
     public async joinMarket(market: resources.Market, rescan: boolean = false): Promise<void> {
         await this.coreRpcService.loadWallet(market.Identity.wallet);
         await this.smsgService.smsgSetWallet(market.Identity.wallet);
         await this.importMarketKeys(market, rescan);
-        return;
     }
 
     /**
@@ -249,8 +255,7 @@ export class MarketService {
      *
      *
      * type === MARKETPLACE -> receive + publish keys are the same
-     * type === STOREFRONT -> receive key is private key, publish key is public key
-     *                        when adding a storefront, both keys should be given
+     * type === STOREFRONT -> receive key is private key, publish key is public key when adding a storefront, both keys should be given
      * type === STOREFRONT_ADMIN -> receive + publish keys are different
      *
      * @param market

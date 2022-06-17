@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
+import { jest } from '@jest/globals';
 import * as _ from 'lodash';
 import * as resources from 'resources';
 import { Logger as LoggerType } from '../../src/core/Logger';
@@ -18,9 +18,11 @@ import { OrderStatus } from '../../src/api/enums/OrderStatus';
 import { BidSearchOrderField, ListingItemSearchOrderField, OrderSearchOrderField } from '../../src/api/enums/SearchOrderField';
 import { MPActionExtended } from '../../src/api/enums/MPActionExtended';
 
-describe('Happy Buy Flow', () => {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;
+jest.setTimeout(+process.env.JASMINE_TIMEOUT || 60_000);
+
+
+describe('Happy Buy Flow', () => {
 
     const log: LoggerType = new LoggerType(__filename);
 

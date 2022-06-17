@@ -12,7 +12,7 @@ import { CountryCodeNotFoundException } from '../../../src/api/exceptions/Countr
 
 describe('AddressUpdateCommand', () => {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = process.env.JASMINE_TIMEOUT;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = +process.env.JASMINE_TIMEOUT;
 
     const log: LoggerType = new LoggerType(__filename);
 

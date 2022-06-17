@@ -53,12 +53,13 @@ export abstract class BaseCommand {
             // execute
             return await rpcCommand.execute(request, commandFactory);
         } else {
-            throw new MessageException('Unknown subcommand: ' + commandName + '\n');
+            throw new MessageException(`Unknown subcommand: ${commandName}\n`);
         }
     }
 
     /**
      * returns the child Commands of this command
+     *
      * @returns {Command[]}
      */
     public getChildCommands(): Command[] {
@@ -97,6 +98,7 @@ export abstract class BaseCommand {
 
     /**
      * set default values if such are set
+     *
      * @param data
      * @param rules
      */
@@ -111,8 +113,9 @@ export abstract class BaseCommand {
 
                     // defaultValue exists and currentParamValue doesnt
                     if (this.debug) {
-                        this.log.debug('setDefaults(): ' + rules.params[i].name
-                            + ', setting defaultValue: ' + rules.params[i].defaultValue);
+                        this.log.debug(
+                            `setDefaults(): ${rules.params[i].name}, setting defaultValue: ${rules.params[i].defaultValue}`
+                        );
                     }
 
                     data.params[i] = rules.params[i].defaultValue;
@@ -124,6 +127,7 @@ export abstract class BaseCommand {
 
     /**
      * make sure the required params exist
+     *
      * @param data
      * @param rules
      */
@@ -132,9 +136,9 @@ export abstract class BaseCommand {
 
             for (let i = 0; i < rules.params.length; i++) {
                 if (this.debug) {
-                    this.log.debug('validateRequiredParamsExist(): ' + rules.params[i].name
-                        + ', required: ' + rules.params[i].required
-                        + ', exists: ' + !_.isNil(data.params[i]));
+                    this.log.debug(
+                        `validateRequiredParamsExist(): ${rules.params[i].name}, required: ${rules.params[i].required}, exists: ${!_.isNil(data.params[i])}`
+                    );
                 }
                 if (rules.params[i].required && _.isNil(data.params[i])) {
                     throw new MissingParamException(rules.params[i].name);
@@ -146,6 +150,7 @@ export abstract class BaseCommand {
 
     /**
      * make sure the params are of required type
+     *
      * @param data
      * @param rules
      */
@@ -155,9 +160,10 @@ export abstract class BaseCommand {
             for (let i = 0; i < rules.params.length; i++) {
 
                 if (this.debug && !_.isNil(data.params[i])) {
-                    this.log.debug('validateRequiredTypes(): ' + rules.params[i].name
-                        + ', requiredType: ' + rules.params[i].type
-                        + ', matches: ' + (typeof data.params[i] === rules.params[i].type));
+                    this.log.debug(
+                        `validateRequiredTypes(): ${rules.params[i].name}, requiredType: ${rules.params[i].type || '??'},` +
+                        `matches: ${typeof data.params[i] === rules.params[i].type}`
+                    );
                 }
 
                 if (!_.isNil(data.params[i])
@@ -182,8 +188,9 @@ export abstract class BaseCommand {
 
                     const result = await rules.params[i].customValidate(data.params[i], i, data.params);
                     if (this.debug) {
-                        this.log.debug('validateAndConvertValues(): ' + rules.params[i].name
-                            + ', valid: ' + (_.isBoolean(result) ? result : 'valid and converted'));
+                        this.log.debug(
+                            `validateAndConvertValues(): ${rules.params[i].name}, valid: ${_.isBoolean(result) ? result : 'valid and converted'}`
+                        );
                     }
 
                     if (!_.isNil(result) && _.isBoolean(result) && !result) {

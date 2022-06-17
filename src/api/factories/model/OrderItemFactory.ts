@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as _ from 'lodash';
-import * as resources from 'resources';
+// import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Core, Types } from '../../../constants';
@@ -11,7 +11,7 @@ import { ModelFactoryInterface } from '../ModelFactoryInterface';
 import { OrderItemCreateParams } from '../ModelCreateParams';
 import { OrderItemCreateRequest } from '../../requests/model/OrderItemCreateRequest';
 import { OrderItemStatus } from '../../enums/OrderItemStatus';
-import { BidMessage } from '../../messages/action/BidMessage';
+// import { BidMessage } from '../../messages/action/BidMessage';
 
 
 export class OrderItemFactory implements ModelFactoryInterface {
@@ -31,8 +31,8 @@ export class OrderItemFactory implements ModelFactoryInterface {
      */
     public async get(params: OrderItemCreateParams): Promise<OrderItemCreateRequest> {
 
-        const actionMessage: BidMessage = params.actionMessage as BidMessage;
-        const smsgMessage: resources.SmsgMessage | undefined = params.smsgMessage;
+        // const actionMessage: BidMessage = params.actionMessage as BidMessage;
+        // const smsgMessage: resources.SmsgMessage | undefined = params.smsgMessage;
 
         const createRequest = {
             // order_id

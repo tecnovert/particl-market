@@ -42,7 +42,8 @@ export class EscrowRefundMessageFactory extends BaseMessageFactory {
     /**
      *
      * @param actionRequest
-     *      bidHash: string
+     * bidHash: string
+     *
      * @returns {Promise<MarketplaceMessage>}
      */
     public async get(actionRequest: EscrowRefundRequest): Promise<MarketplaceMessage> {

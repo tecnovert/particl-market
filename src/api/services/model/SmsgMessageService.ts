@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as resources from 'resources';
 import * as Bookshelf from 'bookshelf';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -41,7 +40,7 @@ export class SmsgMessageService {
     }
 
     public async findLast(): Promise<SmsgMessage> {
-        const smsgMessage = await this.smsgMessageRepo.findLast();
+        const smsgMessage = await this.smsgMessageRepo.findLast().catch(() => null);
         // this.log.debug('findLast(), smsgMessage:', JSON.stringify(smsgMessage, null, 2));
         if (!smsgMessage) {
             this.log.warn(`SmsgMessage not found!`);
@@ -51,7 +50,7 @@ export class SmsgMessageService {
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<SmsgMessage> {
-        const smsgMessage = await this.smsgMessageRepo.findOne(id, withRelated);
+        const smsgMessage = await this.smsgMessageRepo.findOne(id, withRelated).catch(() => null);
         if (smsgMessage === null) {
             this.log.warn(`SmsgMessage with the id=${id} was not found!`);
             throw new NotFoundException(id);
@@ -63,20 +62,23 @@ export class SmsgMessageService {
         await this.smsgMessageRepo.cleanupByType(msgType);
     }
 
-    public async findOneByMsgIdAndDirection(msgId: string, direction: ActionDirection = ActionDirection.BOTH,
-                                            withRelated: boolean = true): Promise<SmsgMessage> {
+    public async findOneByMsgIdAndDirection(
+        msgId: string,
+        direction: ActionDirection = ActionDirection.BOTH,
+        withRelated: boolean = true
+    ): Promise<SmsgMessage> {
         let smsgMessage;
         if (direction === ActionDirection.BOTH) {
-            smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, ActionDirection.INCOMING, withRelated);
+            smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, ActionDirection.INCOMING, withRelated).catch(() => null);
             if (smsgMessage === null) {
-                smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, ActionDirection.OUTGOING, withRelated);
+                smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, ActionDirection.OUTGOING, withRelated).catch(() => null);
                 if (smsgMessage === null) {
                     this.log.warn(`SmsgMessage with the msgid=${msgId} was not found!`);
                     throw new NotFoundException(msgId);
                 }
             }
         } else {
-            smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, direction, withRelated);
+            smsgMessage = await this.smsgMessageRepo.findOneByMsgIdAndDirection(msgId, direction, withRelated).catch(() => null);
             if (smsgMessage === null) {
                 this.log.warn(`SmsgMessage with the msgid=${msgId} and direction=${direction} was not found!`);
                 throw new NotFoundException(msgId);

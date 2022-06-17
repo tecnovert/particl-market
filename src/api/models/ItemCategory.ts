@@ -79,9 +79,11 @@ export class ItemCategory extends Bookshelf.Model<ItemCategory> {
         return collection.first();
     }
 
-    public static async searchBy(options: ItemCategorySearchParams,
-                                 withRelated: boolean = false,
-                                 parentRelations: boolean = true): Promise<Collection<ItemCategory>> {
+    public static async searchBy(
+        options: ItemCategorySearchParams,
+        withRelated: boolean = false,
+        parentRelations: boolean = true
+    ): Promise<Collection<ItemCategory>> {
         const collection = ItemCategory.forge<Model<ItemCategory>>()
             .query(qb => {
                 if (options.market) {

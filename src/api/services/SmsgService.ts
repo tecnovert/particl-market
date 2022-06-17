@@ -54,6 +54,7 @@ export interface SmsgZmqPushResult {
     numsent: number;            // Number of notifications sent
 }
 
+/* eslint-disable */
 /**
  * {
  *      "fromfile": bool,          (boolean, optional, default=false) Send file as message, path specified in "message".
@@ -65,6 +66,7 @@ export interface SmsgZmqPushResult {
  *      "rct_ring_size": n,        (numeric, optional, default=5) Ring size to use with fund_from_rct.
  * }
  */
+/* eslint-enable */
 export interface SmsgSendOptions {
     fromfile: boolean;          // (boolean, optional, default=false) Send file as message, path specified in "message".
     decodehex: boolean;         // (boolean, optional, default=false) Decode "message" from hex before sending.
@@ -74,7 +76,7 @@ export interface SmsgSendOptions {
     fund_from_rct: boolean;     // (boolean, optional, default=false) Fund message from anon balance.
     rct_ring_size: number;      // (numeric, optional, default=5) Ring size to use with fund_from_rct.
 }
-
+/* eslint-disable @typescript-eslint/indent */
 export interface SmsgSendCoinControl {
     changeaddress: string;      // (string, optional, default=) The particl address to receive the change
     inputs: any[];              // TODO: {                        (json object, optional, default=)
@@ -88,6 +90,7 @@ export interface SmsgSendCoinControl {
                                 // addresses are considered dirty if they have previously been used in a transaction.
     feeRate: number;            // (numeric, optional) Set a specific fee rate in PART/kB
 }
+/* eslint-enable @typescript-eslint/indent */
 
 export class SmsgService {
 
@@ -117,10 +120,8 @@ export class SmsgService {
     public async pushUnreadCoreSmsgMessages(from?: number, to?: number): Promise<SmsgZmqPushResult> {
         if (!from) {
             const lastSmsgMessage: resources.SmsgMessage = await this.smsgMessageService.findLast()
-                .then(value => {
-                    return value.toJSON();
-                })
-                .catch(reason => {
+                .then(value => value.toJSON())
+                .catch(() => {
                     this.log.info('No new smsg messages waiting to be processed.');
                     return undefined;
                 });
@@ -128,7 +129,7 @@ export class SmsgService {
             // this.log.debug('pushUnreadCoreSmsgMessages(), lastSmsgMessage: ', JSON.stringify(lastSmsgMessage, null, 2));
 
             if (_.isEmpty(lastSmsgMessage)) {
-                const earliestDate = 60 * 60 * 24 * parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10);
+                const earliestDate = 60 * 60 * 24 * parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS as string, 10);
                 from = Math.trunc(Date.now() / 1000) - earliestDate;
             } else {
                 from = Math.trunc(lastSmsgMessage.received / 1000);
@@ -205,7 +206,7 @@ export class SmsgService {
         } as SmsgSendOptions;
 
         return await this.smsgSend(sendParams.wallet, sendParams.fromAddress, sendParams.toAddress, marketplaceMessage, paidMessage,
-            sendParams.daysRetention, sendParams.estimateFee, options, sendParams.coinControl);
+            sendParams.daysRetention, sendParams.estimateFee, options /* , sendParams.coinControl */);
     }
 
     /**
@@ -222,7 +223,7 @@ export class SmsgService {
      */
     public async smsgImportPrivKey(privateKey: string, label: string = 'particl-market imported pk'): Promise<boolean> {
         return await this.coreRpcService.call('smsgimportprivkey', [privateKey, label])
-            .then(response => true)
+            .then(() => true)
             .catch(error => {
                 this.log.error('smsgImportPrivKey failed: ', error);
                 return false;
@@ -242,9 +243,11 @@ export class SmsgService {
      * @param {object} options
      * @returns {Promise<any>}
      */
-    public async smsgInbox(mode: string = 'all',
-                           filter: string = '',
-                           options?: SmsgInboxOptions): Promise<CoreSmsgMessageResult> {
+    public async smsgInbox(
+        mode: string = 'all',
+        filter: string = '',
+        options?: SmsgInboxOptions
+    ): Promise<CoreSmsgMessageResult> {
         if (!options) {
             options = {
                 updatestatus: true,
@@ -286,9 +289,17 @@ export class SmsgService {
      * @param coinControl
      * @returns {Promise<any>}
      */
-    public async smsgSend(wallet: string, fromAddress: string, toAddress: string, message: MarketplaceMessage, paidMessage: boolean = true,
-                          daysRetention: number = parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS, 10),
-                          estimateFee: boolean = false, options?: SmsgSendOptions, coinControl?: SmsgSendCoinControl): Promise<SmsgSendResponse> {
+    public async smsgSend(
+        wallet: string,
+        fromAddress: string,
+        toAddress: string,
+        message: MarketplaceMessage,
+        paidMessage: boolean = true,
+        daysRetention: number = parseInt(process.env.PAID_MESSAGE_RETENTION_DAYS as string, 10),
+        estimateFee: boolean = false,
+        options?: SmsgSendOptions
+        // coinControl?: SmsgSendCoinControl
+    ): Promise<SmsgSendResponse> {
 
         // set secure messaging to use the specified wallet
         await this.smsgSetWallet(wallet);
@@ -297,7 +308,7 @@ export class SmsgService {
         await this.smsgAddLocalAddress(fromAddress);
 
         if (Environment.isTruthy(process.env.LOG_SMSGSEND)) {
-            this.log.debug('smsgSend, from: ' + fromAddress + ', to: ' + toAddress + ', daysRetention: ' + daysRetention + ', estimateFee: ' + estimateFee);
+            this.log.debug(`smsgSend, from: ${fromAddress}, to: ${toAddress}, daysRetention: ${daysRetention}, estimateFee: ${estimateFee ? 'true' : 'false'}`);
         }
 
         const params: any[] = [
@@ -323,9 +334,10 @@ export class SmsgService {
             return response;
         }
         this.log.error('ERROR: ', JSON.stringify(response, null, 2));
-        throw new MessageException(`Failed to send message: ${response.error}`);
+        throw new MessageException(`Failed to send message: ${response.error as string}`);
     }
 
+    /* eslint-disable */
     /**
      * List and manage keys.
      * [whitelist|all|wallet|recv <+/-> <address>|anon <+/-> <address>]
@@ -348,6 +360,7 @@ export class SmsgService {
      *
      * @returns {Promise<any>}
      */
+    /* eslint-enable */
     public async smsgLocalKeys(): Promise<any> {
         const response = await this.coreRpcService.call('smsglocalkeys', []);
         // this.log.debug('smsgLocalKeys, response: ' + JSON.stringify(response, null, 2));
@@ -355,6 +368,7 @@ export class SmsgService {
     }
 
 
+    /* eslint-disable */
     /**
      * View smsg by msgid.
      *
@@ -385,13 +399,12 @@ export class SmsgService {
      *
      * @returns {Promise<CoreSmsgMessage>}
      */
+    /* eslint-enable */
     public async smsg(msgId: string, remove: boolean = false, setRead: boolean = true): Promise<CoreSmsgMessage> {
-        const response = await this.coreRpcService.call('smsg', [msgId, {
-                delete: remove,
-                setread: setRead,
-                encoding: 'text'
-            }
-        ]);
+        const response = await this.coreRpcService.call(
+            'smsg',
+            [ msgId, { delete: remove, setread: setRead, encoding: 'text'}]
+        );
         // this.log.debug('smsg, response: ' + JSON.stringify(response, null, 2));
         return response;
     }
@@ -485,7 +498,7 @@ export class SmsgService {
      * @param {boolean} smsgAddress
      * @returns {Promise<string>}
      */
-    public async getNewAddress(wallet: string, params: any[] = [], smsgAddress: boolean = true): Promise<string> {
+    public async getNewAddress(wallet: string, params: any[] = [] /* , smsgAddress: boolean = true */): Promise<string> {
         const address = await this.coreRpcService.getNewAddress(wallet, params);
         const publicKey = await this.smsgGetPubKey(address);    // get address public key
         await this.smsgAddAddress(address, publicKey);          // add address and matching public key to smsg database
@@ -514,7 +527,7 @@ export class SmsgService {
                 }
                 return undefined;
             })
-            .catch(error => undefined);
+            .catch(() => undefined);
     }
 
 
@@ -544,9 +557,11 @@ export class SmsgService {
     /**
      * USE smsgSetWallet!
      */
+    /* eslint-disable */
     public async smsgEnable(walletName: string): Promise<void> {
         throw new NotImplementedException();
     }
+    /* eslint-enable */
 
     /**
      *
@@ -567,10 +582,7 @@ export class SmsgService {
      */
     public async smsgZmqPush(options: SmsgZmqPushOptions): Promise<SmsgZmqPushResult> {
         return await this.coreRpcService.call('smsgzmqpush', [options])
-            .then(response => {
-                // this.log.debug('smsgZmqPush, response: ' + JSON.stringify(response, null, 2));
-                return response;
-            });
+            .then(response => response);
     }
 
     public async smsgScanBuckets(): Promise<SmsgResult> {

@@ -8,8 +8,7 @@ import { ValidationException } from '../exceptions/ValidationException';
 import { ActionMessageValidatorInterface } from './ActionMessageValidatorInterface';
 import { MessageException } from '../exceptions/MessageException';
 import { GovernanceAction } from '../enums/GovernanceAction';
-import { ActionDirection } from '../enums/ActionDirection';
-import { MissingParamException } from '../exceptions/MissingParamException';
+// import { ActionDirection } from '../enums/ActionDirection';
 import { ProposalAddMessage } from '../messages/action/ProposalAddMessage';
 
 
@@ -19,7 +18,7 @@ export class ProposalAddValidator implements ActionMessageValidatorInterface {
         //
     }
 
-    public async validateMessage(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateMessage(message: MarketplaceMessage /* , direction: ActionDirection */): Promise<boolean> {
         if (!message.version) {
             throw new MessageException('version: missing');
         }
@@ -60,7 +59,7 @@ export class ProposalAddValidator implements ActionMessageValidatorInterface {
         return true;
     }
 
-    public async validateSequence(message: MarketplaceMessage, direction: ActionDirection): Promise<boolean> {
+    public async validateSequence(/* message: MarketplaceMessage, direction: ActionDirection */): Promise<boolean> {
         return true;
     }
 }

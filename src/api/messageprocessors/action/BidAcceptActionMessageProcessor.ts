@@ -3,7 +3,6 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import * as resources from 'resources';
-import * as _ from 'lodash';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -15,7 +14,6 @@ import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BidFactory } from '../../factories/model/BidFactory';
-import { BidAcceptMessage } from '../../messages/action/BidAcceptMessage';
 import { BidAcceptActionService } from '../../services/action/BidAcceptActionService';
 import { BidService } from '../../services/model/BidService';
 import { ProposalService } from '../../services/model/ProposalService';
@@ -65,16 +63,14 @@ export class BidAcceptActionMessageProcessor extends BaseBidActionMessageProcess
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: BidAcceptMessage = marketplaceMessage.action as BidAcceptMessage;
+        // const actionMessage: BidAcceptMessage = marketplaceMessage.action as BidAcceptMessage;
 
         // - first get the previous Bid (MPA_BID), fail if it doesn't exist
         // - then get the ListingItem the Bid is for, fail if it doesn't exist
         // - then, save the new Bid (MPA_ACCEPT) and update the OrderItem.status and Order.status
 
         return await this.bidAcceptActionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
-                return SmsgMessageStatus.PROCESSED;
-            })
+            .then(() => SmsgMessageStatus.PROCESSED)
             .catch(reason => {
                 this.log.error('PROCESSING_FAILED, reason: ', reason);
                 return SmsgMessageStatus.PROCESSING_FAILED;

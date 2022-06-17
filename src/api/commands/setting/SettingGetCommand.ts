@@ -13,7 +13,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { ProfileService } from '../../services/model/ProfileService';
 import { MarketService } from '../../services/model/MarketService';
 import { MissingParamException } from '../../exceptions/MissingParamException';
@@ -36,9 +35,9 @@ export class SettingGetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [1]: key
-     *  [0]: profile: resources.Profile
-     *  [2]: market: resources.Market, optional
+     * [1]: key
+     * [0]: profile: resources.Profile
+     * [2]: market: resources.Market, optional
      *
      * TODO: change this command name to find or similar since we're returning an array
      *
@@ -47,7 +46,7 @@ export class SettingGetCommand extends BaseCommand implements RpcCommandInterfac
      * @returns {Promise<resources.Setting[]>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<resources.Setting[]> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<resources.Setting[]> {
 
         const key = data.params[0];
         const profile: resources.Profile = data.params[1];
@@ -68,9 +67,9 @@ export class SettingGetCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: key
-     *  [1]: profileId
-     *  [2]: marketId, optional
+     * [0]: key
+     * [1]: profileId
+     * [2]: marketId, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -97,7 +96,7 @@ export class SettingGetCommand extends BaseCommand implements RpcCommandInterfac
         // make sure Profile with the id exists
         data.params[1] = await this.profileService.findOne(data.params[1])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Profile');
             });
 
@@ -105,7 +104,7 @@ export class SettingGetCommand extends BaseCommand implements RpcCommandInterfac
         if (data.params[2]) {
             data.params[2] = await this.marketService.findOne(data.params[2])
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Market');
                 });
 

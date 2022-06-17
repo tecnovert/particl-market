@@ -2,8 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
-import * as resources from 'resources';
 import { SmsgMessageService } from '../services/model/SmsgMessageService';
 import { Logger as LoggerType } from '../../core/Logger';
 import { ActionMessageTypes } from '../enums/ActionMessageTypes';
@@ -24,15 +22,16 @@ export abstract class BaseBidActionMessageProcessor extends BaseActionMessagePro
     public bidFactory: BidFactory;
 
     constructor(@unmanaged() eventType: ActionMessageTypes,
-                @unmanaged() actionService: ActionServiceInterface,
-                @unmanaged() smsgMessageService: SmsgMessageService,
-                @unmanaged() bidService: BidService,
-                @unmanaged() proposalService: ProposalService,
-                @unmanaged() notificationService: NotificationService,
-                @unmanaged() validator: ActionMessageValidatorInterface,
-                @unmanaged() listingItemService: ListingItemService,
-                @unmanaged() bidFactory: BidFactory,
-                @unmanaged() Logger: typeof LoggerType) {
+        @unmanaged() actionService: ActionServiceInterface,
+        @unmanaged() smsgMessageService: SmsgMessageService,
+        @unmanaged() bidService: BidService,
+        @unmanaged() proposalService: ProposalService,
+        @unmanaged() notificationService: NotificationService,
+        @unmanaged() validator: ActionMessageValidatorInterface,
+        @unmanaged() listingItemService: ListingItemService,
+        @unmanaged() bidFactory: BidFactory,
+        @unmanaged() Logger: typeof LoggerType
+    ) {
         super(
             eventType,
             actionService,

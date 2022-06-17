@@ -93,15 +93,13 @@ export class BidService {
         // if identity is found for cancelBid.ParentBid.bidder, then we're the bidder
         let identity: resources.Identity = await this.identityService.findOneByAddress(cancelBid.ParentBid.bidder)
             .then(value => value.toJSON())
-            .catch(reason => undefined);
+            .catch(() => undefined);
 
         if (identity) {
             await this.unlockOutputsFor(identity.wallet, cancelBid.ParentBid.msgid, 'buyer');
         } else {
             const parentBid = await this.findOne(cancelBid.ParentBid.id, true).then(b => b.toJSON());
-            const mpaAcceptBid: resources.Bid | undefined = _.find(parentBid.ChildBids, (child) => {
-                return child.type === MPAction.MPA_ACCEPT;
-            });
+            const mpaAcceptBid: resources.Bid | undefined = _.find(parentBid.ChildBids, (child) => child.type === MPAction.MPA_ACCEPT);
             if (mpaAcceptBid) {
                 // we're the seller
                 identity = await this.identityService.findOneByAddress(cancelBid.ListingItem.seller).then(value => value.toJSON());
@@ -136,7 +134,7 @@ export class BidService {
     @validate()
     public async create(@request(BidCreateRequest) data: BidCreateRequest): Promise<Bid> {
 
-        const body: BidCreateRequest = JSON.parse(JSON.stringify(data));
+        let body: BidCreateRequest | Partial<BidCreateRequest> = JSON.parse(JSON.stringify(data));
         // this.log.debug('BidCreateRequest:', JSON.stringify(body, null, 2));
 
         // MPAction.MPA_BID needs to contain shipping address, for other types its optional
@@ -149,29 +147,29 @@ export class BidService {
                 // NOTE: in both cases, there should not be address_id set, as we want to create a new delivery address for each new bid
 
                 const addressCreateRequest = body.address;
-                delete body.address;
+                body = _.omit(body, 'address');
 
                 // no profile_id set -> figure it out
-                if (!addressCreateRequest.profile_id) {
+                if (addressCreateRequest && !addressCreateRequest.profile_id) {
 
                     // todo: now when there's a relation to Profile, this is propably not necessary anymore
                     // ...or could be moved to where BidCreateRequest is created
 
                     // if identity is found for body.bidder, then we're the bidder
-                    const identity: resources.Identity = await this.identityService.findOneByAddress(body.bidder)
+                    const identity: resources.Identity = await this.identityService.findOneByAddress(body.bidder!)
                         .then(value => value.toJSON())
-                        .catch(reason => undefined);
+                        .catch(() => undefined);
 
                     if (identity) {
                         addressCreateRequest.profile_id = identity.Profile.id;
                     } else {
                         // local identity wasn't the bidder, so we must be the seller, fetch the Profile through the ListingItem
-                        addressCreateRequest.profile_id = await this.listingItemService.findOne(body.listing_item_id)
+                        addressCreateRequest.profile_id = await this.listingItemService.findOne(body.listing_item_id!)
                             .then(value => {
                                 const listingItem: resources.ListingItem = value.toJSON();
                                 return listingItem.ListingItemTemplate.Profile.id;
                             })
-                            .catch(reason1 => {
+                            .catch(() => {
                                 this.log.error('Bid doesnt belong to any local Profile');
                                 throw new MessageException('Bid doesnt belong to any local Profile');
                             });
@@ -179,7 +177,7 @@ export class BidService {
                 }
 
                 // this.log.debug('address create request: ', JSON.stringify(addressCreateRequest, null, 2));
-                const address: resources.Address = await this.addressService.create(addressCreateRequest)
+                const address: resources.Address = await this.addressService.create(addressCreateRequest!)
                     .then(value => value.toJSON());
                 // this.log.debug('created address: ', JSON.stringify(address, null, 2));
 
@@ -196,7 +194,7 @@ export class BidService {
         }
 
         const bidDatas = body.bidDatas || [];
-        delete body.bidDatas;
+        body = _.omit(body, 'bidDatas');
 
         const bid: resources.Bid = await this.bidRepo.create(body).then(value => value.toJSON());
 
@@ -211,7 +209,7 @@ export class BidService {
     @validate()
     public async update(id: number, @request(BidUpdateRequest) data: BidUpdateRequest): Promise<Bid> {
 
-        const body: BidUpdateRequest = JSON.parse(JSON.stringify(data));
+        const body: Partial<BidUpdateRequest> = JSON.parse(JSON.stringify(data));
 
         // find the existing one without related
         const bid = await this.findOne(id, false);
@@ -221,9 +219,9 @@ export class BidService {
         delete body.bidDatas;
 
         // set new values, we only need to change the type
-        bid.Type = body.type;
-        bid.Hash = body.hash;
-        bid.GeneratedAt = body.generatedAt;
+        bid.Type = body.type as string;
+        bid.Hash = body.hash as string;
+        bid.GeneratedAt = body.generatedAt as number;
 
         // TODO: not sure if we should even allow updating the related bidDatas
         // update bid record

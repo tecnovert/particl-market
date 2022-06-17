@@ -2,7 +2,7 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * from 'jest';
+
 import { Environment } from '../../../src/core/helpers/Environment';
 
 describe('Environment', () => {

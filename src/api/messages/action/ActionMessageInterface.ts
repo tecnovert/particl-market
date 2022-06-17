@@ -6,15 +6,8 @@ import { MPA } from '@zasmilingidiot/omp-lib/dist/interfaces/omp';
 import { ActionMessageTypes } from '../../enums/ActionMessageTypes';
 import {KVS} from '@zasmilingidiot/omp-lib/dist/interfaces/common';
 
-/**
- * MPAExtension defines how the MPA will be extended
- * type is extended to include also other ActionTypes instead of just the MPAction
- */
-interface MPAExtension {
-    type: ActionMessageTypes;
-}
 
-export interface ActionMessageInterface extends Overwrite<MPA, MPAExtension> {
+export interface ActionMessageInterface extends Omit<MPA, 'type'> {
     type: ActionMessageTypes;
     generated: number;
     hash: string;

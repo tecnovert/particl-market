@@ -38,8 +38,8 @@ export class ItemCategorySearchCommand extends BaseCommand implements RpcCommand
 
     /**
      * params[]:
-     *  [0]: name, search string
-     *  [1]: marketId
+     * [0]: name, search string
+     * [1]: marketId
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {

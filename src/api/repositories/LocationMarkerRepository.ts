@@ -22,8 +22,8 @@ export class LocationMarkerRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<LocationMarker>> {
-        const list = await this.LocationMarkerModel.fetchAll();
-        return list as Bookshelf.Collection<LocationMarker>;
+        const list = await this.LocationMarkerModel.fetchAll<LocationMarker>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<LocationMarker> {

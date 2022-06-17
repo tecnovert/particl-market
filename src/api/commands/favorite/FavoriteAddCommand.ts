@@ -37,8 +37,8 @@ export class FavoriteAddCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * params[]:
-     *  [0]: profileId
-     *  [1]: listingItemId
+     * [0]: profileId
+     * [1]: listingItemId
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -67,10 +67,10 @@ export class FavoriteAddCommand extends BaseCommand implements RpcCommandInterfa
         const listingItem: resources.ListingItem = data.params[1];
 
         await this.favoriteItemService.findOneByProfileIdAndListingItemId(profile.id, listingItem.id)
-            .then(value => {
+            .then(() => {
                 throw new MessageException('FavoriteItem already exists.');
             })
-            .catch(reason => {
+            .catch(() => {
                 // great, not found, so we can continue and create it
                 // return RpcRequest with the correct data to be passed to execute
             });

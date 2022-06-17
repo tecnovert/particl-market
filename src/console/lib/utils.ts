@@ -10,7 +10,7 @@ import * as pluralize from 'pluralize';
 import { UpdateTargetsCommand } from '../UpdateTargetsCommand';
 
 
-export const parseName = (name: string, suffix: string) => ({
+export const parseName = (name: string, suffix: string): any => ({
     camelCase: _.camelCase(removeSuffix(suffix, name)),
     snakeCase: _.snakeCase(removeSuffix(suffix, name)),
     capitalize: _.upperFirst(_.camelCase(removeSuffix(suffix, name))),
@@ -20,11 +20,9 @@ export const parseName = (name: string, suffix: string) => ({
     normal: name
 });
 
-export const removeSuffix = (suffix: string, value: string) => {
-    return value.replace(suffix, '');
-};
+export const removeSuffix = (suffix: string, value: string): string => value.replace(suffix, '');
 
-export const filterInput = (suffix: string, prefix = '') => (value: string) => {
+export const filterInput = (suffix: string, prefix = ''): (value: string) => string => (value: string): string => {
     if (value.indexOf('/') < 0) {
         return value;
     }
@@ -34,7 +32,7 @@ export const filterInput = (suffix: string, prefix = '') => (value: string) => {
     return (vs.join('/')) + prefix + suffix;
 };
 
-export const buildFilePath = (targetPath: string, fileName: string, isTest = false, extension = '.ts') => {
+export const buildFilePath = (targetPath: string, fileName: string, isTest = false, extension = '.ts'): string => {
     if (isTest) {
         return path.join(__dirname, `/../../../test/${targetPath}`, `${fileName}.test${extension}`);
     } else {
@@ -42,8 +40,9 @@ export const buildFilePath = (targetPath: string, fileName: string, isTest = fal
     }
 };
 
-export const inputIsRequired = (value: any) => !!value;
+export const inputIsRequired = (value: any): boolean => !!value;
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-misused-promises */
 export const existsFile = async (filePath: string, stop: boolean = false, isTest = false) => {
     const prompt = inquirer.createPromptModule();
     return new Promise((resolve, reject) => {
@@ -76,8 +75,9 @@ export const existsFile = async (filePath: string, stop: boolean = false, isTest
         });
     });
 };
+/* eslint-enable @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-misused-promises */
 
-export const updateTargets = async () => {
+export const updateTargets = async (): Promise<void> => {
     console.log('');
     const prompt = inquirer.createPromptModule();
     const answer = await prompt([

@@ -10,7 +10,6 @@ import {Logger as LoggerType} from '../../../core/Logger';
 import {Core, Targets, Types} from '../../../constants';
 import {ListingItemService} from '../../services/model/ListingItemService';
 import {RpcRequest} from '../../requests/RpcRequest';
-import {ListingItem} from '../../models/ListingItem';
 import {RpcCommandInterface} from '../RpcCommandInterface';
 import {Commands} from '../CommandEnumType';
 import {BaseCommand} from '../BaseCommand';
@@ -40,8 +39,8 @@ export class ListingItemGetCommand extends BaseCommand implements RpcCommandInte
 
     /**
      * data.params[]:
-     *  [0]: listingItem: resources.ListingItem
-     *  [1]: returnImageData
+     * [0]: listingItem: resources.ListingItem
+     * [1]: returnImageData
      *
      * @param data
      * @returns {Promise<ListingItem>}
@@ -67,8 +66,8 @@ export class ListingItemGetCommand extends BaseCommand implements RpcCommandInte
 
     /**
      * data.params[]:
-     *  [0]: listingItemId
-     *  [1]: returnImageData (optional)
+     * [0]: listingItemId
+     * [1]: returnImageData (optional)
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

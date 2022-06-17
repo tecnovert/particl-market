@@ -31,8 +31,8 @@ export class SmsgMessageRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<SmsgMessage>> {
-        const list = await this.SmsgMessageModel.fetchAll();
-        return list as Bookshelf.Collection<SmsgMessage>;
+        const list = await this.SmsgMessageModel.fetchAll<SmsgMessage>();
+        return list;
     }
 
     public async cleanupByType(msgType: ActionMessageTypes): Promise<void> {
@@ -47,9 +47,11 @@ export class SmsgMessageRepository {
         return await this.SmsgMessageModel.fetchLast();
     }
 
-    public async findOneByMsgIdAndDirection(msgId: string,
-                                            direction: ActionDirection = ActionDirection.INCOMING,
-                                            withRelated: boolean = true): Promise<SmsgMessage> {
+    public async findOneByMsgIdAndDirection(
+        msgId: string,
+        direction: ActionDirection = ActionDirection.INCOMING,
+        withRelated: boolean = true
+    ): Promise<SmsgMessage> {
         return this.SmsgMessageModel.fetchByMsgIdAndDirection(msgId, direction, withRelated);
     }
 

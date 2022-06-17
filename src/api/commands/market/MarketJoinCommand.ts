@@ -10,7 +10,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { MarketService } from '../../services/model/MarketService';
 import { RpcRequest } from '../../requests/RpcRequest';
-import { Market } from '../../models/Market';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { MarketCreateRequest } from '../../requests/model/MarketCreateRequest';
 import { Commands} from '../CommandEnumType';
@@ -25,7 +24,6 @@ import { MarketCreateParams } from '../../factories/ModelCreateParams';
 import { MarketFactory } from '../../factories/model/MarketFactory';
 import { ContentReference, DSN, ProtocolDSN } from '@zasmilingidiot/omp-lib/dist/interfaces/dsn';
 import {BooleanValidationRule, CommandParamValidationRules, IdValidationRule, ParamValidationRule} from '../CommandParamValidation';
-import {ImageVersions} from '../../../core/helpers/ImageVersionEnumType';
 
 
 export class MarketJoinCommand extends BaseCommand implements RpcCommandInterface<resources.Market> {
@@ -56,10 +54,10 @@ export class MarketJoinCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
-     *  [1]: market: resources.Market
-     *  [2]: identity: resources.Identity, optional
-     *  [3]: rescan, optional, default: false
+     * [0]: profile: resources.Profile
+     * [1]: market: resources.Market
+     * [2]: identity: resources.Identity, optional
+     * [3]: rescan, optional, default: false
      *
      * @param data
      * @returns {Promise<Market>}
@@ -122,10 +120,10 @@ export class MarketJoinCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: profileId
-     *  [1]: marketId
-     *  [2]: identityId, optional
-     *  [3]: rescan, optional, default: false
+     * [0]: profileId
+     * [1]: marketId
+     * [2]: identityId, optional
+     * [3]: rescan, optional, default: false
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -148,10 +146,10 @@ export class MarketJoinCommand extends BaseCommand implements RpcCommandInterfac
         }
 
         await this.marketService.findOneByProfileIdAndReceiveAddress(profile.id, market.receiveAddress)
-            .then(value => {
+            .then(() => {
                 throw new MessageException('You have already joined this Market.');
             })
-            .catch(reason => {
+            .catch(() => {
                 //
             });
 

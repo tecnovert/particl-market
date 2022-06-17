@@ -149,7 +149,7 @@ export class IoC {
         return this.bindFiles(
             '/controllers/**/*Controller.ts',
             Targets.Controller,
-            (name: any, value: any) => this.bindFile(Types.Controller, name, value));
+            () => null);
     }
 
     private bindListeners(): Promise<void> {
@@ -189,7 +189,7 @@ export class IoC {
                     const isRecursive = file.name.indexOf('.') > 0;
                     try {
                         fileExport = require(`${file.filePath}`);
-                    } catch (e) {
+                    } catch (e: any) {
                         this.log.warn(e.message);
                         return;
                     }

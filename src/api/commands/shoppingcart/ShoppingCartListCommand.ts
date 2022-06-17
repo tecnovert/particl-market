@@ -4,7 +4,6 @@
 
 import * as _ from 'lodash';
 import * as resources from 'resources';
-import * as Bookshelf from 'bookshelf';
 import { inject, named } from 'inversify';
 import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
@@ -13,7 +12,6 @@ import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
 import { BaseCommand } from '../BaseCommand';
 import { Commands } from '../CommandEnumType';
-import { ShoppingCart } from '../../models/ShoppingCart';
 import { ShoppingCartService } from '../../services/model/ShoppingCartService';
 import { ProfileService } from '../../services/model/ProfileService';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -36,7 +34,7 @@ export class ShoppingCartListCommand extends BaseCommand implements RpcCommandIn
 
     /**
      * data.params[]:
-     *  [0]: profile: resources.Profile
+     * [0]: profile: resources.Profile
      *
      * @param data
      * @returns {Promise<Bookshelf.Collection<ShoppingCart>>}
@@ -57,7 +55,7 @@ export class ShoppingCartListCommand extends BaseCommand implements RpcCommandIn
 
     /**
      * data.params[]:
-     *  [0]: profileId, optional
+     * [0]: profileId, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -72,13 +70,13 @@ export class ShoppingCartListCommand extends BaseCommand implements RpcCommandIn
         if (data.params.length === 0) {
             data.params[0] = await this.profileService.getDefault()
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Profile');
                 });
         } else {
-            data.params[0] = await this.profileService.findOne(data.params[0])
+            data.params[0] = await this.profileService.findOne(+(data.params[0] as number))
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('Profile');
                 });
         }

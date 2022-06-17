@@ -7,9 +7,9 @@ import { MPAction } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 import { MPActionExtended } from '../../enums/MPActionExtended';
 
 export type BidActionMessageTypes = MPAction.MPA_BID | MPAction.MPA_ACCEPT
-    | MPAction.MPA_REJECT | MPAction.MPA_LOCK | MPAction.MPA_CANCEL
-    | MPActionExtended.MPA_COMPLETE | MPActionExtended.MPA_REFUND
-    | MPActionExtended.MPA_RELEASE | MPActionExtended.MPA_SHIP;
+| MPAction.MPA_REJECT | MPAction.MPA_LOCK | MPAction.MPA_CANCEL
+| MPActionExtended.MPA_COMPLETE | MPActionExtended.MPA_REFUND
+| MPActionExtended.MPA_RELEASE | MPActionExtended.MPA_SHIP;
 
 export class BidNotification implements ActionNotificationInterface {
     public objectId: number;

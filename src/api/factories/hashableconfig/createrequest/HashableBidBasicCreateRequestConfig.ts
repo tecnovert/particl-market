@@ -3,7 +3,7 @@
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
 import { BaseHashableConfig, HashableFieldConfig, HashableFieldValueConfig } from '@zasmilingidiot/omp-lib/dist/interfaces/configs';
-import { HashableBidField, HashableCommonField } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
+import { HashableCommonField } from '@zasmilingidiot/omp-lib/dist/interfaces/omp-enums';
 
 // TODO: rename
 export class HashableBidBasicCreateRequestConfig extends BaseHashableConfig {

@@ -22,8 +22,8 @@ export class SettingRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Setting>> {
-        const list = await this.SettingModel.fetchAll();
-        return list as Bookshelf.Collection<Setting>;
+        const list = await this.SettingModel.fetchAll<Setting>();
+        return list;
     }
 
     public async findAllByProfileId(profileId: number, withRelated: boolean = true): Promise<Bookshelf.Collection<Setting>> {

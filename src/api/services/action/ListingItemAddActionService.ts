@@ -40,6 +40,7 @@ import { BlacklistService } from '../model/BlacklistService';
 
 export class ListingItemAddActionService extends BaseActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.CoreRpcService) public coreRpcService: CoreRpcService,
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
@@ -70,6 +71,7 @@ export class ListingItemAddActionService extends BaseActionService {
             Logger
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -98,8 +100,12 @@ export class ListingItemAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(actionRequest: ListingItemAddRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        actionRequest: ListingItemAddRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
         return smsgSendResponse;
     }
 
@@ -114,10 +120,12 @@ export class ListingItemAddActionService extends BaseActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: ListingItemAddRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: ListingItemAddRequest
+    ): Promise<resources.SmsgMessage> {
 
         this.log.debug('processMessage(), actionDirection: ', actionDirection);
 
@@ -139,9 +147,7 @@ export class ListingItemAddActionService extends BaseActionService {
             const existingImages: resources.Image[] = await this.imageService.findAllByTarget(createRequest.hash).then(value => value.toJSON());
             for (const existingImage of existingImages) {
                 // then remove existing Image from the ListingItemCreateRequest
-                _.remove(createRequest.itemInformation.images, (imageCR) => {
-                    return imageCR.hash === existingImage.hash;
-                });
+                _.remove(createRequest.itemInformation.images, (imageCR) => imageCR.hash === existingImage.hash);
             }
 
             // create the ListingItem
@@ -170,11 +176,11 @@ export class ListingItemAddActionService extends BaseActionService {
                     // if there's a matching ListingItemTemplate, create a relation
                     await this.updateListingItemAndTemplateRelationIfNeeded(listingItem);
 
-                    this.log.debug('CREATED: ' + smsgMessage.msgid + ' / ' + listingItem.id + ' / ' + listingItem.hash);
+                    this.log.debug(`CREATED: ${smsgMessage.msgid} / ${listingItem.id} / ${listingItem.hash}`);
 
                 })
                 .catch(reason => {
-                    this.log.error('FAILED: ' + smsgMessage.msgid + ' : ' + reason);
+                    this.log.error(`FAILED: ${smsgMessage.msgid} : ${reason}`);
                     throw reason;
                 });
         }
@@ -182,9 +188,11 @@ export class ListingItemAddActionService extends BaseActionService {
         return smsgMessage;
     }
 
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {
@@ -217,13 +225,10 @@ export class ListingItemAddActionService extends BaseActionService {
     public async updateListingItemAndTemplateRelationIfNeeded(listingItem: resources.ListingItem): Promise<void> {
         const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOneByHash(listingItem.hash)
             .then(value => value.toJSON())
-            .catch(reason => {
-                return undefined;
-            });
+            .catch(() => undefined);
         if (listingItemTemplate) {
             await this.listingItemService.updateListingItemAndTemplateRelation(listingItem, listingItemTemplate);
         }
-        return;
     }
 
     /**
@@ -237,9 +242,7 @@ export class ListingItemAddActionService extends BaseActionService {
                 const proposal: resources.Proposal = value.toJSON();
                 return await this.createFlaggedItemForListingItem(listingItem, proposal);
             })
-            .catch(reason => {
-                return null;
-            });
+            .catch(() => null);
     }
 
     /**
@@ -249,8 +252,10 @@ export class ListingItemAddActionService extends BaseActionService {
      * @param {module:resources.Proposal} proposal
      * @returns {Promise<module:resources.FlaggedItem>}
      */
-    private async createFlaggedItemForListingItem(listingItem: resources.ListingItem,
-                                                  proposal: resources.Proposal): Promise<resources.FlaggedItem> {
+    private async createFlaggedItemForListingItem(
+        listingItem: resources.ListingItem,
+        proposal: resources.Proposal
+    ): Promise<resources.FlaggedItem> {
         const flaggedItemCreateRequest = {
             listing_item_id: listingItem.id,
             proposal_id: proposal.id,

@@ -41,7 +41,7 @@ export class ChatAddActionMessageProcessor implements MessageProcessorInterface 
 
             // no point to storing the failed smsg...
             if (msgid.length > 0) {
-                await this.smsgMessageService.destroy(event.smsgMessage.id).catch(er => null);
+                await this.smsgMessageService.destroy(event.smsgMessage.id).catch(() => null);
             }
 
             return;

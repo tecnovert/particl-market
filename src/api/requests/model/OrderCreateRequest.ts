@@ -7,9 +7,8 @@ import { RequestBody } from '../../../core/api/RequestBody';
 import { OrderItemCreateRequest } from './OrderItemCreateRequest';
 import { OrderStatus } from '../../enums/OrderStatus';
 import { ModelRequestInterface } from './ModelRequestInterface';
-import {AddressCreateRequest} from './AddressCreateRequest';
 
-// tslint:disable:variable-name
+
 export class OrderCreateRequest extends RequestBody implements ModelRequestInterface {
 
     @IsNotEmpty()
@@ -35,4 +34,3 @@ export class OrderCreateRequest extends RequestBody implements ModelRequestInter
     public generatedAt: number;
 
 }
-// tslint:enable:variable-name

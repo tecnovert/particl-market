@@ -60,15 +60,15 @@ export class OrderSearchCommand extends BaseSearchCommand implements RpcCommandI
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: listingItem, resources.ListingItem, optional
-     *  [5]: status, OrderStatus or OrderItemStatus, optional
-     *  [6]: buyerAddress, string, optional
-     *  [7]: sellerAddress, string, optional
-     *  [8]: market, string, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: listingItem, resources.ListingItem, optional
+     * [5]: status, OrderStatus or OrderItemStatus, optional
+     * [6]: buyerAddress, string, optional
+     * [7]: sellerAddress, string, optional
+     * [8]: market, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<Bookshelf.Collection<Order>>}
@@ -100,15 +100,15 @@ export class OrderSearchCommand extends BaseSearchCommand implements RpcCommandI
 
     /**
      * data.params[]:
-     *  [0]: page, number, 0-based
-     *  [1]: pageLimit, number
-     *  [2]: order, SearchOrder
-     *  [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
-     *  [4]: listingItemId, number, optional
-     *  [5]: status, OrderStatus or OrderItemStatus, optional
-     *  [6]: buyerAddress, string, optional
-     *  [7]: sellerAddress, string, optional
-     *  [8]: market, string, optional
+     * [0]: page, number, 0-based
+     * [1]: pageLimit, number
+     * [2]: order, SearchOrder
+     * [3]: orderField, SearchOrderField, field to which the SearchOrder is applied
+     * [4]: listingItemId, number, optional
+     * [5]: status, OrderStatus or OrderItemStatus, optional
+     * [6]: buyerAddress, string, optional
+     * [7]: sellerAddress, string, optional
+     * [8]: market, string, optional
      *
      * @param data
      * @returns {Promise<RpcRequest>}

@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Types, Core, Targets } from '../../../constants';
@@ -11,7 +10,7 @@ import { SmsgMessageStatus } from '../../enums/SmsgMessageStatus';
 import { MarketplaceMessageEvent } from '../../messages/MarketplaceMessageEvent';
 import { SmsgMessageService } from '../../services/model/SmsgMessageService';
 import { MarketplaceMessage } from '../../messages/MarketplaceMessage';
-import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
+// import { ListingItemAddMessage } from '../../messages/action/ListingItemAddMessage';
 import { ProposalService } from '../../services/model/ProposalService';
 import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterface';
 import { BaseActionMessageProcessor } from '../BaseActionMessageProcessor';
@@ -62,16 +61,16 @@ export class MarketAddActionMessageProcessor extends BaseActionMessageProcessor 
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
+        // const actionMessage: ListingItemAddMessage = marketplaceMessage.action as ListingItemAddMessage;
 
         // processMessage will create the ListingItem
         return await this.actionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
-            .then(value => {
+            .then(() => {
                 this.log.debug('PROCESSED: ' + smsgMessage.msgid);
                 return SmsgMessageStatus.PROCESSED;
 
             })
-            .catch(reason => {
+            .catch(() => {
                 this.log.error('PROCESSING FAILED: ', smsgMessage.msgid);
                 return SmsgMessageStatus.PROCESSING_FAILED;
             });

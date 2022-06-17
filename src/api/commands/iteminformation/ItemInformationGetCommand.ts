@@ -40,7 +40,7 @@ export class ItemInformationGetCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplate, resources.ListingItemTemplate
+     * [0]: listingItemTemplate, resources.ListingItemTemplate
      *
      * @param data
      * @returns {Promise<ItemInformation>}
@@ -53,7 +53,7 @@ export class ItemInformationGetCommand extends BaseCommand implements RpcCommand
 
     /**
      * data.params[]:
-     *  [0]: listingItemTemplateId
+     * [0]: listingItemTemplateId
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}

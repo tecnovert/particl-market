@@ -20,7 +20,15 @@ export class SocketIoServer {
     constructor(public httpServer: http.Server, ioc: IoC) {
         this.eventEmitter = ioc.container.getNamed<EventEmitter>(Types.Core, Core.Events);
         this.eventEmitter.setMaxListeners(10);
-        this.socketIO = this.configure(SocketIO(httpServer));
+        this.socketIO = this.configure(SocketIO(
+            httpServer
+            // {
+            //     // allow any user to authenticate.
+            //     allowRequest: (req, callback) => {
+            //         callback(null, true);
+            //     }
+            // }
+        ));
     }
 
     public emit(eventType: string, msg: string): void {
@@ -30,17 +38,13 @@ export class SocketIoServer {
     private configure(io: SocketIO): SocketIO {
         this.log.debug('Configuring SocketIoServer');
 
-        // io.set('transports', ['websocket']);
-
         // allow any user to authenticate.
-        io.set('authorization', (handshake, callback) => {
-            return callback(null, true);
-        });
+        io.set('authorization', (handshake, callback) => callback(null, true));
 
         io.on('connection', (client) => {
             this.clients[client.id] = client;
-            this.log.debug('socket.io: ' + client.id + ' connected');
-            this.log.debug('socket.io: ' + io.engine.clientsCount + ' sockets connected');
+            this.log.debug(`socket.io: ${client.id} connected`);
+            this.log.debug(`socket.io: ${io.engine.clientsCount} sockets connected`);
 
             // listen to messages for cli
             this.eventEmitter.on('cli', (event) => {
@@ -50,13 +54,13 @@ export class SocketIoServer {
 
             client.on('disconnect', (event) => {
                 delete this.clients[client.id];
-                this.log.debug('socket.io: ' + client.id + ' disconnected');
+                this.log.debug(`socket.io: ${client.id} disconnected`);
                 this.eventEmitter.removeListener('cli', () => {
                     this.log.debug('cli', event);
                 });
             });
 
-            client.on('serverpong', (data) => {
+            client.on('serverpong', () => {
                 // this.log.debug('received pong from client');
             });
 

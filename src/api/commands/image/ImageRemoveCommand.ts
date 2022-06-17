@@ -39,7 +39,7 @@ export class ImageRemoveCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: image: resources.Image
+     * [0]: image: resources.Image
      *
      */
     @validate()
@@ -50,7 +50,8 @@ export class ImageRemoveCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: image: resources.Image
+     * [0]: image: resources.Image
+     *
      * @param data
      * @returns {Promise<RpcRequest>}
      */
@@ -65,7 +66,7 @@ export class ImageRemoveCommand extends BaseCommand implements RpcCommandInterfa
             const templateId = image.ItemInformation.ListingItemTemplate.id;
             const listingItemTemplate: resources.ListingItemTemplate = await this.listingItemTemplateService.findOne(templateId)
                 .then(value => value.toJSON())
-                .catch(reason => {
+                .catch(() => {
                     throw new ModelNotFoundException('ListingItemTemplate');
                 });
 

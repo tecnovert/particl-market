@@ -48,8 +48,8 @@ export class SmsgResendCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: smsgMessage: resources.SmsgMessage
-     *  [1]: identity: resources.Identity
+     * [0]: smsgMessage: resources.SmsgMessage
+     * [1]: identity: resources.Identity
      *
      * @param data
      * @returns {Promise<void>}
@@ -84,8 +84,8 @@ export class SmsgResendCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: msgid
-     *  [1]: identityId
+     * [0]: msgid
+     * [1]: identityId
      *
      * @param data
      * @returns {Promise<RpcRequest>}
@@ -96,7 +96,7 @@ export class SmsgResendCommand extends BaseCommand implements RpcCommandInterfac
         // make sure an outgoing SmsgMessage with the msgid exists
         const smsgMessage: resources.SmsgMessage = await this.smsgMessageService.findOneByMsgIdAndDirection(data.params[0],  ActionDirection.OUTGOING)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('SmsgMessage');
             });
 

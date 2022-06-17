@@ -119,16 +119,13 @@ export class OrderItemService {
         const orderItem = await this.findOne(id, false);
         orderItem.Status = status;
         const updated = await this.orderItemRepo.update(id, orderItem.toJSON());
-        this.log.debug('updated OrderItem ' + id + ' status to: ' + updated.Status);
+        this.log.debug(`updated OrderItem ${id} status to: ${updated.Status}`);
         return updated;
     }
 
 
     public isNextStatusValid(currentStatus: OrderItemStatus, toStatus: OrderItemStatus): boolean {
-        if (this.madctBuyFlowSequence[currentStatus]) {
-            return this.madctBuyFlowSequence[currentStatus].nextStates.findIndex(status => toStatus && (status === toStatus)) >= 0;
-        }
-        return false;
+        return (this.madctBuyFlowSequence[currentStatus] || {nextStates: []}).nextStates.findIndex(status => toStatus && (status === toStatus)) >= 0;
     }
 
 }

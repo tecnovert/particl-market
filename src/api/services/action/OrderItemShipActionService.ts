@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
@@ -36,6 +35,7 @@ import { MessageException } from '../../exceptions/MessageException';
 
 export class OrderItemShipActionService extends BaseBidActionService {
 
+    /* eslint-disable max-params */
     constructor(
         @inject(Types.Service) @named(Targets.Service.SmsgService) public smsgService: SmsgService,
         @inject(Types.Service) @named(Targets.Service.NotifyService) public notificationService: NotifyService,
@@ -65,6 +65,7 @@ export class OrderItemShipActionService extends BaseBidActionService {
             bidFactory
         );
     }
+    /* eslint-enable max-params */
 
     /**
      * create the MarketplaceMessage to which is to be posted to the network
@@ -93,8 +94,12 @@ export class OrderItemShipActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param smsgSendResponse
      */
-    public async afterPost(params: OrderItemShipRequest, marketplaceMessage: MarketplaceMessage, smsgMessage: resources.SmsgMessage,
-                           smsgSendResponse: SmsgSendResponse): Promise<SmsgSendResponse> {
+    public async afterPost(
+        params: OrderItemShipRequest,
+        marketplaceMessage: MarketplaceMessage,
+        smsgMessage: resources.SmsgMessage,
+        smsgSendResponse: SmsgSendResponse
+    ): Promise<SmsgSendResponse> {
 
         return smsgSendResponse;
     }
@@ -109,10 +114,12 @@ export class OrderItemShipActionService extends BaseBidActionService {
      * @param smsgMessage
      * @param actionRequest
      */
-    public async processMessage(marketplaceMessage: MarketplaceMessage,
-                                actionDirection: ActionDirection,
-                                smsgMessage: resources.SmsgMessage,
-                                actionRequest?: OrderItemShipRequest): Promise<resources.SmsgMessage> {
+    public async processMessage(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+        // actionRequest?: OrderItemShipRequest
+    ): Promise<resources.SmsgMessage> {
 
         const orderItemShipMessage: OrderItemShipMessage = marketplaceMessage.action as OrderItemShipMessage;
         const bidCreateRequest: BidCreateRequest = await this.createChildBidCreateRequest(orderItemShipMessage, smsgMessage);
@@ -149,9 +156,11 @@ export class OrderItemShipActionService extends BaseBidActionService {
      * @param actionDirection
      * @param smsgMessage
      */
-    public async createNotification(marketplaceMessage: MarketplaceMessage,
-                                    actionDirection: ActionDirection,
-                                    smsgMessage: resources.SmsgMessage): Promise<MarketplaceNotification | undefined> {
+    public async createNotification(
+        marketplaceMessage: MarketplaceMessage,
+        actionDirection: ActionDirection,
+        smsgMessage: resources.SmsgMessage
+    ): Promise<MarketplaceNotification | undefined> {
 
         // only send notifications when receiving messages
         if (ActionDirection.INCOMING === actionDirection) {

@@ -26,6 +26,7 @@ import { CommandParamValidationRules, IdValidationRule, ParamValidationRule, Str
 import { ProposalService } from '../../services/model/ProposalService';
 import { VoteRequest } from '../../requests/action/VoteRequest';
 import {VoteActionService} from '../../services/action/VoteActionService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 
 
 export class MarketFlagCommand extends BaseCommand implements RpcCommandInterface<SmsgSendResponse> {
@@ -53,10 +54,10 @@ export class MarketFlagCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: market: resources.Market
-     *  [1]: identity: resources.Identity
-     *  [2]: reason
-     *  [3]: expiryTime (set in validate)
+     * [0]: market: resources.Market
+     * [1]: identity: resources.Identity
+     * [2]: reason
+     * [3]: expiryTime (set in validate)
      *
      * @param data
      * @returns {Promise<SmsgSendResponse>}
@@ -93,9 +94,9 @@ export class MarketFlagCommand extends BaseCommand implements RpcCommandInterfac
         const smsgSendResponse: SmsgSendResponse = await this.proposalAddActionService.post(postRequest);
 
         const proposal: resources.Proposal = await this.proposalService.findOneByMsgId(smsgSendResponse.msgid!).then(value => value.toJSON());
-        const proposalOption: resources.ProposalOption | undefined = _.find(proposal.ProposalOptions, (o: resources.ProposalOption) => {
-            return o.description === ItemVote.REMOVE;
-        });
+        const proposalOption: resources.ProposalOption | undefined = _.find(
+            proposal.ProposalOptions,
+            (o: resources.ProposalOption) => o.description === ItemVote.REMOVE);
 
         // prepare the VoteRequest for sending votes
         const voteRequest = {
@@ -114,8 +115,8 @@ export class MarketFlagCommand extends BaseCommand implements RpcCommandInterfac
 
     /**
      * data.params[]:
-     *  [0]: marketId, number
-     *  [1]: reason, string, optional
+     * [0]: marketId, number
+     * [1]: reason, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -140,11 +141,11 @@ export class MarketFlagCommand extends BaseCommand implements RpcCommandInterfac
         // make sure identity exists
         const identity: resources.Identity = await this.identityService.findOne(market.Identity.id)
             .then(value => value.toJSON())
-            .catch(ex => {
+            .catch(() => {
                 throw new ModelNotFoundException('Identity');
             });
 
-        const daysRetention: number = parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10);
+        const daysRetention: number = parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10);
 
         data.params[0] = market;
         data.params[1] = identity;

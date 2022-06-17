@@ -24,6 +24,7 @@ import { ProfileService } from '../../services/model/ProfileService';
 import { ListingItemService } from '../../services/model/ListingItemService';
 import { IdentityService } from '../../services/model/IdentityService';
 import { CommandParamValidationRules, IdValidationRule, ParamValidationRule } from '../CommandParamValidation';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 
 
 export class BidCancelCommand extends BaseCommand implements RpcCommandInterface<SmsgSendResponse> {
@@ -73,7 +74,7 @@ export class BidCancelCommand extends BaseCommand implements RpcCommandInterface
                 fromAddress: identity.address,      // send from the given identity
                 toAddress,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -104,16 +105,14 @@ export class BidCancelCommand extends BaseCommand implements RpcCommandInterface
         }
 
         // make sure the Escrow hasnt been completed yet
-        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => {
-            return child.type === MPActionExtended.MPA_COMPLETE;
-        });
+        const childBid: resources.Bid | undefined = _.find(bid.ChildBids, (child) => child.type === MPActionExtended.MPA_COMPLETE);
         if (childBid) {
             throw new MessageException('Escrow has already been completed, unable to cancel.');
         }
 
         await this.listingItemService.findOne(bid.ListingItem.id)
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('ListingItem');
             });
 

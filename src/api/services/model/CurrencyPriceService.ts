@@ -153,34 +153,40 @@ export class CurrencyPriceService {
      * get the updated currency price
      * fromCurrency: PART (must be PART for now)
      * toCurrency: another currencies for which we want to convert
+     *
      * @returns {Promise<any>}
      */
 
     private async getUpdatedCurrencyPrice(fromCurrency: string, toCurrency: string): Promise<any> {
         try {
+            if (!process.env.CHASING_COINS_API) {
+                throw new MessageException('Invalid API specified');
+            }
             return new Promise<any>((resolve, reject) => {
                 this.apiRequest.get(
-                    process.env.CHASING_COINS_API + '/' + fromCurrency + '/' + toCurrency,
+                    `${process.env.CHASING_COINS_API || ''}/${fromCurrency}/${toCurrency}`,
                     {
                         strictSSL: false
-                    }, async (error: any, response: Request.RequestResponse, body: any) => {
-                    if (error || body.includes('Undefined property')) {
-                        this.log.error('error while fetching currencyprice:', error);
-                        reject(error);
-                    } else {
-                        resolve(JSON.parse(body));
-                    }
-                });
+                    },
+                    (error: any, response: Request.RequestResponse, body: any) => {
+                        if (error || body.includes('Undefined property')) {
+                            this.log.error('error while fetching currencyprice:', error);
+                            reject(error);
+                        } else {
+                            resolve(JSON.parse(body));
+                        }
+                    });
             }).catch(() => {
                 throw new MessageException(`Invalid or unsupported currency, <${toCurrency}> or <${fromCurrency}>.`);
             });
-        } catch (err) {
+        } catch (err: any) {
             throw new MessageException(`Cannot add currency price ${err}.`);
         }
     }
 
     /**
      * currencyUpdatedAt: timestamp
+     *
      * @returns {Promise<boolean>}
      */
 

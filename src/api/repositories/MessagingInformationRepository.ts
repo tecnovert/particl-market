@@ -22,8 +22,8 @@ export class MessagingInformationRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<MessagingInformation>> {
-        const list = await this.MessagingInformationModel.fetchAll();
-        return list as Bookshelf.Collection<MessagingInformation>;
+        const list = await this.MessagingInformationModel.fetchAll<MessagingInformation>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<MessagingInformation> {

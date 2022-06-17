@@ -22,8 +22,8 @@ export class ImageDataRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<ImageData>> {
-        const list = await this.ImageDataModel.fetchAll();
-        return list as Bookshelf.Collection<ImageData>;
+        const list = await this.ImageDataModel.fetchAll<ImageData>();
+        return list;
     }
 
     public async findAllByImageHashAndVersion(hash: string, version: string, withRelated: boolean = true): Promise<Bookshelf.Collection<ImageData>> {

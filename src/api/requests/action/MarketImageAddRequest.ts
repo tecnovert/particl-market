@@ -19,7 +19,6 @@ export class MarketImageAddRequest extends RequestBody implements ActionRequestI
     @IsNotEmpty()
     public market: resources.Market;
 
-    public withData: boolean;   // whether the data is included in the message or not
-                                // (... ProtocolDSN LOCAL or SMSG)
+    public withData: boolean;   // whether the data is included in the message or not (... ProtocolDSN LOCAL or SMSG)
 
 }

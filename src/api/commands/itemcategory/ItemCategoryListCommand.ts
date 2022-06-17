@@ -29,7 +29,7 @@ export class ItemCategoryListCommand extends BaseCommand implements RpcCommandIn
 
     /**
      * params[]:
-     *  [0]: market: resources.Market, optional
+     * [0]: market: resources.Market, optional
      *
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
@@ -53,7 +53,7 @@ export class ItemCategoryListCommand extends BaseCommand implements RpcCommandIn
 
     /**
      * data.params[]:
-     *  [0]: marketId, optional, if market isn't given, return the list of default categories
+     * [0]: marketId, optional, if market isn't given, return the list of default categories
      *
      * @param data
      * @returns {Promise<ItemCategory>}

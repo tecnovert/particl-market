@@ -14,7 +14,6 @@ import * as http from 'http';
 import * as express from 'express';
 import { Logger } from './Logger';
 import { Environment } from './helpers/Environment';
-import { ApiMonitor } from './ApiMonitor';
 import { ApiInfo } from './ApiInfo';
 import { CliIndex } from './CliIndex';
 
@@ -42,7 +41,9 @@ export class Server {
 
     private log = new Logger(__filename);
 
-    constructor(public httpServer: http.Server) { }
+    constructor(public httpServer: http.Server) {
+        // empty constructor
+    }
 
     /**
      * Listen to the given http server
@@ -69,21 +70,18 @@ export class Server {
      */
     public onStartUp(app: express.Application): void {
         this.log.debug(``);
-        this.log.debug(`Aloha, your app is ready on ${app.get('host')}:${app.get('port')}${process.env.APP_URL_PREFIX}`);
+        this.log.debug(`Aloha, your app is ready on ${app.get('host')}:${app.get('port')}${process.env.APP_URL_PREFIX || '/api'}`);
         this.log.debug(`To shut it down, press <CTRL> + C at any time.`);
         this.log.debug(``);
         this.log.debug('-------------------------------------------------------');
         this.log.debug(`Environment  : ${Environment.getNodeEnv()}`);
         // this.log.debug(`Version      : ${Environment.getPkg().version}`);
         this.log.debug(``);
-        if (Environment.isTruthy(process.env.API_INFO_ENABLED)) {
+        if (Environment.isTruthy(process.env.API_INFO_ENABLED || '')) {
             this.log.debug(`API Info     : ${app.get('host')}:${app.get('port')}${ApiInfo.getRoute()}`);
         }
-        if (Environment.isTruthy(process.env.CLI_ENABLED)) {
+        if (Environment.isTruthy(process.env.CLI_ENABLED || '')) {
             this.log.debug(`CLI          : ${app.get('host')}:${app.get('port')}${CliIndex.getRoute()}`);
-        }
-        if (Environment.isTruthy(process.env.MONITOR_ENABLED)) {
-            this.log.debug(`Monitor      : ${app.get('host')}:${app.get('port')}${ApiMonitor.getRoute()}`);
         }
 
         this.log.debug(`RPCServer    : ${app.get('host')}:${app.get('port')}/api/rpc`);
@@ -104,16 +102,16 @@ export class Server {
             throw error;
         }
         switch (error.code) {
-            case 'EACCES':
-                this.log.error('The Server requires elevated privileges: ', error);
-                process.exit(1);
-                break;
-            case 'EADDRINUSE':
-                this.log.error('Port is already in use or blocked by the os: ', error);
-                process.exit(1);
-                break;
-            default:
-                throw error;
+        case 'EACCES':
+            this.log.error('The Server requires elevated privileges: ', error);
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            this.log.error('Port is already in use or blocked by the os: ', error);
+            process.exit(1);
+            break;
+        default:
+            throw error;
         }
     }
 

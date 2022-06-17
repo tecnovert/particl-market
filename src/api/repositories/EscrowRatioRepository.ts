@@ -22,8 +22,8 @@ export class EscrowRatioRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<EscrowRatio>> {
-        const list = await this.EscrowRatioModel.fetchAll();
-        return list as Bookshelf.Collection<EscrowRatio>;
+        const list = await this.EscrowRatioModel.fetchAll<EscrowRatio>();
+        return list;
     }
 
     public async findOne(id: number, withRelated: boolean = true): Promise<EscrowRatio> {

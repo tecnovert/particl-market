@@ -4,7 +4,6 @@
 
 import * as Bookshelf from 'bookshelf';
 import * as _ from 'lodash';
-import * as resources from 'resources';
 import { inject, named } from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { Types, Core, Targets } from '../../../constants';
@@ -46,8 +45,9 @@ export class NotificationService {
     }
 
     @validate()
-    public async search(@request(NotificationSearchParams) options: NotificationSearchParams,
-                        withRelated: boolean = true): Promise<Bookshelf.Collection<Notification>> {
+    public async search(
+        @request(NotificationSearchParams) options: NotificationSearchParams, withRelated: boolean = true
+    ): Promise<Bookshelf.Collection<Notification>> {
         return await this.notificationRepo.search(options, withRelated);
     }
 

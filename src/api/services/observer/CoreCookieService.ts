@@ -5,9 +5,9 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
-import {inject, named, unmanaged} from 'inversify';
+import {inject, named} from 'inversify';
 import { Logger as LoggerType } from '../../../core/Logger';
-import { Types, Core, Targets } from '../../../constants';
+import { Types, Core } from '../../../constants';
 import { Environment } from '../../../core/helpers/Environment';
 import { CoreCookieServiceStatus } from '../../enums/CoreCookieServiceStatus';
 import { BaseObserverService } from './BaseObserverService';
@@ -36,7 +36,7 @@ export class CoreCookieService extends BaseObserverService {
         // this.log = new Logger(__filename);
     }
 
-    public async run(currentStatus: ObserverStatus): Promise<ObserverStatus> {
+    public async run(/* currentStatus: ObserverStatus */): Promise<ObserverStatus> {
 
         const cookie = this.getPathToCookie();
 
@@ -82,7 +82,7 @@ export class CoreCookieService extends BaseObserverService {
         }
         // this.log.debug('PATH_TO_COOKIE: ', this.PATH_TO_COOKIE);
 
-        const homeDir: string = os.homedir ? os.homedir() : process.env['HOME'];
+        const homeDir: string = os.homedir ? os.homedir() : process.env['HOME'] as string;
 
         let dir = '';
         const appName = 'Particl';
@@ -90,23 +90,23 @@ export class CoreCookieService extends BaseObserverService {
         // this.log.debug('process.platform: ', process.platform);
 
         switch (process.platform) {
-            case 'linux':
-                dir = path.join(homeDir, '.' + appName.toLowerCase());
-                break;
-            case 'darwin':
-                dir = path.join(homeDir, 'Library', 'Application Support', appName);
-                break;
-            case 'win32':
-                const temp = path.join(process.env['APPDATA'], appName);
-                if (this.checkIfExists(temp)) {
-                    dir = temp;
-                } else {
-                    dir = path.join(homeDir, 'AppData', 'Roaming', appName);
-                }
-                break;
-            default:
-                this.log.error('process.platform not supported: ', process.platform);
-                throw new Error('process.platform not supported: ' + process.platform);
+        case 'linux':
+            dir = path.join(homeDir, '.' + appName.toLowerCase());
+            break;
+        case 'darwin':
+            dir = path.join(homeDir, 'Library', 'Application Support', appName);
+            break;
+        case 'win32':
+            const temp = path.join(process.env['APPDATA'] as string, appName);
+            if (this.checkIfExists(temp)) {
+                dir = temp;
+            } else {
+                dir = path.join(homeDir, 'AppData', 'Roaming', appName);
+            }
+            break;
+        default:
+            this.log.error('process.platform not supported: ', process.platform);
+            throw new Error('process.platform not supported: ' + process.platform);
         }
 
         // just check if it exist so it logs an error just in case

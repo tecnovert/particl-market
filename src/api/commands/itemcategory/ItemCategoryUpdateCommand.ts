@@ -43,10 +43,10 @@ export class ItemCategoryUpdateCommand extends BaseCommand implements RpcCommand
 
     /**
      * params[]:
-     *  [0]: categoryId
-     *  [1]: categoryName
-     *  [2]: description
-     *  [3]: parentCategoryId, default: root
+     * [0]: categoryId
+     * [1]: categoryName
+     * [2]: description
+     * [3]: parentCategoryId, default: root
      */
     public getCommandParamValidationRules(): CommandParamValidationRules {
         return {
@@ -81,10 +81,10 @@ export class ItemCategoryUpdateCommand extends BaseCommand implements RpcCommand
     }
 
     /**
-     *  [0]: categoryId
-     *  [1]: categoryName
-     *  [2]: description
-     *  [3]: parentCategoryId, default: root
+     * [0]: categoryId
+     * [1]: categoryName
+     * [2]: description
+     * [3]: parentCategoryId, default: root
      *
      * @param {RpcRequest} data
      * @returns {Promise<void>}
@@ -93,8 +93,8 @@ export class ItemCategoryUpdateCommand extends BaseCommand implements RpcCommand
         await super.validate(data);
 
         const itemCategory: resources.ItemCategory = data.params[0];                // required
-        const categoryName = data.params[1];                                        // required
-        const description = data.params[2];                                         // required
+        // const categoryName = data.params[1];                                        // required
+        // const description = data.params[2];                                         // required
         const parentItemCategory: resources.ItemCategory = data.params[3];
 
         if (!parentItemCategory) {
@@ -110,9 +110,7 @@ export class ItemCategoryUpdateCommand extends BaseCommand implements RpcCommand
         // custom categories can only be modified if market.type = MarketType.STOREFRONT_ADMIN
         // todo: fix when auth is added
         const markets: resources.Market[] = await this.marketService.findAllByReceiveAddress(itemCategory.market).then(value => value.toJSON());
-        const adminMarket = _.find(markets, market => {
-            return market.type === MarketType.STOREFRONT_ADMIN;
-        });
+        const adminMarket = _.find(markets, market => market.type === MarketType.STOREFRONT_ADMIN);
 
         if (_.isEmpty(adminMarket)) {
             throw new MessageException('You cannot modify this ItemCategory.');

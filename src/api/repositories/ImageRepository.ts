@@ -22,8 +22,8 @@ export class ImageRepository {
     }
 
     public async findAll(): Promise<Bookshelf.Collection<Image>> {
-        const list = await this.ImageModel.fetchAll();
-        return list as Bookshelf.Collection<Image>;
+        const list = await this.ImageModel.fetchAll<Image>();
+        return list;
     }
 
     public async findAllByHash(hash: string, withRelated: boolean = true): Promise<Bookshelf.Collection<Image>> {
@@ -61,7 +61,7 @@ export class ImageRepository {
         try {
             const imageUpdated = await image.save(data, { patch: true });
             return await this.ImageModel.fetchById(imageUpdated.id);
-        } catch (error) {
+        } catch (error: any) {
             this.log.error(error);
             throw new DatabaseException('Could not update the Image!', error);
         }

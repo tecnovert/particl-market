@@ -10,7 +10,6 @@ import { Core, Targets, Types } from '../../../constants';
 import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { BaseCommand } from '../BaseCommand';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
 import { CommentService } from '../../services/model/CommentService';
@@ -27,6 +26,7 @@ import { MessageException } from '../../exceptions/MessageException';
 import { IdentityService } from '../../services/model/IdentityService';
 import { IdentityType } from '../../enums/IdentityType';
 import { ProposalService } from '../../services/model/ProposalService';
+import { DefaultSettingService } from '../../services/DefaultSettingService';
 import {
     CommandParamValidationRules, EnumValidationRule,
     IdValidationRule,
@@ -67,20 +67,20 @@ export class CommentPostCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: identity, resources.Identity
-     *  [1]: type, CommentType
-     *  [2]: receiver
-     *  [3]: target
-     *  [4]: message
-     *  [5]: parentComment, resources.Comment, optional
-     *  [6]: market, resources.Market
+     * [0]: identity, resources.Identity
+     * [1]: type, CommentType
+     * [2]: receiver
+     * [3]: target
+     * [4]: message
+     * [5]: parentComment, resources.Comment, optional
+     * [6]: market, resources.Market
      *
      * @param data, RpcRequest
      * @param rpcCommandFactory, RpcCommandFactory
      * @returns {Promise<SmsgSendResponse>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<SmsgSendResponse> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<SmsgSendResponse> {
 
         const identity: resources.Identity = data.params[0];
         const type = CommentCategory[data.params[1]];
@@ -95,7 +95,7 @@ export class CommentPostCommand extends BaseCommand implements RpcCommandInterfa
                 fromAddress: identity.address,   // send from the given identity
                 toAddress,
                 paid: false,
-                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS, 10),
+                daysRetention: parseInt(process.env.FREE_MESSAGE_RETENTION_DAYS || `${DefaultSettingService.FREE_MESSAGE_RETENTION_DAYS}`, 10),
                 estimateFee: false,
                 anonFee: false
             } as SmsgSendParams,
@@ -112,12 +112,12 @@ export class CommentPostCommand extends BaseCommand implements RpcCommandInterfa
 
     /**
      * data.params[]:
-     *  [0]: identityId, number
-     *  [1]: type, CommentType (LISTINGITEM_QUESTION_AND_ANSWERS, PROPOSAL_QUESTION_AND_ANSWERS, MARKETPLACE_COMMENT, PRIVATE_MESSAGE)
-     *  [2]: receiver, string, this would be the marketReceiveAddress, or when private messaging, the receiving profile or identity address
-     *  [3]: target, string, target identifier, when type === LISTINGITEM_QUESTION_AND_ANSWERS -> ListingItem.hash
-     *  [4]: message, string
-     *  [5]: parentCommentHash, string, optional
+     * [0]: identityId, number
+     * [1]: type, CommentType (LISTINGITEM_QUESTION_AND_ANSWERS, PROPOSAL_QUESTION_AND_ANSWERS, MARKETPLACE_COMMENT, PRIVATE_MESSAGE)
+     * [2]: receiver, string, this would be the marketReceiveAddress, or when private messaging, the receiving profile or identity address
+     * [3]: target, string, target identifier, when type === LISTINGITEM_QUESTION_AND_ANSWERS -> ListingItem.hash
+     * [4]: message, string
+     * [5]: parentCommentHash, string, optional
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -146,30 +146,30 @@ export class CommentPostCommand extends BaseCommand implements RpcCommandInterfa
         data.params[6] = market;
 
         switch (type) {
-            case CommentCategory.LISTINGITEM_QUESTION_AND_ANSWERS:
-                await this.listingItemService.findOneByHashAndMarketReceiveAddress(target, market.receiveAddress).then(value => value.toJSON())
-                    .catch(() => {
-                        throw new ModelNotFoundException('ListingItem');
-                    });
-                break;
-            case CommentCategory.PROPOSAL_QUESTION_AND_ANSWERS:
-                // todo: findOneByHashAndMarket
-                await this.proposalService.findOneByHash(target).then(value => value.toJSON())
-                    .catch(() => {
-                        throw new ModelNotFoundException('ListingItem');
-                    });
-                break;
-            case CommentCategory.MARKETPLACE_COMMENT:
-                await this.marketService.findOneByProfileIdAndReceiveAddress(identity.Profile.id, target)
-                    .then(value => value.toJSON())
-                    .catch(() => {
-                        throw new ModelNotFoundException('Market');
-                    });
-                break;
-            case CommentCategory.PRIVATE_MESSAGE:
-                break;
-            default:
-                throw new MessageException('CommentType not supported.');
+        case CommentCategory.LISTINGITEM_QUESTION_AND_ANSWERS:
+            await this.listingItemService.findOneByHashAndMarketReceiveAddress(target, market.receiveAddress).then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItem');
+                });
+            break;
+        case CommentCategory.PROPOSAL_QUESTION_AND_ANSWERS:
+            // todo: findOneByHashAndMarket
+            await this.proposalService.findOneByHash(target).then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('ListingItem');
+                });
+            break;
+        case CommentCategory.MARKETPLACE_COMMENT:
+            await this.marketService.findOneByProfileIdAndReceiveAddress(identity.Profile.id, target)
+                .then(value => value.toJSON())
+                .catch(() => {
+                    throw new ModelNotFoundException('Market');
+                });
+            break;
+        case CommentCategory.PRIVATE_MESSAGE:
+            break;
+        default:
+            throw new MessageException('CommentType not supported.');
 
         }
 

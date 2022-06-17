@@ -26,6 +26,7 @@ export class HashableProposalAddMessageConfig extends BaseHashableConfig {
 
     /**
      * HashableProposalAddField.PROPOSAL_OPTIONS and  HashableProposalAddField.PROPOSAL_MARKET should be added manually
+     *
      * @param values
      */
     constructor(values?: HashableFieldValueConfig[]) {

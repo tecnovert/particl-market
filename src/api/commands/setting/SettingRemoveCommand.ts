@@ -2,7 +2,6 @@
 // Distributed under the GPL software license, see the accompanying
 // file COPYING or https://github.com/particl/particl-market/blob/develop/LICENSE
 
-import * as _ from 'lodash';
 import * as resources from 'resources';
 import { Logger as LoggerType } from '../../../core/Logger';
 import { inject, named } from 'inversify';
@@ -12,7 +11,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands} from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { SettingService } from '../../services/model/SettingService';
 import { MissingParamException } from '../../exceptions/MissingParamException';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -32,21 +30,21 @@ export class SettingRemoveCommand extends BaseCommand implements RpcCommandInter
 
     /**
      * data.params[]:
-     *  [0]: setting: resources.Setting
+     * [0]: setting: resources.Setting
      *
      * @param data
      * @param rpcCommandFactory
      * @returns {Promise<void>}
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<void> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<void> {
         const setting = data.params[0];
         return this.settingService.destroy(setting.id);
     }
 
     /**
      * data.params[]:
-     *  [0]: settingId
+     * [0]: settingId
      *
      * @param {RpcRequest} data
      * @returns {Promise<RpcRequest>}
@@ -66,7 +64,7 @@ export class SettingRemoveCommand extends BaseCommand implements RpcCommandInter
         // make sure Setting with the id exists
         const setting: resources.Setting = await this.settingService.findOne(data.params[0])
             .then(value => value.toJSON())
-            .catch(reason => {
+            .catch(() => {
                 throw new ModelNotFoundException('Setting');
             });
         data.params[0] = setting;

@@ -10,7 +10,6 @@ import { RpcRequest } from '../../requests/RpcRequest';
 import { RpcCommandInterface } from '../RpcCommandInterface';
 import { Commands } from '../CommandEnumType';
 import { BaseCommand } from '../BaseCommand';
-import { RpcCommandFactory } from '../../factories/RpcCommandFactory';
 import { TestDataService } from '../../services/TestDataService';
 import { TestDataCreateRequest } from '../../requests/testdata/TestDataCreateRequest';
 import { InvalidParamException } from '../../exceptions/InvalidParamException';
@@ -32,15 +31,15 @@ export class DataAddCommand extends BaseCommand implements RpcCommandInterface<a
 
     /**
      * data.params[]:
-     *  [0]: CreatableModel, model to generate
-     *  [1]: json
-     *  [2]: withRelated, return full objects or just id's
+     * [0]: CreatableModel, model to generate
+     * [1]: json
+     * [2]: withRelated, return full objects or just id's
      *
      * @param data
      * @param rpcCommandFactory
      */
     @validate()
-    public async execute( @request(RpcRequest) data: RpcRequest, rpcCommandFactory: RpcCommandFactory): Promise<any> {
+    public async execute( @request(RpcRequest) data: RpcRequest): Promise<any> {
         const withRelated = data.params[2] ? data.params[2] : true;
         return await this.testDataService.create({
             model: data.params[0],
@@ -51,9 +50,9 @@ export class DataAddCommand extends BaseCommand implements RpcCommandInterface<a
 
     /**
      * data.params[]:
-     *  [0]: CreatableModel, model to generate
-     *  [1]: json
-     *  [2]: withRelated, return full objects or just id's
+     * [0]: CreatableModel, model to generate
+     * [1]: json
+     * [2]: withRelated, return full objects or just id's
      *
      * @param data
      * @param rpcCommandFactory

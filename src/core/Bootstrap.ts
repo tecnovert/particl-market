@@ -8,13 +8,11 @@ import { InversifyExpressServer } from 'inversify-express-utils';
 import { Server } from './Server';
 import { Logger } from './Logger';
 import { ApiInfo } from './ApiInfo';
-import { ApiMonitor } from './ApiMonitor';
-import { exceptionHandler } from './api/exceptionHandler';
-import { extendExpressResponse } from './api/extendExpressResponse';
 import { IoC } from './IoC';
 import { CliIndex } from './CliIndex';
 import { SocketIoServer } from './SocketIoServer';
 import { ZmqWorker } from './ZmqWorker';
+import { exceptionHandler } from './api/exceptionHandler';
 
 export class Bootstrap {
 
@@ -28,11 +26,6 @@ export class Bootstrap {
         app.set('host', process.env.APP_HOST);
         app.set('port', Server.normalizePort(process.env.APP_PORT || '45492'));
         return app;
-    }
-
-    public setupMonitor(app: express.Application): void {
-        const apiMonitor = new ApiMonitor();
-        apiMonitor.setup(app);
     }
 
     public setupCoreTools(app: express.Application): void {
@@ -49,9 +42,8 @@ export class Bootstrap {
 
     public setupInversifyExpressServer(app: express.Application, ioc: IoC): InversifyExpressServer {
         const inversifyExpressServer = new InversifyExpressServer(ioc.container, undefined, {
-            rootPath: process.env.APP_URL_PREFIX
+            rootPath: process.env.APP_URL_PREFIX as string
         }, app);
-        inversifyExpressServer.setConfig((a) => a.use(extendExpressResponse));
         inversifyExpressServer.setErrorConfig((a) => a.use(exceptionHandler));
         return inversifyExpressServer;
     }
@@ -59,7 +51,7 @@ export class Bootstrap {
     public bindInversifyExpressServer(app: express.Application, inversifyExpressServer: InversifyExpressServer): express.Application {
         try {
             app = inversifyExpressServer.build();
-        } catch (e) {
+        } catch (e: any) {
             this.log.error(e.message);
             process.exit(1);
         }

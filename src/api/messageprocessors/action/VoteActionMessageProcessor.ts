@@ -14,7 +14,7 @@ import { ActionMessageProcessorInterface } from '../ActionMessageProcessorInterf
 import { BaseActionMessageProcessor } from '../BaseActionMessageProcessor';
 import { GovernanceAction } from '../../enums/GovernanceAction';
 import { VoteActionService } from '../../services/action/VoteActionService';
-import { VoteMessage } from '../../messages/action/VoteMessage';
+// import { VoteMessage } from '../../messages/action/VoteMessage';
 import { BidService } from '../../services/model/BidService';
 import { ProposalService } from '../../services/model/ProposalService';
 import { VoteValidator } from '../../messagevalidators/VoteValidator';
@@ -56,7 +56,7 @@ export class VoteActionMessageProcessor extends BaseActionMessageProcessor imple
 
         const smsgMessage: resources.SmsgMessage = event.smsgMessage;
         const marketplaceMessage: MarketplaceMessage = event.marketplaceMessage;
-        const actionMessage: VoteMessage = marketplaceMessage.action as VoteMessage;
+        // const actionMessage: VoteMessage = marketplaceMessage.action as VoteMessage;
 
         // processVote will create or update the Vote
         return await this.actionService.processMessage(marketplaceMessage, ActionDirection.INCOMING, smsgMessage)
