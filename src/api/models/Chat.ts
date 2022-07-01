@@ -412,9 +412,8 @@ export class Chat extends Bookshelf.Model<Chat> {
         let success = false;
 
         try {
-            const channelIDs: Array<{id: number}> = await Bookshelf.knex
+            const channelIDs: Array<{id: number}> = await Bookshelf.knex('chat_channels')
                 .select('id')
-                .from('chat_channels')
                 .where(channelObj);
 
             if (Array.isArray(channelIDs) && (channelIDs.length > 0) && (+channelIDs[0].id > 0)) {

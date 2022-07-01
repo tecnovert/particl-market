@@ -38,7 +38,8 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
             options.age = 0;
         }
 
-        const age = Date.now() - options.age;
+        const now = Date.now();
+        const age = now - options.age;
 
         // SmsgMessage.log.debug('age: ', age);
         // SmsgMessage.log.debug('age.toString(): ', new Date(age).toString());
@@ -46,6 +47,8 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
 
         const messageCollection = SmsgMessage.forge<Model<SmsgMessage>>()
             .query(qb => {
+
+                qb.where('smsg_messages.created_at', '<=', new Date(age).toString()); // .andWhere('smsg_messages.expiration', '>', now);
 
                 if (!_.isEmpty(options.msgid)) {
                     qb.andWhere('smsg_messages.msgid', '=', options.msgid);
@@ -70,8 +73,6 @@ export class SmsgMessage extends Bookshelf.Model<SmsgMessage> {
                                     });
                                 }
                 */
-
-                qb.where('smsg_messages.created_at', '<=', new Date(age).toString());
 
             })
             .orderBy('smsg_messages.' + options.orderField, options.order)
