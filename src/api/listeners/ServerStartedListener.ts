@@ -192,6 +192,10 @@ export class ServerStartedListener implements interfaces.Listener {
         }
 
         await this.enforceSingleRunTasks();
+        if (process.env.NODE_ENV !== 'test') {
+            // request new messages to be pushed through zmq
+            await this.smsgService.pushUnreadCoreSmsgMessages().catch(err => this.log.error(`Failed to request pending messages from particld`, err));
+        }
 
         this.log.info('bootstrap(), done.');
 
