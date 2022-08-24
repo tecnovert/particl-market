@@ -20,6 +20,12 @@ import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import { Logger } from '../core/Logger';
 import { App, Configurable } from '../core/App';
+import { CliIndex } from '../core/CliIndex';
+
+
+const unless = (middleware: (...params: any[]) => any, ...excludedPaths: string[]) =>
+    (req: express.Request, res: express.Response, next: express.NextFunction) =>
+        excludedPaths.some(excludedPath => excludedPath && req.path.startsWith(excludedPath)) ? next() : middleware(req, res, next);
 
 export class AppConfig implements Configurable {
     public configure(app: App): void {
@@ -29,13 +35,18 @@ export class AppConfig implements Configurable {
         app.Express
             // Enabling the cors headers
             // .options('*', cors())
-            .use(cors())
+            .use(unless(cors(), CliIndex.getRoute()))
 
             // Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-            .use(helmet({
-                hsts: { maxAge: 31536000, includeSubDomains: true },
-                crossOriginResourcePolicy: { policy: 'cross-origin' }
-            }))
+            .use(
+                unless(
+                    helmet({
+                        hsts: { maxAge: 31536000, includeSubDomains: true },
+                        crossOriginResourcePolicy: { policy: 'cross-origin' }
+                    }),
+                    CliIndex.getRoute()
+                )
+            )
 
             // Compress response bodies for all request that traverse through the middleware
             .use(compression())

@@ -35,7 +35,17 @@ export class DaemonRootCommand extends BaseCommand implements RpcCommandInterfac
         // this.log.debug('data.params:', data.params);
         const wallet = data.params.shift();
         const command = data.params.shift();
-        return await this.coreRpcService.call(command, data.params, wallet);
+        const requestParams: any[] = [];
+        for (const p of data.params) {
+            try {
+                requestParams.push(JSON.parse(typeof p === 'string' ? p : `${p}`));
+                continue;
+            } catch(e) {
+                // do nothing... handled next
+            }
+            requestParams.push(p);
+        }
+        return await this.coreRpcService.call(command, requestParams, wallet);
     }
 
     /**
