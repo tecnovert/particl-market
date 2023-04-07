@@ -1,6 +1,6 @@
 {
   "name": "@zasmilingidiot/particl-marketplace",
-  "version": "0.3.12",
+  "version": "0.3.13-test1",
   "description": "decentralized marketplace",
   "main": "dist/module.js",
   "scripts": {
@@ -72,7 +72,7 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "@zasmilingidiot/omp-lib": "0.1.155",
+    "@zasmilingidiot/omp-lib": "0.2.0",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.20.0",

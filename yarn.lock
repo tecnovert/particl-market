@@ -1684,10 +1684,10 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@zasmilingidiot/omp-lib@0.1.155":
-  version "0.1.155"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/omp-lib/-/omp-lib-0.1.155.tgz#6a7e6c13b22203103cae23169f681cb2abccd990"
-  integrity sha512-NviSRimOtB90xP8FIh9/3l3SI54QvhdrDVaaZAEnvtxnJ/MtUpLok4Af8uKg5IUdwFLWkf6lyevDBt4UypOmsw==
+"@zasmilingidiot/omp-lib@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/omp-lib/-/omp-lib-0.2.0.tgz#d57a1e767a49f7eda294bd9c210986a1595fb7d0"
+  integrity sha512-GJCYdFXNZ2mYt4RADF70RiDdUq+3snB84jP/Ig5Dzy00HK8ybeLSIpd1qYxIP3s0O490O4ELDwhtU+yMkcODlA==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
