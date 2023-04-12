@@ -180,7 +180,11 @@ export class OmpService {
             }
             coreRpcService.getBlockchainInfo().then(
                 (blockInfo: RpcBlockchainInfo) => {
-                    const chain = `${blockInfo.chain}net`;
+                    let chain = `${blockInfo.chain}net`;
+                    // HACK: Regtest is mostly = testnet
+                    if (chain !== 'mainnet') {
+                        chain = 'testnet';
+                    }
                     const ompConfig = { network: chain} as Config;
                     this.omp = new OpenMarketProtocol(ompConfig);
                     this.omp.inject(Cryptocurrency.PART, coreRpcService);
