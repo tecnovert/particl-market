@@ -178,7 +178,6 @@ export class MarketJoinCommand extends BaseCommand implements RpcCommandInterfac
     }
 
     public example(): string {
-        return 'market ' + this.getName() + ' 1 \'mymarket\' \'MARKETPLACE\' \'2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek\' ' +
-            '\'2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek\' ';
+        return 'market ' + this.getName() + ' 1 1 1 true ';
     }
 }
